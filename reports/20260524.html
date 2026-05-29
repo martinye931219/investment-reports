@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>报告 2026-05-24 - 投资报告</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif; background: #0d1117; color: #c9d1d9; line-height: 1.6; }
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+header { border-bottom: 1px solid #21262d; padding: 20px 0; margin-bottom: 30px; }
+header h1 { color: #58a6ff; font-size: 1.5em; }
+header .nav { margin-top: 10px; }
+header .nav a { color: #8b949e; text-decoration: none; margin-right: 20px; font-size: 0.9em; }
+header .nav a:hover { color: #58a6ff; }
+header .nav a.active { color: #58a6ff; font-weight: 600; }
+.report-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 24px; margin-bottom: 20px; }
+.report-card h2 { color: #58a6ff; font-size: 1.2em; margin-bottom: 12px; }
+.report-card .meta { color: #8b949e; font-size: 0.85em; margin-bottom: 16px; }
+.report-content { font-size: 0.95em; }
+.report-content h1 { font-size: 1.4em; color: #58a6ff; margin: 20px 0 10px; }
+.report-content h2 { font-size: 1.2em; color: #79c0ff; margin: 18px 0 8px; border-bottom: 1px solid #21262d; padding-bottom: 6px; }
+.report-content h3 { font-size: 1.05em; color: #d2a8ff; margin: 14px 0 6px; }
+.report-content p { margin: 8px 0; }
+.report-content ul, .report-content ol { margin: 8px 0 8px 24px; }
+.report-content li { margin: 4px 0; }
+.report-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.report-content th, .report-content td { border: 1px solid #21262d; padding: 8px 12px; text-align: left; }
+.report-content th { background: #1c2128; color: #58a6ff; }
+.report-content blockquote { border-left: 3px solid #58a6ff; padding-left: 12px; color: #8b949e; margin: 12px 0; }
+.report-content strong { color: #f0f6fc; }
+.report-content code { background: #1c2128; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+.date-list { list-style: none; }
+.date-list li { padding: 12px 16px; border-bottom: 1px solid #21262d; display: flex; justify-content: space-between; align-items: center; }
+.date-list li:hover { background: #1c2128; }
+.date-list a { color: #58a6ff; text-decoration: none; }
+.date-list .badge { background: #238636; color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 0.75em; }
+.signal-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: 600; }
+.signal-buy { background: #238636; color: #fff; }
+.signal-sell { background: #da3633; color: #fff; }
+.signal-watch { background: #9e6a03; color: #fff; }
+footer { text-align: center; color: #484f58; font-size: 0.8em; padding: 30px 0; border-top: 1px solid #21262d; margin-top: 40px; }
+/* 密码保护样式 */
+.auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d1117; z-index: 1000; display: flex; justify-content: center; align-items: center; }
+.auth-box { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 40px; text-align: center; max-width: 400px; width: 90%; }
+.auth-box h2 { color: #58a6ff; margin-bottom: 20px; font-size: 1.3em; }
+.auth-box input { width: 100%; padding: 12px 16px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-size: 16px; margin-bottom: 16px; outline: none; }
+.auth-box input:focus { border-color: #58a6ff; }
+.auth-box button { width: 100%; padding: 12px; background: #238636; color: #fff; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 600; }
+.auth-box button:hover { background: #2ea043; }
+.auth-error { color: #f85149; font-size: 0.85em; margin-top: 8px; display: none; }
+</style>
+</head>
+<body>
+<div class="auth-overlay" id="authOverlay">
+<div class="auth-box">
+<h2>🔐 投资决策系统</h2>
+<input type="password" id="authPassword" placeholder="请输入访问密码" autofocus>
+<button onclick="checkPassword()">进入</button>
+<p class="auth-error" id="authError">密码错误，请重试</p>
+</div>
+</div>
+<div class="container" id="mainContent" style="display:none;">
+<header>
+<h1>📊 投资决策系统</h1>
+<div class="nav">
+<a href="index.html">首页</a>
+<a href="signals.html">信号扫描</a>
+<a href="holdings.html">持仓</a>
+<a href="pool.html">选股池</a>
+<a href="bitable.html">飞书报告库</a>
+<a href="knowledge.html">知识库</a>
+<a href="zsxq.html">知识星球</a>
+</div>
+</header>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding:12px 16px; background:#161b22; border:1px solid #21262d; border-radius:8px;"><a href="20260523.html">← 2026-05-23</a><span style="color:#58a6ff; font-weight:600;">2026-05-24</span><a href="20260525.html">2026-05-25 →</a></div>
+<div class="report-card"><h2>🌙 晚报</h2><div class="report-content"><p>📊 每日晚间市场报告 20260524</p>
+<p><strong>一、市场整体解读</strong></p>
+<p>今日市场缩量震荡，AI主线延续强势但分化加剧，PCB、液冷、钻针、药水等“AI通胀品”板块集体异动；美伊停火协议临近落地+星舰V3成功溅落，SpaceX链与地缘缓和双催化下，商业航天、智能驾驶、人形机器人情绪升温；量化资金周四突袭抛压后趋于收敛，但尾盘仍显谨慎。北向小幅回流，内资聚焦科技硬供给环节。</p>
+<p><strong>二、板块个股动态</strong></p>
+<ul>
+<li>【群主】AI通胀品再燃新战火：重点锚定PCB中具备mSAP先发优势的玩家，上游卡脖子材料（电子布、Low CTE布、HVLP铜箔、TGV电镀药水）为高确定性方向；PCB钻针看鼎泰高科、金洲等国产替代龙头，M9材料+金刚石涂层技术壁垒明确。</li>
+<li>【群主】液冷、电容为AI通胀品两大新增品种，核心逻辑是Rubin机架高压直流（HVDC）升级带来的散热与储能需求爆发，对应热管理与功率器件环节。</li>
+<li>【群主】叙事驱动优先锚定【贴马斯克标签】分支：人形机器人（执行端+关节模组）、商业航天（星链V3验证+星舰复用）、智能驾驶（FSD V13.3落地预期）为三大主线，强调“有订单、有交付、有海外映射”。</li>
+<li>【群主】半导体材料与北美电网方向为新增观察重点，逻辑是AI算力基建外溢至能源基础设施升级，SiC/GaN在800VDC系统中承担高压骨架角色。</li>
+</ul>
+<p><strong>三、持仓池滚动记录</strong></p>
+<ul>
+<li>浙江世宝(002703) | 当前浮盈0% | 操作建议：无信号，维持0.01仓位，观察智能驾驶政策催化</li>
+<li>明阳电气(301291) | 当前浮盈0% | 操作建议：无信号，维持0.05仓位，属AI液冷+海风双属性，静待Q2订单落地</li>
+<li>中国东航(600115) / 中国国航(601111) | 当前浮盈0% | 操作建议：无信号，维持合计0.06仓位，受益于中东局势缓和+暑期出行旺季，暂不调仓</li>
+<li>招商轮船(601872) / 招商南油(601975) / 中远海能(1138.HK) | 当前浮盈0% | 操作建议：无信号，维持合计0.23仓位，美伊停火利好运价修复，但短期缺乏弹性，观望为主</li>
+<li>石大胜华(603026) | 当前浮盈0% | 操作建议：无信号，维持0.02仓位，电解液溶剂逻辑弱化，暂不加仓</li>
+<li>安井食品(603345) | 当前浮盈0% | 操作建议：无信号，维持0.01仓位，消费防御属性保留</li>
+<li>伯特利(603596) | 当前浮盈0% | 操作建议：无信号，维持0.01仓位，智能底盘+线控制动核心标的，等待FSD量产节奏确认</li>
+<li>卓易信息(688258) | 当前浮盈0% | 操作建议：无信号，维持0.03仓位，AI应用端信创底座，已入观察池AI应用分类，暂不调整</li>
+<li>中概互联网ETF(159605) | 当前浮盈0% | 操作建议：无信号，维持0.001仓位，对冲美股科技股波动，低配持有</li>
+<li>黄金股ETF永赢(517520) / 工业有色ETF(159880) | 当前浮盈0% | 操作建议：无信号，维持合计0.16仓位，宏观避险+资源周期双重配置，不主动增减</li>
+</ul>
+<p><strong>四、观察池滚动记录</strong></p>
+<ul>
+<li>鼎泰高科(301377) | 信号强度：9.5 | 新增标注：PCB钻针核心供应商，Rubin机架加速出货+第二轮涨价推进中，台资订单全面转向大陆龙头</li>
+<li>天承科技(未列于当前观察池，但内容明确提及) | 信号强度：10.5 | 应紧急加入观察池：PCB药水龙头，沉铜药水市占率领先，深度绑定英伟达AI服务器PCB供应链，MSAP+玻璃基板TGV电镀药水已布局</li>
+<li>宏和科技(603256) | 信号强度：8.0 | 新增标注：T布龙头，AI PCB高端电子布紧缺核心受益者，2代/4代布产能扩张确定性强</li>
+<li>中材科技(002080) | 信号强度：7.5 | 应紧急加入观察池：电子布全覆盖龙头，Low CTE布+载体铜箔同步放量，国产替代刚性最强</li>
+<li>黄河旋风(600571) | 信号强度：7.0 | 应紧急加入观察池：8英寸CVD金刚石热沉片量产，AI芯片散热瓶颈突破核心标的</li>
+</ul>
+<p><strong>五、系统信号汇总</strong></p>
+<ul>
+<li>长川科技(300604) | 强度:9 | 🔴 乖离率39.66%超30%，建议止盈2/3，目标价215元，剩余仓位观察20日线支撑</li>
+<li>长川科技(300604) | 强度:5 | 🟠 股价220.2跌破短期均线组均值230.35，若明日收盘未能站回225元，则触发二次减仓1/3</li>
+</ul>
+<p><strong>六、明日操作指导</strong></p>
+<ul>
+<li>建仓：天承科技(688603) | 买入价位：128.5–130.0元区间 | 仓位：0.03 | 逻辑：PCB药水唯一深度切入英伟达AI服务器供应链的A股标的，MSAP工艺+TGV电镀药水已送样，信号强度10.5</li>
+<li>建仓：宏和科技(603256) | 买入价位：9.2–9.4元区间 | 仓位：0.02 | 逻辑：T布绝对龙头，AI PCB高端电子布缺货溢价最显著环节，Q2业绩加速确定性强</li>
+<li>止盈：长川科技(300604) | 目标价：215元 | 减仓比例：2/3 | 若未达目标价但收盘跌破225元，则按强度5信号执行减仓1/3</li>
+<li>观察：鼎泰高科(301377) | 等待：明日放量突破年线（现价38.6元）且单日成交额超8亿元，即启动建仓程序，首仓0.02</li>
+<li>观察：黄河旋风(600571) | 等待：周线MACD金叉+8英寸热沉片首批订单公告，触发即纳入建仓清单</li>
+</ul>
+<p><strong>七、风险提示</strong></p>
+<ul>
+<li>美伊协议最终签署存在变数，若谈判破裂或出现意外事件，将引发全球风险资产回调</li>
+<li>Rubin机架量产进度不及预期，可能导致PCB、钻针、药水等AI通胀品需求证伪，板块面临估值压缩</li>
+<li>港股通额度趋紧叠加跨境监管新规细则临近，港股科技股流动性可能阶段性承压，需警惕范式智能(6682.HK)等港股持仓波动放大</li>
+</ul></div></div>
+<div class="report-card"><h2>📊 午报</h2><div class="report-content"><p>📊 午间简报 20260524</p>
+<p><strong>一、市场整体解读</strong></p>
+<p>上午指数窄幅震荡，科技主线强势领涨，AI算力链（PCB/药水/钻针/HVDC）集体异动；美伊停火协议临近落地+星舰V3成功试飞双催化“SpaceX链”与地缘风险缓释预期；北向小幅流入，内资聚焦高信号强度的产业确定性方向，量能温和放大。</p>
+<p><strong>二、板块个股动态</strong></p>
+<ul>
+<li><strong>【PCB药水】天承科技</strong>：群主未点名但知识星球高频聚焦，明确为“国内PCB药水龙头，沉铜药水市占率前列，深度切入英伟达AI服务器PCB供应链”，并提前布局MSAP工艺及玻璃基板TGV电镀药水——核心逻辑：AI驱动高端药水国产替代+量价齐升；操作策略：观察池中暂无该股，属隐性高优先级标的，建议纳入紧急补库清单。</li>
+<li><strong>【PCB钻针】鼎泰高科</strong>：知识星球多条信息指向其“台资PCB厂订单全面转向大陆龙头”，叠加Rubin架构加速出货致钻针供不应求至2027年底，第二轮涨价顺利推进——核心逻辑：AI服务器钻针卡位+份额集中+涨价传导确定；操作策略：观察池已有，信号强度虽未标注但实际≥8.5（综合zsxq_20260524_f100d624582b + zsxq_20260524_1fa79ede1e00），午后可启动建仓。</li>
+<li><strong>【商业航天】欧比特</strong>：观察池中唯一明确标注R3角色的商业航天标的，同步匹配zsxq_20260524_e96a49d90a2d星舰V3首飞成功事件（信号强度7.5）——核心逻辑：“SpaceX链”映射+低市值弹性标的；操作策略：观察池active状态，今日若放量突破5日线且站稳3.85元，可轻仓试多。</li>
+<li><strong>【AI通胀品】液冷、电容</strong>：群主在飞书直播预告中明确列为“新增品种”，并强调“对科技主线最新看法”将重点覆盖——核心逻辑：AI算力耗电激增倒逼散热升级+电力管理扩容；操作策略：观察池暂无纯正液冷/电容标的，需紧急筛查江海股份（002484）、中石科技（300684）、飞荣达（300602）等，今日优先调研。</li>
+</ul>
+<p><strong>三、持仓池状态</strong></p>
+<ul>
+<li>浙江世宝(002703)：浮盈0%，未触发铁律，无操作；当前属汽车电子+机器人概念，但缺乏AI主线加持，维持持有观察。</li>
+<li>明阳电气(301291)：浮盈0%，未触发铁律；属HVDC核心标的，直接受益Rubin机架800VDC爆发（zsxq_20260524_ce326b9c98a9），午后若站稳57.8元可加仓0.02。</li>
+<li>中国东航(600115)/中国国航(601111)：浮盈0%，未触发铁律；受益美伊停火预期，但航空股弹性弱于航天，维持持有，不加仓。</li>
+<li>招商轮船(601872)/招商南油(601975)/中远海能(1138.HK)：浮盈0%，未触发铁律；地缘缓和利空航运情绪，短期回避，暂不操作。</li>
+<li>石大胜华(603026)：浮盈0%，未触发铁律；化工属性与主线脱钩，观察池中恒逸/恒力等亦无催化，建议择机调出。</li>
+<li>安井食品(603345)：浮盈0%，未触发铁律；消费防御属性，但无事件催化，维持底仓。</li>
+<li>伯特利(603596)：浮盈0%，未触发铁律；智能驾驶链，与群主强调的“贴马斯克标签分支”逻辑契合，但需等待人形机器人/智驾政策信号，暂持。</li>
+<li>卓易信息(688258)：浮盈0%，未触发铁律；观察池中同属AI应用R4，且已持仓，属主线内标的，可加仓至0.05（现价140.92元）。</li>
+<li>中概互联网ETF(159605)：浮盈0%，未触发铁律；美伊缓和+美股半导体连涨利好中概，但QDII申赎延迟，暂持。</li>
+<li>黄金股ETF永赢(517520)/工业有色ETF(159880)：浮盈0%，未触发铁律；避险属性减弱，但黄金股有美元走弱对冲逻辑，维持0.08仓位不动。</li>
+<li>范式智能(6682.HK)：浮盈0%，未触发铁律；港股AI算力标的，流动性受限，暂持。</li>
+</ul>
+<p><strong>四、观察池状态</strong></p>
+<ul>
+<li>鼎泰高科(301377)：信号强度≥8.5（综合钻针紧缺+Rubin放量+涨价推进），触发条件：放量突破28.6元且MACD金叉。</li>
+<li>欧比特(300053)：信号强度7.5（星舰V3首飞+R3角色），触发条件：单日换手＞8%且收盘站稳3.85元。</li>
+<li>明阳电气(301291)：虽在持仓池，但属观察池中HVDC核心标的，信号强度≥7（zsxq_20260524_ce326b9c98a9 + zsxq_20260524_7c808265bec9），触发条件：突破57.8元+量比＞1.5。</li>
+<li>卓易信息(688258)：已在持仓，但观察池中明确R4角色，信号强度≥7（AI应用+国产信创），触发条件：放量突破142元。</li>
+</ul>
+<p><strong>五、午后操作指导</strong></p>
+<ul>
+<li>加仓：明阳电气(301291)，于57.80元挂单，加仓0.02仓位；卓易信息(688258)，于141.20元挂单，加仓0.02仓位；鼎泰高科(301377)，于28.60元挂单，首次建仓0.01仓位。</li>
+<li>减仓：石大胜华(603026)，若反弹至93.50元，减仓0.01；招商轮船(601872)，若跌破17.10元，减仓0.03。</li>
+<li>止损：全部持仓当前浮盈0%，无触发止损条件；若大盘午后跳水跌破3030点，所有持仓统一设置-1.5%动态止损。</li>
+<li>观察：江海股份(002484)，等待其公布液冷电容送样进展；中石科技(300684)，跟踪金刚石热沉片产能释放节奏；宏和科技(603256)，作为T布龙头，对应PCB材料紧缺逻辑（zsxq_20260524_70e69e0f6405），若放量突破12.30元可纳入建仓观察。</li>
+</ul>
+<p><strong>六、风险提示</strong></p>
+<ul>
+<li>美伊协议若最终未签署或出现反复，将引发全球风险资产回调，尤其冲击AI算力链外资持仓集中的港股与科创板。</li>
+<li>Rubin机架量产进度不及预期（如台积电CoWoS产能瓶颈），可能压制PCB/药水/钻针等环节涨价持续性，需紧盯6月上旬产业链排产数据。</li>
+</ul></div></div>
+<footer>
+🤖 Investment System · 自动更新 · 2026-05-29 15:45
+</footer>
+</div>
+<script>
+const AUTH_KEY = 'investment_auth';
+const AUTH_HASH = 'a3f5b8c2d1e4f6a7b9c0d2e3f5a8b1c4'; // 简单hash，实际密码: Martin2026
+
+function simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).padStart(32, '0').substring(0, 32);
+}
+
+function checkPassword() {
+    const input = document.getElementById('authPassword').value;
+    const hash = simpleHash(input);
+    if (hash === AUTH_HASH) {
+        localStorage.setItem(AUTH_KEY, 'true');
+        document.getElementById('authOverlay').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+    } else {
+        document.getElementById('authError').style.display = 'block';
+        document.getElementById('authPassword').value = '';
+    }
+}
+
+// 检查是否已认证
+if (localStorage.getItem(AUTH_KEY) === 'true') {
+    document.getElementById('authOverlay').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+}
+
+// 回车提交
+document.getElementById('authPassword').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') checkPassword();
+});
+</script>
+</body>
+</html>

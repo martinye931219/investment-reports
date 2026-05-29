@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>知识星球 - 投资报告</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif; background: #0d1117; color: #c9d1d9; line-height: 1.6; }
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+header { border-bottom: 1px solid #21262d; padding: 20px 0; margin-bottom: 30px; }
+header h1 { color: #58a6ff; font-size: 1.5em; }
+header .nav { margin-top: 10px; }
+header .nav a { color: #8b949e; text-decoration: none; margin-right: 20px; font-size: 0.9em; }
+header .nav a:hover { color: #58a6ff; }
+header .nav a.active { color: #58a6ff; font-weight: 600; }
+.report-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 24px; margin-bottom: 20px; }
+.report-card h2 { color: #58a6ff; font-size: 1.2em; margin-bottom: 12px; }
+.report-card .meta { color: #8b949e; font-size: 0.85em; margin-bottom: 16px; }
+.report-content { font-size: 0.95em; }
+.report-content h1 { font-size: 1.4em; color: #58a6ff; margin: 20px 0 10px; }
+.report-content h2 { font-size: 1.2em; color: #79c0ff; margin: 18px 0 8px; border-bottom: 1px solid #21262d; padding-bottom: 6px; }
+.report-content h3 { font-size: 1.05em; color: #d2a8ff; margin: 14px 0 6px; }
+.report-content p { margin: 8px 0; }
+.report-content ul, .report-content ol { margin: 8px 0 8px 24px; }
+.report-content li { margin: 4px 0; }
+.report-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.report-content th, .report-content td { border: 1px solid #21262d; padding: 8px 12px; text-align: left; }
+.report-content th { background: #1c2128; color: #58a6ff; }
+.report-content blockquote { border-left: 3px solid #58a6ff; padding-left: 12px; color: #8b949e; margin: 12px 0; }
+.report-content strong { color: #f0f6fc; }
+.report-content code { background: #1c2128; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+.date-list { list-style: none; }
+.date-list li { padding: 12px 16px; border-bottom: 1px solid #21262d; display: flex; justify-content: space-between; align-items: center; }
+.date-list li:hover { background: #1c2128; }
+.date-list a { color: #58a6ff; text-decoration: none; }
+.date-list .badge { background: #238636; color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 0.75em; }
+.signal-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: 600; }
+.signal-buy { background: #238636; color: #fff; }
+.signal-sell { background: #da3633; color: #fff; }
+.signal-watch { background: #9e6a03; color: #fff; }
+footer { text-align: center; color: #484f58; font-size: 0.8em; padding: 30px 0; border-top: 1px solid #21262d; margin-top: 40px; }
+/* 密码保护样式 */
+.auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d1117; z-index: 1000; display: flex; justify-content: center; align-items: center; }
+.auth-box { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 40px; text-align: center; max-width: 400px; width: 90%; }
+.auth-box h2 { color: #58a6ff; margin-bottom: 20px; font-size: 1.3em; }
+.auth-box input { width: 100%; padding: 12px 16px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-size: 16px; margin-bottom: 16px; outline: none; }
+.auth-box input:focus { border-color: #58a6ff; }
+.auth-box button { width: 100%; padding: 12px; background: #238636; color: #fff; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 600; }
+.auth-box button:hover { background: #2ea043; }
+.auth-error { color: #f85149; font-size: 0.85em; margin-top: 8px; display: none; }
+</style>
+</head>
+<body>
+<div class="auth-overlay" id="authOverlay">
+<div class="auth-box">
+<h2>🔐 投资决策系统</h2>
+<input type="password" id="authPassword" placeholder="请输入访问密码" autofocus>
+<button onclick="checkPassword()">进入</button>
+<p class="auth-error" id="authError">密码错误，请重试</p>
+</div>
+</div>
+<div class="container" id="mainContent" style="display:none;">
+<header>
+<h1>📊 投资决策系统</h1>
+<div class="nav">
+<a href="index.html">首页</a>
+<a href="signals.html">信号扫描</a>
+<a href="holdings.html">持仓</a>
+<a href="pool.html">选股池</a>
+<a href="bitable.html">飞书报告库</a>
+<a href="knowledge.html">知识库</a>
+<a href="zsxq.html" class="active">知识星球</a>
+</div>
+</header>
+<h2 style="color:#58a6ff; margin-bottom:20px;">🌟 知识星球每日信息</h2><div class="report-card"><h2>📅 2026-05-27 (23条)</h2><table><tr><th>分类</th><th>来源</th><th>内容</th><th>涉及个股</th><th>信号强度</th></tr><tr><td>🏭 sector</td><td>小满</td><td>PTFE专家&产业信息多方分享总结0526【东北计算机】，材料再再再更新🌛 1️⃣原有PTFE&现
+# PTFE专家&产业信息多方分享总结0526【东北计算机】</td><td></td><td>5.0</td></tr><tr><td>📰 news</td><td>小满</td><td>【国泰海通海外科技】小米26Q1业绩会纪要 [https%3A%2F%2Fshare.note.yo
+# 【国泰海通海外科技】小米26Q1业绩会纪要 [http</td><td></td><td>5.0</td></tr><tr><td>📰 news</td><td>小满</td><td>🌊诺德股份调研交流更新：锂电铜箔盈利持续修复、高端电子铜箔送样推进（5.26） #交流核心要点 1
+# 🌊诺德股份调研交流更新：锂电铜箔盈利持续修复、高端电子铜</td><td></td><td>5.0</td></tr><tr><td>📈 stock</td><td>小满</td><td>【华泰机械】如何看待今年的玻璃基产业趋势？为什么要重视超快激光？ 1、  为什么玻璃基今年产业
+# 【华泰机械】如何看待今年的玻璃基产业趋势？为什么要重视超快激</td><td></td><td>5.0</td></tr><tr><td>🏭 sector</td><td>小满</td><td>【长江电新】储能Call：为什么看好大储行情启动？ [玫瑰]年初以来大储集成板块调整已久，锂涨价下
+# 【长江电新】储能Call：为什么看好大储行情启动？ [玫</td><td></td><td>5.0</td></tr><tr><td>📰 news</td><td>小满</td><td>【中金传媒】欢聚｜1Q26业绩会纪要[https%3A%2F%2Fshare.note.youdao
+# 【中金传媒】欢聚｜1Q26业绩会纪要[https%3A</td><td></td><td>5.0</td></tr><tr><td>📰 news</td><td>小满</td><td>【东吴商社】名创优品2026Q1公开业绩会 [https%3A%2F%2Fshare.note.yo
+# 【东吴商社】名创优品2026Q1公开业绩会 [http</td><td></td><td>5.0</td></tr><tr><td>📰 news</td><td>小满</td><td>医药产业运行数据专题及脑机接口产业链图谱 [https%3A%2F%2Fshare.note.you
+# 医药产业运行数据专题及脑机接口产业链图谱 [https</td><td></td><td>5.0</td></tr><tr><td>🏭 sector</td><td>小满</td><td>AI主升重启及动态更新 [https%3A%2F%2Fshare.note.youdao.com%2
+# AI主升重启及动态更新 [https%3A%2F%2F</td><td></td><td>5.0</td></tr><tr><td>📰 news</td><td>小满</td><td>SST专家交流纪要 [https%3A%2F%2Fshare.note.youdao.com%2Fy
+# SST专家交流纪要 [https%3A%2F%2Fsh</td><td></td><td>5.0</td></tr><tr><td>📰 news</td><td>小满</td><td>【国泰海通食饮】成都乳业嘉年华展会见闻20260526 近期中国乳制品工业协会年会暨乳业嘉年华在成
+# 【国泰海通食饮】成都乳业嘉年华展会见闻20260526 </td><td></td><td>5.0</td></tr><tr><td>📰 news</td><td>小满</td><td>[太阳]洪田股份策略会交流要点260526 1、锂电+电子铜箔设备需求共振。当前在手订单15e，2
+# [太阳]洪田股份策略会交流要点260526 1、锂电+电</td><td></td><td>5.0</td></tr><tr><td>📰 news</td><td>小满</td><td>【Cpo板块】观点更新（82）：重要！产能瓶颈已解决 根据最新调研反馈，罗博特科目前已经做好支撑今
+# 【Cpo板块】观点更新（82）：重要！产能瓶颈已解决 根</td><td></td><td>5.0</td></tr><tr><td>🏭 sector</td><td>小满</td><td>今晚美股商业航天大涨，核心不是某一家公司单独利好，而是 SpaceX 把整个“商业航天资产重估”点燃
+# 今晚美股商业航天大涨，核心不是某一家公司单独利好，而是</td><td></td><td>5.0</td></tr><tr><td>📰 news</td><td>小满</td><td>高通与字节跳动达成协议，为其人工智能数据中心提供芯片  ![img](httpsimages
+# 高通与字节跳动达成协议，为其人工智能数据中心提供芯片  ![i</td><td></td><td>5.0</td></tr></table></div>
+<div class="report-card"><h2>📅 2026-05-26 (51条)</h2><table><tr><th>分类</th><th>来源</th><th>内容</th><th>涉及个股</th><th>信号强度</th></tr><tr><td>📰 news</td><td>小满</td><td>电子布产业链6月涨价前瞻0525 二！次！提！速！ 坐！稳！扶！好！ 普通布： 7628上涨11
+# 电子布产业链6月涨价前瞻0525 二！次！提！速！ 坐！稳</td><td></td><td>5.0</td></tr><tr><td>📰 news</td><td>未知</td><td>【阳光电源】重视公司构建AI电力系统整体解决方案的能力-260527
+# 【阳光电源】重视公司构建AI电力系统整体解决方案的能力-260527
+
+> **作者*</td><td>260527</td><td>5.0</td></tr><tr><td>🏭 sector</td><td>未知</td><td>【华创计算机】五一视界：从数字孪生到Physical AI，世界模型打开重估空间
+# 【华创计算机】五一视界：从数字孪生到Physical AI，世界模型打开重</td><td></td><td>5.0</td></tr><tr><td>🏭 sector</td><td>未知</td><td>新易盛更新来了～
+# 新易盛更新来了～
+
+> **作者**: 未知
+> **发布时间**: 2026-05-26 10:22:23
+> **类型**: 普通
+></td><td></td><td>5.0</td></tr><tr><td>🏭 sector</td><td>小满</td><td>领导好，更新排产情况，实际5月排产基本符合预期，行业总体排产6-8%增长；6月初步了解环比5-10%
+# 领导好，更新排产情况，实际5月排产基本符合预期，行业总</td><td></td><td>5.0</td></tr><tr><td>📰 news</td><td>小满</td><td>PCB材料再再更新【东北计算机】0525：上游加速进行时🌛 再次更新，生益进展持续超预期，PTFE
+# PCB材料再再更新【东北计算机】0525：上游加速进行时</td><td></td><td>5.0</td></tr><tr><td>🏭 sector</td><td>未知</td><td>🍁🍁🍁红星发展：从化工周期到 AI 核心材料的估值重塑，仅12倍的隐形冠军
+# 🍁🍁🍁红星发展：从化工周期到 AI 核心材料的估值重塑，仅12倍的隐形冠军
+
+></td><td></td><td>5.0</td></tr><tr><td>🏭 sector</td><td>小满</td><td>20260525复盘： 宏观： 1. 特朗普：美国与伊朗的谈判“进展顺利”，“要么达成对各方都有利
+# 20260525复盘： 宏观： 1. 特朗普：美国与伊朗</td><td></td><td>5.0</td></tr><tr><td>📰 news</td><td>小满</td><td>【长江机械&电新&电子】晶盛机电碳化硅业务调研更新 1、碳化硅需求旺盛，目前保持满产状态，预计全年
+# 【长江机械&电新&电子】晶盛机电碳化硅业务调研更新 1、</td><td></td><td>5.0</td></tr><tr><td>🏭 sector</td><td>小满</td><td>【DBJX｜人形机器人】宇树上会时间确定，国产链&北美链有望共振 事件宇树科技科创板IPO将于6
+# 【DBJX｜人形机器人】宇树上会时间确定，国产链&北美链有</td><td></td><td>5.0</td></tr><tr><td>📰 news</td><td>未知</td><td>#阳光电源和英伟达合作有重要进展，目前已经在做方案对接，目标是#构建数据中心整体电力系统，预计未来2个月会有初步结果!
+# #阳光电源和英伟达合作有重要进展，目</td><td></td><td>5.0</td></tr><tr><td>🏭 sector</td><td>小满</td><td>大模型进展+市场空间再思考 [https%3A%2F%2Fshare.note.youdao.com
+# 大模型进展+市场空间再思考 [https%3A%2F%</td><td></td><td>5.0</td></tr><tr><td>🏭 sector</td><td>小满</td><td>【广发通信】韬定律强调“以连补算”，光互联投资注意做好#“简单题”，继续推荐中际旭创新易盛天孚通
+# 【广发通信】韬定律强调“以连补算”，光互联投资注意做好#“</td><td></td><td>5.0</td></tr><tr><td>🏭 sector</td><td>小满</td><td>液冷更新0525石墨烯：超聚变和NV均有望引入石墨烯作为散热材料 2026年5月，结合市场信息，海
+# 液冷更新0525石墨烯：超聚变和NV均有望引入石墨烯作为</td><td>300684, 301489, 300602, 300731</td><td>5.0</td></tr><tr><td>📰 news</td><td>小满</td><td>【国金电子】韬（τ）定律产业链机会解读 [https%3A%2F%2Fshare.note.youd
+# 【国金电子】韬（τ）定律产业链机会解读 [https%</td><td></td><td>5.0</td></tr></table></div>
+<div class="report-card"><h2>📅 2026-05-25 (43条)</h2><table><tr><th>分类</th><th>来源</th><th>内容</th><th>涉及个股</th><th>信号强度</th></tr><tr><td>📈 stock</td><td>小满</td><td>锐翔智能调研交流要点20260522——FPC主业稳固，PCB光通信加速导入 [太阳]#锐翔智能为
+锐翔智能调研交流要点20260522——FPC主业稳固，PC</td><td></td><td>8.0</td></tr><tr><td>📋 strategy</td><td>小满</td><td>【东吴计算机王紫敬】AXT近一年股价暴涨125倍，三重逻辑看好#云南锗业  一、AXT极致涨幅与单
+【东吴计算机王紫敬】AXT近一年股价暴涨125倍，三重逻辑看</td><td></td><td>7.5</td></tr><tr><td>🏭 sector</td><td>小满</td><td>汇报2❗️【天风电新】新雷能调研更新：AI电源品类拓展量利齐升，绑定ADI全球卡位+800~50V电
+汇报2❗️【天风电新】新雷能调研更新：AI电源品类拓展量利</td><td>260523</td><td>7.5</td></tr><tr><td>🏭 sector</td><td>小满</td><td>[红包][红包]【天风电子】先进封测：AI算力驱动景气强化，持续重点关注先进封测链 🌟核心观点：
+红包红包【天风电子】先进封测：AI算力驱动景气强化，持续重点关</td><td></td><td>7.5</td></tr><tr><td>📰 news</td><td>小满</td><td>【国联民生计算机】小吕说AI系列纪要 （一）20260201第一期 1、巨头AI超级入口“无限战争
+【国联民生计算机】小吕说AI系列纪要 （一）20260201</td><td></td><td>7.5</td></tr><tr><td>🏭 sector</td><td>小满</td><td>下一代Rubin机架发现，其售价将达到约780万美元，较GB300几乎翻倍，除了【pcb】等，【服务
+下一代Rubin机架发现，其售价将达到约780万美元，较G</td><td></td><td>7.5</td></tr><tr><td>🏭 sector</td><td>小满</td><td>【中泰通信】光通信全链条更新-0524W [太阳]CPO：2025年CPO市场约为140亿美元，至
+【中泰通信】光通信全链条更新-0524W 太阳CPO：202</td><td></td><td>6.5</td></tr><tr><td>🏭 sector</td><td>小满</td><td>本轮MLCC行情怎么看？[https%3A%2F%2Fshare.note.youdao.com%2
+本轮MLCC行情怎么看？https%3A%2F%2Fsha</td><td></td><td>6.0</td></tr><tr><td>📈 stock</td><td>小满</td><td>继续建议切换❗️【天风电新】继续强call锂电设备及固态（4）：C前道设备正式定标-0524 ———
+继续建议切换❗️【天风电新】继续强call锂电设备及固态（</td><td></td><td>5.5</td></tr><tr><td>🏭 sector</td><td>小满</td><td>AI光模块随笔：武汉光博会反馈，PD为新涨价品种，看好PIC和特种光纤，H2物料改善可期 上游物
+AI光模块随笔：武汉光博会反馈，PD为新涨价品种，看好PIC和</td><td></td><td>5.0</td></tr><tr><td>📰 news</td><td>小满</td><td>线控底盘EMB专家交流要点 & 宁波华翔EMB布局点评 -20260525 #EMB线控制动专家交
+线控底盘EMB专家交流要点 & 宁波华翔EMB布局点评 -2</td><td></td><td>5.0</td></tr><tr><td>📰 news</td><td>小满</td><td>[庆祝]关于pcb上游的几点干货更新0524 [太阳]#预期差看翻倍标的：宝鼎科技 1）预期差：子
+庆祝关于pcb上游的几点干货更新0524 太阳预期差看翻倍标</td><td></td><td>4.0</td></tr><tr><td>🏭 sector</td><td>小满</td><td>光通信观点更新 [https%3A%2F%2Fshare.note.youdao.com%2Fyno
+光通信观点更新 https%3A%2F%2Fshare.n</td><td></td><td>4.0</td></tr><tr><td>🏭 sector</td><td>小满</td><td>《美伊有望达成初步协议，关注未来市场叙事的改变（周观点0524）》东北策略张超越 上周受美伊和谈
+《美伊有望达成初步协议，关注未来市场叙事的改变（周观点0524</td><td></td><td>4.0</td></tr><tr><td>🏭 sector</td><td>小满</td><td>碳化硅SiC交流 [https%3A%2F%2Fshare.note.youdao.com%2Fyn
+碳化硅SiC交流 https%3A%2F%2Fshare.</td><td></td><td>3.0</td></tr></table></div>
+<div class="report-card"><h2>📅 2026-05-24 (37条)</h2><table><tr><th>分类</th><th>来源</th><th>内容</th><th>涉及个股</th><th>信号强度</th></tr><tr><td>📰 news</td><td>小满</td><td>今天的大事儿： 1、调停人士称美国与伊朗即将达成停火延长60天的协议 今天上午的消息，特朗普取消
+今天的大事儿： 1、调停人士称美国与伊朗即将达成停火延长60天</td><td></td><td>11.0</td></tr><tr><td>🏭 sector</td><td>小满</td><td>【PCB药水】 PCB中的价值洼地，量价齐升 0524 AI算力推动PCB向高层数、高频高速、封
+【PCB药水】 PCB中的价值洼地，量价齐升 0524 AI算</td><td></td><td>10.5</td></tr><tr><td>📰 news</td><td>小满</td><td>【PCB演绎逻辑更新】新技术驱动全面涨价[發][發][發] 1️⃣新材料-CCL上游材料量价齐升
+【PCB演绎逻辑更新】新技术驱动全面涨价發發發 1️⃣新材料-</td><td></td><td>10.5</td></tr><tr><td>🏭 sector</td><td>小满</td><td>海外商业航天跟踪❗️【天风电新】星舰V3首飞任务成功溅落印度洋，验证了星链V3卫星的部署流程-052
+海外商业航天跟踪❗️【天风电新】星舰V3首飞任务成功溅落印</td><td></td><td>7.5</td></tr><tr><td>🏭 sector</td><td>小满</td><td>天风通信  茂莱光学交流要点20260524 1.半导体领域 半导体量检测下游景气度高，下游海外
+天风通信  茂莱光学交流要点20260524 1.半导体领域 </td><td></td><td>6.5</td></tr><tr><td>🏭 sector</td><td>小满</td><td>【AI产业机会观察——20260524】 #芯和光的故事还将继续，端的故事有望展开 本周CPU继续
+【AI产业机会观察——20260524】 芯和光的故事还将继</td><td></td><td>6.0</td></tr><tr><td>🌐 macro</td><td>小满</td><td>领导好，加完科技待涨，周观点如下： 1）	上周说抄底，是建立在宏观风险（海峡、CPI、沃什）在本周
+领导好，加完科技待涨，周观点如下： 1）	上周说抄底，是建立</td><td></td><td>5.0</td></tr><tr><td>🏭 sector</td><td>小满</td><td>🍉【DB电新&AI】Rubin系列带来PCB等算力硬件高增，Rubin CPX 机架迎来HVDC爆发
+🍉【DB电新&AI】Rubin系列带来PCB等算力硬件高增</td><td></td><td>4.5</td></tr><tr><td>📰 news</td><td>小满</td><td>PCB进展更新： 1，Vera Rubin200机柜中OAM板的技术规格、价值量等情况？ 在Ver
+PCB进展更新： 1，Vera Rubin200机柜中OAM</td><td></td><td>4.0</td></tr><tr><td>🏭 sector</td><td>小满</td><td>一个海外投资人对亚洲PCB 市场的理解，角度还挺有意思，涵盖 TW、大陆、日本厂商。能看出美股投资人
+一个海外投资人对亚洲PCB 市场的理解，角度还挺有意思，涵</td><td></td><td>4.0</td></tr><tr><td>🏭 sector</td><td>小满</td><td>新材料观点速递0524 1、AI PCB材料（电子布树脂填料）：全年主线，一直推（核心是tg sy
+新材料观点速递0524 1、AI PCB材料（电子布树脂填料</td><td></td><td>4.0</td></tr><tr><td>🏭 sector</td><td>小满</td><td>为什么SiCGaN在HVDC时代至关重要？ 1）HVDC的本质是升压降流，SiCGaN的本质是
+为什么SiCGaN在HVDC时代至关重要？ 1）HVDC的本质是</td><td></td><td>3.0</td></tr><tr><td>📰 news</td><td>小满</td><td>针对供给扰动事件的再解读 该事件不只是区域性的影响而是全国性的，问题并不只是局限于事故地的停产和检
+针对供给扰动事件的再解读 该事件不只是区域性的影响而是全国性</td><td></td><td>2.5</td></tr><tr><td>📰 news</td><td>小满</td><td>🙏🏻🙏🏻🙏🏻🙏🏻🙏🏻🙏🏻 【东财煤炭李淼王涛】山西沁源煤矿事故点评 0523-#焦煤或为脉冲式
+🙏🏻🙏🏻🙏🏻🙏🏻🙏🏻🙏🏻 【东财煤炭李淼王涛】山西沁源煤矿事故点</td><td></td><td>2.5</td></tr><tr><td>🏭 sector</td><td>小满</td><td>【兴证策略】对比科网泡沫，本轮AI行情走到哪儿了？ 我们对比了2022年底ChatGPT发布后与9
+【兴证策略】对比科网泡沫，本轮AI行情走到哪儿了？ 我们对比</td><td></td><td>2.5</td></tr></table></div>
+<div class="report-card"><h2>📅 2026-05-22 (23条)</h2><table><tr><th>分类</th><th>来源</th><th>内容</th><th>涉及个股</th><th>信号强度</th></tr><tr><td>🏭 sector</td><td>小满</td><td>海外算力通胀逻辑系列之PCB、光通信上游原材料、元器件全年保持量价齐升【华源电子BY】 一、电子布
+海外算力通胀逻辑系列之PCB、光通信上游原材料、元器件全年保</td><td></td><td>14.0</td></tr><tr><td>📰 news</td><td>小满</td><td>[太阳]【国金计算机】NEBIUS GPU租金大幅提价，算力仍是稀缺资产，【算租】需求爆炸+业绩加速
+太阳【国金计算机】NEBIUS GPU租金大幅提价，算力仍</td><td></td><td>13.5</td></tr><tr><td>🏭 sector</td><td>小满</td><td>国联民生的Micro-LED路演0521，核心可以浓缩为三点： 1. 技术逻辑变了：传统光互联追求
+国联民生的Micro-LED路演0521，核心可以浓缩为三点</td><td></td><td>12.0</td></tr><tr><td>📰 news</td><td>小满</td><td>特朗普政府拟推迟制冷剂及氢氟烃（HFCs）淘汰节奏 此前拜登政府曾在《》框架之上，大幅加码加速三代
+特朗普政府拟推迟制冷剂及氢氟烃（HFCs）淘汰节奏 此前拜登</td><td></td><td>12.0</td></tr><tr><td>🌐 macro</td><td>小满</td><td>【国海资产配置】专家会纪要：6月FOMC前的海外宏观，美联储换届、能源通胀与大类资产表现 美国经济
+【国海资产配置】专家会纪要：6月FOMC前的海外宏观，美联储</td><td></td><td>11.5</td></tr><tr><td>🏭 sector</td><td>小满</td><td>当前对AI行情的几点思考： 4月以来AI持续上涨后，近期市场对行情持续性的担忧也在加大，尤其是今日
+当前对AI行情的几点思考： 4月以来AI持续上涨后，近期市场</td><td></td><td>10.5</td></tr><tr><td>📰 news</td><td>小满</td><td>【申万通信】光通信（20260521晚）：波动不影响长逻辑，国内外需求共振 #今日市场波动，我们坚
+【申万通信】光通信（20260521晚）：波动不影响长逻辑，</td><td></td><td>9.0</td></tr><tr><td>📋 strategy</td><td>小满</td><td>【浙商科创&海外策略王杨团队】顺势而为，不要轻易跨赛道切换！ 普遍的投资心态是，主线结构涨多了之后
+【浙商科创&海外策略王杨团队】顺势而为，不要轻易跨赛道切换！</td><td></td><td>8.5</td></tr><tr><td>📰 news</td><td>小满</td><td>[太阳]顾家家居高管交流&工厂参观要点 ■行业周期判断： 仍处于重构调整阶段，存量翻新、适老化、智
+太阳顾家家居高管交流&工厂参观要点 ■行业周期判断： 仍处于</td><td></td><td>8.0</td></tr><tr><td>📰 news</td><td>小满</td><td>天风通信  算力租赁涨价NBIS大涨，token套餐／工厂百花齐放势头，重视产业链核心标的机会
+天风通信  算力租赁涨价NBIS大涨，token套餐／工厂百花齐</td><td></td><td>8.0</td></tr><tr><td>📰 news</td><td>小满</td><td>今晚沟通交流这个事件的领导较多，其实很简单，就是HFC制冷剂不够用了，尤其高GWP的，所以其自己制定
+今晚沟通交流这个事件的领导较多，其实很简单，就是HFC制冷</td><td></td><td>7.0</td></tr><tr><td>🏭 sector</td><td>小满</td><td>[太阳]公牛集团-投资者交流日小结 [玫瑰]26A核心战略：坚定不移推进智能生态、新能源和国际化三
+太阳公牛集团-投资者交流日小结 玫瑰26A核心战略：坚定不移</td><td></td><td>6.0</td></tr><tr><td>📰 news</td><td>小满</td><td>【中金传媒】网易丨1Q26业绩会纪要 [https%3A%2F%2Fshare.note.youda
+【中金传媒】网易丨1Q26业绩会纪要 httpsshare</td><td></td><td>4.5</td></tr><tr><td>📰 news</td><td>小满</td><td>唯品会26Q1业绩会Q&A速记 [https%3A%2F%2Fshare.note.youdao.c
+唯品会26Q1业绩会Q&A速记 httpsshare.no</td><td></td><td>3.0</td></tr><tr><td>📰 news</td><td>小满</td><td>美债利率飙升的归因&展望 [https%3A%2F%2Fshare.note.youdao.com%
+美债利率飙升的归因&展望 httpsshare.note.</td><td></td><td>3.0</td></tr></table></div>
+<footer>
+🤖 Investment System · 自动更新 · 2026-05-29 15:45
+</footer>
+</div>
+<script>
+const AUTH_KEY = 'investment_auth';
+const AUTH_HASH = 'a3f5b8c2d1e4f6a7b9c0d2e3f5a8b1c4'; // 简单hash，实际密码: Martin2026
+
+function simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).padStart(32, '0').substring(0, 32);
+}
+
+function checkPassword() {
+    const input = document.getElementById('authPassword').value;
+    const hash = simpleHash(input);
+    if (hash === AUTH_HASH) {
+        localStorage.setItem(AUTH_KEY, 'true');
+        document.getElementById('authOverlay').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+    } else {
+        document.getElementById('authError').style.display = 'block';
+        document.getElementById('authPassword').value = '';
+    }
+}
+
+// 检查是否已认证
+if (localStorage.getItem(AUTH_KEY) === 'true') {
+    document.getElementById('authOverlay').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+}
+
+// 回车提交
+document.getElementById('authPassword').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') checkPassword();
+});
+</script>
+</body>
+</html>

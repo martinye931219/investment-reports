@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>报告 2026-05-26 - 投资报告</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif; background: #0d1117; color: #c9d1d9; line-height: 1.6; }
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+header { border-bottom: 1px solid #21262d; padding: 20px 0; margin-bottom: 30px; }
+header h1 { color: #58a6ff; font-size: 1.5em; }
+header .nav { margin-top: 10px; }
+header .nav a { color: #8b949e; text-decoration: none; margin-right: 20px; font-size: 0.9em; }
+header .nav a:hover { color: #58a6ff; }
+header .nav a.active { color: #58a6ff; font-weight: 600; }
+.report-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 24px; margin-bottom: 20px; }
+.report-card h2 { color: #58a6ff; font-size: 1.2em; margin-bottom: 12px; }
+.report-card .meta { color: #8b949e; font-size: 0.85em; margin-bottom: 16px; }
+.report-content { font-size: 0.95em; }
+.report-content h1 { font-size: 1.4em; color: #58a6ff; margin: 20px 0 10px; }
+.report-content h2 { font-size: 1.2em; color: #79c0ff; margin: 18px 0 8px; border-bottom: 1px solid #21262d; padding-bottom: 6px; }
+.report-content h3 { font-size: 1.05em; color: #d2a8ff; margin: 14px 0 6px; }
+.report-content p { margin: 8px 0; }
+.report-content ul, .report-content ol { margin: 8px 0 8px 24px; }
+.report-content li { margin: 4px 0; }
+.report-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.report-content th, .report-content td { border: 1px solid #21262d; padding: 8px 12px; text-align: left; }
+.report-content th { background: #1c2128; color: #58a6ff; }
+.report-content blockquote { border-left: 3px solid #58a6ff; padding-left: 12px; color: #8b949e; margin: 12px 0; }
+.report-content strong { color: #f0f6fc; }
+.report-content code { background: #1c2128; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+.date-list { list-style: none; }
+.date-list li { padding: 12px 16px; border-bottom: 1px solid #21262d; display: flex; justify-content: space-between; align-items: center; }
+.date-list li:hover { background: #1c2128; }
+.date-list a { color: #58a6ff; text-decoration: none; }
+.date-list .badge { background: #238636; color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 0.75em; }
+.signal-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: 600; }
+.signal-buy { background: #238636; color: #fff; }
+.signal-sell { background: #da3633; color: #fff; }
+.signal-watch { background: #9e6a03; color: #fff; }
+footer { text-align: center; color: #484f58; font-size: 0.8em; padding: 30px 0; border-top: 1px solid #21262d; margin-top: 40px; }
+/* 密码保护样式 */
+.auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d1117; z-index: 1000; display: flex; justify-content: center; align-items: center; }
+.auth-box { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 40px; text-align: center; max-width: 400px; width: 90%; }
+.auth-box h2 { color: #58a6ff; margin-bottom: 20px; font-size: 1.3em; }
+.auth-box input { width: 100%; padding: 12px 16px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-size: 16px; margin-bottom: 16px; outline: none; }
+.auth-box input:focus { border-color: #58a6ff; }
+.auth-box button { width: 100%; padding: 12px; background: #238636; color: #fff; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 600; }
+.auth-box button:hover { background: #2ea043; }
+.auth-error { color: #f85149; font-size: 0.85em; margin-top: 8px; display: none; }
+</style>
+</head>
+<body>
+<div class="auth-overlay" id="authOverlay">
+<div class="auth-box">
+<h2>🔐 投资决策系统</h2>
+<input type="password" id="authPassword" placeholder="请输入访问密码" autofocus>
+<button onclick="checkPassword()">进入</button>
+<p class="auth-error" id="authError">密码错误，请重试</p>
+</div>
+</div>
+<div class="container" id="mainContent" style="display:none;">
+<header>
+<h1>📊 投资决策系统</h1>
+<div class="nav">
+<a href="index.html">首页</a>
+<a href="signals.html">信号扫描</a>
+<a href="holdings.html">持仓</a>
+<a href="pool.html">选股池</a>
+<a href="bitable.html">飞书报告库</a>
+<a href="knowledge.html">知识库</a>
+<a href="zsxq.html">知识星球</a>
+</div>
+</header>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding:12px 16px; background:#161b22; border:1px solid #21262d; border-radius:8px;"><a href="20260525.html">← 2026-05-25</a><span style="color:#58a6ff; font-weight:600;">2026-05-26</span><a href="20260527.html">2026-05-27 →</a></div>
+<div class="report-card"><h2>🌙 晚报</h2><div class="report-content"><p>📊 每日晚间市场报告 20260526</p>
+<p><strong>一、市场整体解读</strong></p>
+<p>今日市场呈现“科技主线内部分化+资金小规模分流有色”的结构性特征。半导体延续韬定律催化，但高位品种（乖离≥40%）普遍承压回吐，沪电股份、通富微电等涨停未封引发止盈潮；资金短暂试探电解铝、锡、钨方向，中国铝业、华通线缆涨停，但圈子明确判断“非板块性行情，承接有难度”。AI算力链调研密集验证（精测电子、微导纳米、中际旭创等），光互联、3D堆叠检测、石墨烯散热成为新共识。全市场情绪中性（🌡️3/5），量能温和放大，无系统性风险。</p>
+<p><strong>二、板块个股动态</strong></p>
+<ul>
+<li>奕瑞科技：卖方电话会确认3D堆叠良率检测设备需求爆发，M8背钻全检需求爆表，26-27年PCB检测景气持续提升｜横盘消化50%乖离，中线看好</li>
+<li>肯特催化：30%乖离+半导体短线调整拖累，电子级氟化铵深度绑定客户，中线新高潜力｜贴近中期均线组低吸</li>
+<li>中芯国际(H)：50%乖离值以内不存在上修问题，贴近50%时获利盘回吐明显｜不追，等待回调</li>
+<li>沪电股份：乖离近50%且迟迟封不上涨停｜减仓止盈</li>
+<li>通富微电：乖离超30%放量涨停未封住｜参照昨日分析减仓</li>
+<li>扬杰科技/捷捷微电/蓝思科技：30%乖离值附近｜求稳可部分减仓止盈</li>
+<li>长电科技：涨停封板，主力净流出18亿系交易软件假数据｜强势涨停</li>
+<li>中国铝业：有色资金分流受益涨停｜看是否走出突破买点结构</li>
+<li>华锡有色：出现回踩买点结构｜可关注</li>
+<li>诺德股份：回踩买点低吸收获涨停，中午被砸开未回补｜观察回补情况</li>
+<li>阳光电源：传闻与英伟达合作构建数据中心整体电力系统，万亿市场｜继续持有，消息待验证</li>
+<li>石大胜华：碳酸锂价格消息面不清晰｜核心看是否出现回踩买点结构</li>
+<li>浙江荣泰：乖离30%，暂无新催化｜止盈1/3</li>
+<li>闰土股份：乖离买点结构｜小仓位博弈技术性反弹</li>
+<li>卓易信息：构建探路模型有走出来迹象｜关注</li>
+<li>元力股份：大实体阴线回落，不属于异动搓揉线｜不追</li>
+<li>和远气体：N倍量涨后回调踩均线组｜等回踩买点结构再买</li>
+<li>中兵红箭：无涨停板，不属于探路尖兵模型｜不参与</li>
+</ul>
+<p><strong>三、持仓池滚动记录</strong></p>
+<ul>
+<li>浙江世宝(002703)：成本21.5，现价21.5，浮盈0%，仓位0.01｜群主昨日点评“极值反转模型，上周五走出突破买点结构”，今日无新信号，维持holding，暂不操作</li>
+<li>明阳电气(301291)：成本57.58，现价57.58，浮盈0%，仓位0.05｜午报点评“缠绕中期均线，北美变压器震荡拖累”，建议“偏绿盘缓步接回”，当前平价，维持holding</li>
+<li>中国东航(600115)：成本4.44，现价4.44，浮盈0%，仓位0.03｜无群主点评，属航空运输底仓配置，维持holding</li>
+<li>中国国航(601111)：成本6.96，现价6.96，浮盈0%，仓位0.03｜同上，维持holding</li>
+<li>招商轮船(601872)：成本17.26，现价17.26，浮盈0%，仓位0.1｜早盘简报明确“⚠️铁律触发：股价跌破中期均线组均值17.65，必须清仓”，今日收盘价17.26＜17.65，<strong>立即执行清仓</strong></li>
+<li>招商南油(601975)：成本5.31，现价5.31，浮盈0%，仓位0.03｜无信号，维持holding</li>
+<li>石大胜华(603026)：成本91.79，现价91.79，浮盈0%，仓位0.02｜群主连续两日强调“核心看是否出现回踩买点结构”，当前平价未破位，维持holding，重点观察明日是否形成回踩结构</li>
+<li>安井食品(603345)：成本96.03，现价96.03，浮盈0%，仓位0.01｜无信号，维持holding</li>
+<li>伯特利(603596)：成本34.12，现价34.12，浮盈0%，仓位0.01｜无信号，维持holding</li>
+<li>卓易信息(688258)：成本140.92，现价140.92，浮盈0%，仓位0.03｜群主点评“构建探路模型有走出来迹象”，晚间报告重申“关注”，维持holding</li>
+<li>中概互联网ETF(159605)：成本0.852，现价0.852，浮盈0%，仓位0.001｜无信号，维持holding</li>
+<li>黄金股ETF永赢(517520)：成本1.893，现价1.893，浮盈0%，仓位0.08｜无信号，维持holding</li>
+<li>工业有色ETF(159880)：成本2.121，现价2.121，浮盈0%，仓位0.08｜群主定性“有色仅为小规模分流，非板块性行情”，不追涨，维持holding但不加仓</li>
+<li>中远海能(1138.HK)：成本17.6，现价17.6，浮盈0%，仓位0.1｜无信号，维持holding</li>
+<li>范式智能(6682.HK)：成本32.5，现价32.5，浮盈0%，仓位0.02｜无信号，维持holding</li>
+</ul>
+<p><strong>四、观察池滚动记录</strong></p>
+<p>今日新增触发信号标的（来自signal_scanner）：</p>
+<ul>
+<li>诺德股份(600110)：信号强度8｜回踩买点低吸收获涨停，中午被砸开未回补，观察回补情况（已从“active”升为“watch_alert”）</li>
+<li>卓易信息(688258)：信号强度7｜构建探路模型有走出来迹象，且已入持仓池，观察池同步标记为“watch_alert”</li>
+<li>中石科技(300684)：信号强度9｜液冷更新明确其为石墨烯TIM龙头，已量产供货苹果，A股核心标的，观察池状态由“active”升级为“watch_alert”</li>
+<li>思泉新材(301489)：信号强度8｜公告投建石墨烯及合成石墨垂直取向热界面材料项目，布局碳基TIM，观察池状态由“active”升级为“watch_alert”</li>
+<li>肯特股份(002891)：信号强度9｜PTFE重大进展：掺玻纤解决打孔开裂问题，生益S5300混压方案获NV认可，观察池原无此票，<strong>新增至观察池，角色R3，信号watch_alert</strong></li>
+</ul>
+<p><strong>五、系统信号汇总</strong></p>
+<p>按强度从高到低排序：</p>
+<ul>
+<li>长川科技(300604)：强度9｜🔴 乖离率39.66%超30%，建议止盈1/2-2/3｜<strong>立即执行，减仓2/3</strong></li>
+<li>长川科技(300604)：强度5｜🟠 股价220.2跌破短期均线组均值230.35，考虑减仓｜与强度9信号协同，强化执行必要性</li>
+<li>润泽科技(300442)：强度9｜🔴 铁律触发：股价89.01跌破中期均线组均值90.81，必须清仓｜<strong>立即执行清仓</strong></li>
+<li>招商轮船(601872)：强度9｜⚠️ 铁律触发：股价17.26跌破中期均线组均值17.65，必须清仓｜<strong>立即执行清仓</strong></li>
+</ul>
+<p><strong>六、明日操作指导</strong></p>
+<ul>
+<li>建仓：肯特股份(002891)，目标价28.5元（对应PTFE事件催化+中期均线支撑），仓位0.02，仅限明日早盘30分钟内完成</li>
+<li>止盈：长川科技(300604)，现价220.2元，目标价235元，<strong>减仓2/3（即0.065仓位）</strong>；浙江荣泰(002866)，现价26.8元，乖离30%，<strong>止盈1/3（即0.005仓位）</strong></li>
+<li>止损：招商轮船(601872)，已触发铁律，<strong>收盘前清仓全部0.1仓位</strong>；润泽科技(300442)，已触发铁律，<strong>开盘即清仓全部0.03仓位</strong></li>
+<li>观察：石大胜华(603026)，重点盯盘是否在90.5–91.0区间构筑回踩买点结构，若放量站稳91.0并收阳线，则次日可低吸0.01仓位；中国铝业(601600)，观察是否突破前期高点5.28元并站稳，若突破则视为“突破买点结构”成立，可轻仓试多</li>
+</ul>
+<p><strong>七、风险提示</strong></p>
+<ul>
+<li>阳光电源与英伟达合作消息未经证实，若2个月内无实质性进展，可能引发预期差修正，需严守“消息验证后再加仓”纪律</li>
+<li>半导体高位品种乖离普遍超30%，历史规律显示50%乖离附近存在强抛压，切勿“抄底”或“扛单”</li>
+<li>有色行情纯属科技资金分流，中国铝业若未能走出有效突破结构，次日可能快速退潮，追涨即套利</li>
+</ul></div></div>
+<div class="report-card"><h2>📊 午报</h2><div class="report-content"><p>📊 午间简报 20260526</p>
+<p><strong>一、市场整体解读</strong></p>
+<p>上午市场延续“科技主线轮动+高低切”节奏，半导体受“韬定律”催化持续活跃，但高位品种（乖离≥40%）普遍承压；有色资金小规模分流，中国铝业、华通线缆涨停，但属局部行情，非板块性启动；新能源承接偏弱，阳光电源稳步上涨，石大胜华仍在等待回踩买点结构确认。市场情绪中性（🟡3/5），量能温和，主线未切换，交易重心仍在先进封装与AI算力链。</p>
+<p><strong>二、板块个股动态</strong></p>
+<ul>
+<li><strong>润泽科技(300442)</strong>：铁律触发——股价89.01跌破中期均线组均值90.81，必须清仓</li>
+<li><strong>长川科技(300604)</strong>：乖离率50.45%超30%，建议止盈1/2–2/3</li>
+<li><strong>招商轮船(601872)</strong>：铁律触发——股价17.26跌破中期均线组均值17.65，必须清仓</li>
+<li><strong>奕瑞科技</strong>：卖方电话会确认3D堆叠良率检测设备需求爆发，M8背钻全检需求爆表，26–27年PCB检测景气持续提升；策略为横盘消化50%乖离，中线看好</li>
+<li><strong>肯特催化</strong>：30%乖离+半导体短线调整拖累，电子级氟化铵深度绑定客户；策略为贴近中期均线组低吸</li>
+<li><strong>中芯国际(H)</strong>：50%乖离值以内无上修问题，贴近50%时获利盘回吐明显；策略为不追，等待回调</li>
+<li><strong>沪电股份</strong>：乖离近50%且迟迟封不上涨停；策略为减仓止盈</li>
+<li><strong>通富微电</strong>：乖离超30%放量涨停未封住；策略为参照昨日分析减仓</li>
+<li><strong>扬杰科技/捷捷微电/蓝思科技</strong>：30%乖离值附近；策略为求稳可部分减仓止盈</li>
+<li><strong>长电科技</strong>：涨停封板，主力净流出18亿系交易软件假数据；策略为强势涨停</li>
+<li><strong>中国铝业</strong>：有色资金分流受益涨停；策略为看是否走出突破买点结构</li>
+<li><strong>华锡有色</strong>：出现回踩买点结构；策略为可关注</li>
+<li><strong>诺德股份</strong>：回踩买点低吸收获涨停，中午被砸开未回补；策略为观察回补情况</li>
+<li><strong>阳光电源</strong>：传闻与英伟达合作构建数据中心整体电力系统，万亿市场；策略为继续持有，消息待验证</li>
+<li><strong>石大胜华</strong>：碳酸锂价格消息面不清晰；核心看是否出现回踩买点结构</li>
+<li><strong>浙江荣泰</strong>：乖离30%，暂无新催化；策略为止盈1/3</li>
+<li><strong>闰土股份</strong>：乖离买点结构；策略为小仓位博弈技术性反弹</li>
+<li><strong>卓易信息</strong>：构建探路模型有走出来迹象；策略为关注</li>
+<li><strong>元力股份</strong>：大实体阴线回落，不属于异动搓揉线；策略为不追</li>
+<li><strong>和远气体</strong>：N倍量涨后回调踩均线组；策略为等回踩买点结构再买</li>
+<li><strong>中兵红箭</strong>：无涨停板，不属于探路尖兵模型；策略为不参与</li>
+<li><strong>中芯国际</strong>（A股）：圈子已部分减仓止盈，当前位置新开性价比不高；策略为暂不追</li>
+<li><strong>华天科技</strong>：乖离~40%，涨停封住，开板可半仓止盈；策略为继续持有或开板减防守</li>
+<li><strong>鼎龙股份</strong>：CMP抛光液再获突破（HKMG氧化铝、铜阻挡层、SiC衬底抛光液全落地）；策略为全品类布局，基本盘强劲</li>
+<li><strong>上纬新材</strong>：宇树科技6/1上会催化，乖离68%，有板块行情可看80–100%；策略为短线关注</li>
+<li><strong>中大力德</strong>：筹码博弈涨停，移动平均带回踩买点；策略为模型驱动</li>
+<li><strong>模塑科技</strong>：探路尖兵模型加持，率先创历史新高；策略为有开板注意</li>
+<li><strong>振华股份</strong>：跌幅7%，前排京泉华70%乖离调整拖累后排；策略为观察午后是否走出长下影线（异动搓揉线）</li>
+<li><strong>京泉华</strong>：70%乖离值后破坏式K线调整，获利盘兑现；策略为适度止盈</li>
+<li><strong>百傲化学</strong>：极值反转模型；策略为关注中</li>
+<li><strong>大位科技</strong>：跌停，股性特点（每次调整以跌停演绎）；策略为观察中期均线组支撑，失守则减仓</li>
+</ul>
+<p><strong>三、持仓池状态</strong></p>
+<ul>
+<li>浙江世宝(002703)：浮盈0%，未触发铁律，当前无信号；策略：维持持有，观察极值反转模型持续性</li>
+<li>明阳电气(301291)：浮盈0%，缠绕中期均线，北美变压器震荡拖累；策略：偏绿盘缓步接回，暂不操作</li>
+<li>中国东航(600115)：浮盈0%，航空运输板块无催化；策略：维持持有，静待暑运预期升温</li>
+<li>中国国航(601111)：浮盈0%，同上；策略：维持持有</li>
+<li>招商轮船(601872)：浮盈0%，铁律已触发（股价17.26 < 均线组均值17.65）；策略：<strong>必须清仓</strong></li>
+<li>招商南油(601975)：浮盈0%，无信号；策略：维持持有</li>
+<li>石大胜华(603026)：浮盈0%，电解液环节承压，尚未走出回踩买点结构；策略：<strong>等待结构确认，暂不操作</strong></li>
+<li>安井食品(603345)：浮盈0%，消费板块无催化；策略：维持持有</li>
+<li>伯特利(603596)：浮盈0%，智能驾驶无新催化；策略：维持持有</li>
+<li>卓易信息(688258)：浮盈0%，已确认走出回踩买点结构；策略：<strong>关注，可小仓位试多</strong></li>
+<li>中概互联网ETF(159605)：浮盈0%，无事件催化；策略：维持持有</li>
+<li>黄金股ETF永赢(517520)：浮盈0%，宏观避险属性未强化；策略：维持持有</li>
+<li>工业有色ETF(159880)：浮盈0%，有色仅为分流，非主线；策略：维持持有，不加仓</li>
+<li>中远海能(1138.HK)：浮盈0%，航运板块无新催化；策略：维持持有</li>
+<li>范式智能(6682.HK)：浮盈0%，AI应用方向，但无明确信号；策略：维持持有</li>
+</ul>
+<p><strong>四、观察池状态</strong></p>
+<ul>
+<li><strong>诺德股份(600110)</strong>：信号强度≥7（回踩中期均线组不破+锂电铜箔逻辑+涨停验证），触发条件为“回踩买点低吸+涨停未回补”，当前需观察午盘是否回封</li>
+<li><strong>卓易信息(688258)</strong>：信号强度≥7（已明确“走出回踩买点结构”，群主两次强调），触发条件为“回踩买点结构确认”，已满足，进入可操作序列</li>
+<li><strong>中大力德(002896)</strong>：信号强度≥7（筹码博弈涨停+移动平均带回踩买点+人形机器人+宇树上会催化），触发条件为“涨停+模型驱动”，已满足</li>
+<li><strong>模塑科技(000700)</strong>：信号强度≥7（探路尖兵模型加持+率先创历史新高），触发条件为“历史新高+开板”，当前需盯紧开板动作</li>
+</ul>
+<p><strong>五、午后操作指导</strong></p>
+<ul>
+<li>加仓：<strong>卓易信息(688258)</strong>，于140.00–141.50区间分两笔建仓，单笔仓位0.015，总仓位0.03；逻辑为回踩买点结构已确认，模型走出迹象明确</li>
+<li>加仓：<strong>中大力德(002896)</strong>，于28.80–29.20区间轻仓试多，仓位0.01；逻辑为筹码博弈涨停+人形机器人前排+模型驱动</li>
+<li>减仓：<strong>沪电股份(002463)</strong>，若午后未能封板，于24.50–24.70区间减仓1/2；逻辑为乖离近50%且封板失败</li>
+<li>减仓：<strong>通富微电(002156)</strong>，于22.30–22.50区间减仓1/2；逻辑为乖离超30%放量涨停未封住</li>
+<li>止损：<strong>招商轮船(601872)</strong>，<strong>立即执行清仓</strong>，止损价即市价（17.26）；逻辑为铁律硬性触发</li>
+<li>观察：<strong>诺德股份(600110)</strong>，紧盯12.80–13.00区间是否回封涨停；若14:30前未回补，则放弃当日机会</li>
+<li>观察：<strong>模塑科技(000700)</strong>，若开板且换手率超25%，于开板后5分钟内回踩5日线（约10.15）可轻仓博弈</li>
+</ul>
+<p><strong>六、风险提示</strong></p>
+<ul>
+<li>高位品种乖离接近50%时获利盘回吐是历史规律，不可硬扛，尤其沪电、通富、扬杰等已临近临界点</li>
+<li>有色行情仅为科技资金小规模分流，中国铝业若未走出突破买点结构，午后可能快速退潮，追涨风险极高</li>
+</ul></div></div>
+<div class="report-card"><h2>pool-updates</h2><div class="report-content"><h1>观察池/持仓池更新记录</h1>
+<blockquote>20260526 evening报告自动更新 · 2026-05-26 23:06</blockquote>
+<p>---</p>
+<h2>观察池变更</h2>
+<h3>🆕 新增待审股票 (4 只)</h3>
+<table>
+<tr><th>代码</th><th>名称</th></tr>
+<tr><td>603658</td><td>None</td></tr>
+<tr><td>300604</td><td>None</td></tr>
+<tr><td>601600</td><td>None</td></tr>
+<tr><td>601872</td><td>None</td></tr>
+</table>
+<h3>🔔 信号计数更新 (6 只)</h3>
+<table>
+<tr><th>代码</th><th>名称</th><th>分类</th><th>30日信号次数</th></tr>
+<tr><td>300684</td><td>中石科技</td><td>thermal</td><td>0 → 1</td></tr>
+<tr><td>301489</td><td>思泉新材</td><td>thermal</td><td>0 → 1</td></tr>
+<tr><td>603005</td><td>晶方科技</td><td>other</td><td>0 → 1</td></tr>
+<tr><td>601888</td><td>中国中免</td><td>duty_free</td><td>5 → 6</td></tr>
+<tr><td>300442</td><td>润丰股份</td><td>ai_computing</td><td>5 → 6</td></tr>
+<tr><td>002594</td><td>比亚迪</td><td>robotics</td><td>5 → 6</td></tr>
+</table>
+<h2>持仓池变更</h2>
+<h3>📊 持仓更新 (6 只)</h3>
+<table>
+<tr><th>代码</th><th>名称</th><th>成本</th><th>现价</th><th>盈亏%</th></tr>
+<tr><td>601600</td><td>中国铝业</td><td>11.9</td><td>12.09</td><td>+1.60%</td></tr>
+<tr><td>300442</td><td>润泽科技</td><td>95.87</td><td>89.01</td><td>-7.16%</td></tr>
+<tr><td>300604</td><td>长川科技</td><td>155.61</td><td>235.1</td><td>+51.08%</td></tr>
+<tr><td>601872</td><td>招商轮船</td><td>17.52</td><td>17.26</td><td>-1.48%</td></tr>
+<tr><td>601888</td><td>中国中免</td><td>66.28</td><td>56.53</td><td>-14.71%</td></tr>
+<tr><td>002594</td><td>比亚迪</td><td>99.98</td><td>96.55</td><td>-3.43%</td></tr>
+</table>
+<h3>⚠️ 风险警告 (2 只)</h3>
+<p><strong>300442 润泽科技</strong></p>
+<ul>
+<li>⚠️ 触及止损线 (91.08)</li>
+<li>🚨 浮动亏损 -7.16%，接近硬止损</li>
+</ul>
+<p><strong>601888 中国中免</strong></p>
+<ul>
+<li>⚠️ 触及止损线 (62.97)</li>
+<li>🚨 浮动亏损 -14.71%，接近硬止损</li>
+</ul>
+<p>---</p>
+<p>*本文件由系统自动生成*</p></div></div>
+<footer>
+🤖 Investment System · 自动更新 · 2026-05-29 15:45
+</footer>
+</div>
+<script>
+const AUTH_KEY = 'investment_auth';
+const AUTH_HASH = 'a3f5b8c2d1e4f6a7b9c0d2e3f5a8b1c4'; // 简单hash，实际密码: Martin2026
+
+function simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).padStart(32, '0').substring(0, 32);
+}
+
+function checkPassword() {
+    const input = document.getElementById('authPassword').value;
+    const hash = simpleHash(input);
+    if (hash === AUTH_HASH) {
+        localStorage.setItem(AUTH_KEY, 'true');
+        document.getElementById('authOverlay').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+    } else {
+        document.getElementById('authError').style.display = 'block';
+        document.getElementById('authPassword').value = '';
+    }
+}
+
+// 检查是否已认证
+if (localStorage.getItem(AUTH_KEY) === 'true') {
+    document.getElementById('authOverlay').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+}
+
+// 回车提交
+document.getElementById('authPassword').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') checkPassword();
+});
+</script>
+</body>
+</html>
