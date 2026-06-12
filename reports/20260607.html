@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>报告 2026-06-07 - 投资报告</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif; background: #0d1117; color: #c9d1d9; line-height: 1.6; }
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+header { border-bottom: 1px solid #21262d; padding: 20px 0; margin-bottom: 30px; }
+header h1 { color: #58a6ff; font-size: 1.5em; }
+header .nav { margin-top: 10px; }
+header .nav a { color: #8b949e; text-decoration: none; margin-right: 20px; font-size: 0.9em; }
+header .nav a:hover { color: #58a6ff; }
+header .nav a.active { color: #58a6ff; font-weight: 600; }
+.report-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 24px; margin-bottom: 20px; }
+.report-card h2 { color: #58a6ff; font-size: 1.2em; margin-bottom: 12px; }
+.report-card .meta { color: #8b949e; font-size: 0.85em; margin-bottom: 16px; }
+.report-content { font-size: 0.95em; }
+.report-content h1 { font-size: 1.4em; color: #58a6ff; margin: 20px 0 10px; }
+.report-content h2 { font-size: 1.2em; color: #79c0ff; margin: 18px 0 8px; border-bottom: 1px solid #21262d; padding-bottom: 6px; }
+.report-content h3 { font-size: 1.05em; color: #d2a8ff; margin: 14px 0 6px; }
+.report-content p { margin: 8px 0; }
+.report-content ul, .report-content ol { margin: 8px 0 8px 24px; }
+.report-content li { margin: 4px 0; }
+.report-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.report-content th, .report-content td { border: 1px solid #21262d; padding: 8px 12px; text-align: left; }
+.report-content th { background: #1c2128; color: #58a6ff; }
+.report-content blockquote { border-left: 3px solid #58a6ff; padding-left: 12px; color: #8b949e; margin: 12px 0; }
+.report-content strong { color: #f0f6fc; }
+.report-content code { background: #1c2128; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+.date-list { list-style: none; }
+.date-list li { padding: 12px 16px; border-bottom: 1px solid #21262d; display: flex; justify-content: space-between; align-items: center; }
+.date-list li:hover { background: #1c2128; }
+.date-list a { color: #58a6ff; text-decoration: none; }
+.date-list .badge { background: #238636; color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 0.75em; }
+.signal-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: 600; }
+.signal-buy { background: #238636; color: #fff; }
+.signal-sell { background: #da3633; color: #fff; }
+.signal-watch { background: #9e6a03; color: #fff; }
+footer { text-align: center; color: #484f58; font-size: 0.8em; padding: 30px 0; border-top: 1px solid #21262d; margin-top: 40px; }
+/* 密码保护样式 */
+.auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d1117; z-index: 1000; display: flex; justify-content: center; align-items: center; }
+.auth-box { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 40px; text-align: center; max-width: 400px; width: 90%; }
+.auth-box h2 { color: #58a6ff; margin-bottom: 20px; font-size: 1.3em; }
+.auth-box input { width: 100%; padding: 12px 16px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-size: 16px; margin-bottom: 16px; outline: none; }
+.auth-box input:focus { border-color: #58a6ff; }
+.auth-box button { width: 100%; padding: 12px; background: #238636; color: #fff; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 600; }
+.auth-box button:hover { background: #2ea043; }
+.auth-error { color: #f85149; font-size: 0.85em; margin-top: 8px; display: none; }
+</style>
+</head>
+<body>
+<div class="auth-overlay" id="authOverlay">
+<div class="auth-box">
+<h2>🔐 投资决策系统</h2>
+<input type="password" id="authPassword" placeholder="请输入访问密码" autofocus>
+<button onclick="checkPassword()">进入</button>
+<p class="auth-error" id="authError">密码错误，请重试</p>
+</div>
+</div>
+<div class="container" id="mainContent" style="display:none;">
+<header>
+<h1>📊 投资决策系统</h1>
+<div class="nav">
+<a href="index.html">首页</a>
+<a href="signals.html">信号扫描</a>
+<a href="holdings.html">持仓</a>
+<a href="pool.html">选股池</a>
+<a href="backtest.html">策略回测</a>
+<a href="stats.html">每日统计</a>
+<a href="bitable.html">飞书报告库</a>
+<a href="knowledge.html">知识库</a>
+<a href="zsxq.html">知识星球</a>
+<a href="kline.html">K线分析</a>
+<a href="db.html">历史数据</a>
+</div>
+</header>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding:12px 16px; background:#161b22; border:1px solid #21262d; border-radius:8px;"><a href="20260605.html">← 2026-06-05</a><span style="color:#58a6ff; font-weight:600;">2026-06-07</span><a href="20260608.html">2026-06-08 →</a></div>
+<div class="report-card"><h2>ai-hardware-watchlist</h2><div class="report-content"><p>📡 AI 硬件板块拆解与重点观察清单</p>
+<p>一、AI 硬件细分板块拆解</p>
+<p>1. 光纤与光连接</p>
+<p>光纤（长飞/亨通/中天）→ 光棒（长飞/亨通/中天）→ 光纤上游材料（云南锗业-磷化铟/石英股份-石英砂/三孚股份-四氯化硅）</p>
+<p>逻辑：AI算力扩张→数据中心互联→光纤需求通胀→价格上修+锁单长协</p>
+<p>2. 光模块与连接芯片</p>
+<p>光模块（中际旭创/新易盛/天孚通信）→ 连接芯片（万通发展-PCIe Switch/澜起科技-Retimer/盛科通信-交换芯片/裕太微-PHY）</p>
+<p>逻辑：北美CSP资本开支持续→光模块从400G→800G→1.6T迭代→连接芯片成新瓶颈</p>
+<p>3. 液冷散热</p>
+<p>光模块液冷cage（鼎通科技/奕东电子/意华股份/硕贝德）→ 机房液冷（申菱环境/英维克）</p>
+<p>逻辑：1.6T/3.2T高功耗光模块散热唯一解→2026年渗透率20%，2027年60%</p>
+<p>4. MLCC与高端被动元件</p>
+<p>MLCC本体（三环集团/风华高科）→ 上游材料（国瓷材料-陶瓷粉体/洁美科技-载体/博迁新材-靶材/华宏科技-稀土回收）→ 经销商（深圳华强/商络电子）→ 电感（顺络电子-TLVR/龙磁科技）</p>
+<p>逻辑：AI单机柜MLCC需求30-60万颗→高容MLCC涨价15-35%→上游材料卡脖子</p>
+<p>5. 半导体硅片</p>
+<p>硅片（立昂微-重掺/沪硅产业-硅光SOI/西安奕材料）→ 电子化学品（肯特催化）</p>
+<p>逻辑：AI服务器12寸硅片需求3.8倍→26年结构性紧缺→涨价预期</p>
+<p>6. AIDC电源</p>
+<p>VPD电源（新雷能）→ 二次电源（振华科技/宏达电子-钽电容）</p>
+<p>逻辑：AI服务器供电架构升级→VPD垂直供电→钽电容单柜用量激增</p>
+<p>7. PCB与材料</p>
+<p>PCB检测（奕瑞科技）→ PCB钻针（鼎泰高科/中钨高新）→ 覆铜板（金安国纪/华正新材）</p>
+<p>逻辑：AI服务器PCB通胀→高阶HDI用量翻倍→检测设备+钻针+材料全链受益</p>
+<p>8. 国产超节点</p>
+<p>超节点整机（华勤技术）→ 交换芯片（中兴通讯）</p>
+<p>逻辑：2026Q3寒武纪690/海光深腾4号/昇腾950PR支持超节点→国产化0-1放量</p>
+<p>二、重点观察清单（20只）</p>
+<p>优先级说明：P0=退潮期优先配置 | P1=冰点出手标的 | P2=观察仓/试错 | P3=长期跟踪</p>
+<p>No. 板块          代码    名称        优先级  核心逻辑                              买点要求</p>
+<p>───────────────────────────────────────────────────────────────────────────────────────────</p>
+<p>1   光纤          601869  长飞光纤    P0     北美CSP认证+订单排27年+CRU月度披露    站稳5日线，不追高</p>
+<p>2   光纤          600487  亨通光电    P0     突破北美CSP+光棒扩产                  中期均线组附近低吸</p>
+<p>3   光纤上游      600497  驰宏锌锗    P1     磷化铟衬底+锗产业链                   回踩买点结构出现</p>
+<p>4   光纤上游      603688  石英股份    P1     5N6N石英砂国内独家+长飞亨通长协锁单   乖离回归30%以内</p>
+<p>5   光模块        300308  中际旭创    P1     800G→1.6T迭代+北美CSP直供            50%乖离值内做T</p>
+<p>6   连接芯片      603881  万通发展    P1     PCIe 5.0 Switch量产+替代博通          回踩20日线</p>
+<p>7   液冷cage      301365  奕东电子    P0     安费诺代工+市值仅鼎通一半             放量突破年线+换手>8%</p>
+<p>8   液冷cage      300681  意华股份    P1     华为超算cage 50%份额                  回踩买点结构</p>
+<p>9   MLCC上游      300285  国瓷材料    P0     陶瓷粉体龙头+5N级碳酸钡全球唯一矿源   中期均线组附近</p>
+<p>10  MLCC上游      603659  特变电工    P2     MLCC粉体+稀土                        缩量缩波出现</p>
+<p>11  硅片          605358  立昂微      P0     重掺硅片涨价预期最正+率先创新高       成本优势做T</p>
+<p>12  硅片          688126  沪硅产业    P1     硅光SOI国内唯一+大尺寸硅片            回踩买点结构</p>
+<p>13  电感          002263  顺络电子    P1     TLVR独家供应Empower+Rubin架构放量     50%乖离值内</p>
+<p>14  AIDC电源      300865  新雷能      P2     VPD电源+Google供应链                  缩量缩波+观察仓</p>
+<p>15  钽电容        000733  振华科技    P1     AI服务器钽电容核心+Rubin单柜3.85万    回踩买点结构</p>
+<p>16  PCB检测       300636  奕瑞科技    P1     PCB检测订单确定+硅基OLED+RGA         30%乖离值试错</p>
+<p>17  商业航天      002281  信维通信    P1     SpaceX映射+MLCC放量+SpaceX上市窗口    回踩20日线</p>
+<p>18  国产超节点    603296  华勤技术    P2     超节点Q3起量+N1X平台代工             回踩年线低吸</p>
+<p>19  煤炭          600188  兖矿能源    P3     防守配置+AI耗电逻辑+焦煤涨价          焦煤主连站上1850</p>
+<p>20  MLCC分销      000062  深圳华强    P3     补涨品种+村田授权分销                 60日线止损</p>
+<p>三、交易策略框架</p>
+<p>退潮期仓位管理：</p>
+<ul>
+<li>总仓位上限5成，单只上限3%，试错仓上限1%</li>
+<li>P0标的可先布局1-2只，占总仓位10-15%</li>
+<li>P1标的等冰点信号出现后逐步建仓</li>
+<li>P2/P3标的仅观察，不主动建仓</li>
+</ul>
+<p>买点规则（基于均线带策略）：</p>
+<ul>
+<li>回踩买点：股价贴近中期均线组（55/60/65日），出现放量中阳线确认</li>
+<li>突破买点：突破中期均线组+放量确认，回踩不破则持有</li>
+<li>缩量缩波：高乖离品种等待缩量缩波至均线组附近再介入</li>
+</ul>
+<p>卖点规则：</p>
+<ul>
+<li>高乖离止盈：乖离值达50%+，分批减仓</li>
+<li>破5日线减仓：短线趋势破位</li>
+<li>破中期均线组清仓：中线逻辑破坏</li>
+</ul>
+<p>当前持仓与AI硬件交叉：</p>
+<ul>
+<li>石大胜华（电极液）：弱跌穿中期均线组，底仓可拿但不加仓</li>
+<li>卓易信息（固件）：AI硬件底层，持股观察</li>
+<li>伯特利（线控底盘）：非AI硬件，独立逻辑</li>
+</ul></div></div>
+<div class="report-card"><h2>us-market-mapping-revised-watchlist</h2><div class="report-content"><p>📡 AI 硬件板块·美股超跌映射与修订观察清单</p>
+<p>一、美股周五收盘（6/6）核心数据</p>
+<p>板块/个股            收盘跌幅     映射A股方向</p>
+<p>───────────────────────────────────────────────</p>
+<p>费城半导体指数        -10.26%      整体情绪压制</p>
+<p>纳斯达克指数          -4.18%       高估值科技承压</p>
+<p>英伟达 NVDA          -6.20%       国产算力/超节点</p>
+<p>美光 MU              -13.25%      存储/硅片</p>
+<p>博通 AVGO            -7.92%       连接芯片/交换芯片</p>
+<p>AMD                  -10.86%      国产算力替代</p>
+<p>Marvell MRVL         -16.00%      光模块/连接芯片（超跌最重）</p>
+<p>Coherent COHR        -10.64%      光模块/光连接</p>
+<p>Lumentum LITE        -8.62%       光模块/光通信</p>
+<p>应用材料 AMAT        -7.50%       半导体设备/硅片</p>
+<p>KLA                  -8.20%       PCB检测/半导体检测</p>
+<p>触发因素：非农大超预期 → 市场定价加息回归 → 高估值科技股集体杀估值。</p>
+<p>性质：美股是泡沫修正（估值过高+利率预期上修），A股是情绪传导（已提前调整）。</p>
+<p>二、美股超跌 → A股映射逻辑</p>
+<p>1. 光模块链（Coherent -10.64% / Lumentum -8.62% / Marvell -16%）</p>
+<p>美股光模块三巨头暴跌，但A股光模块已提前2周调整。</p>
+<p>映射：中际旭创、新易盛——如果周一进一步杀跌，反而是冰点信号。</p>
+<p>关键判断：北美CSP资本开支没变，需求逻辑没变，跌的是估值不是订单。</p>
+<p>2. 存储/硅片（Micron -13.25%）</p>
+<p>美光暴跌映射A股硅片涨价逻辑不变但短期情绪压制。</p>
+<p>映射：立昂微、沪硅产业——已持有做T降低成本，不追高。</p>
+<p>群主原话（5/27）："目前立昂微能逆势上涨，但越涨乖离值越高，冲高遇阻时部分减仓止盈，中期趋势有看点，盯着涨价去看。"</p>
+<p>3. 连接芯片（Broadcom -7.92% / Marvell -16%）</p>
+<p>博通+Marvell暴跌，映射国产连接芯片替代逻辑。</p>
+<p>映射：澜起科技——但群主多次强调50%乖离值是硬约束。</p>
+<p>群主原话（5/27）："澜起科技，核心在于50%乖离值，再硬的基本面，除非板块效应很热，否则都需要去消化这块获利盘。"</p>
+<p>群主原话（5/20）："如果在50-60%区间此前没有进行过止盈动作，当前阶段，还是趁反弹减仓的策略。"</p>
+<p>→ 澜起科技不适合新建仓，持有者等反弹减仓。</p>
+<p>4. 半导体检测（KLA -8.20%）</p>
+<p>映射A股PCB检测：奕瑞科技。</p>
+<p>群主原话（5/27）："奕瑞科技的交易策略，在圈子刚又讲过的。"</p>
+<p>→ 奕瑞科技逻辑独立（PCB检测+硅基OLED+RGA），美股暴跌反而提供低吸窗口。</p>
+<p>三、A股飞书群讨论热度排序（近1个月）</p>
+<p>按群主点评频次和讨论深度排序：</p>
+<p>Tier 1（反复讨论，群主多次点评策略）</p>
+<p>· 立昂微 — 硅片涨价龙头，群主明确"逆势上涨但注意乖离"</p>
+<p>· 澜起科技 — 连接芯片，群主反复强调50%乖离止盈</p>
+<p>· 奕瑞科技 — PCB检测，群主专门讲过交易策略</p>
+<p>· 长飞光纤 — 光纤龙头，6/2群主确认"回踩买点结构出现"</p>
+<p>· 顺络电子 — TLVR电感，群主确认"补涨动作+中线新高潜力"</p>
+<p>Tier 2（有讨论，逻辑清晰但点评较少）</p>
+<p>· 鼎泰高科 — PCB设备，群主确认"板块行情可适度上修乖离值"</p>
+<p>· 国瓷材料 — MLCC上游，5N级碳酸钡全球唯一矿源</p>
+<p>· 亨通光电 — 光纤，确认切入北美CSP</p>
+<p>· 深圳华强 — MLCC分销，群主定位"补涨品种，逻辑弱于上游"</p>
+<p>Tier 3（逻辑存在但需验证）</p>
+<p>· 新雷能 — VPD电源，等6/15批量订单消息</p>
+<p>· 奕东电子 — 液冷cage，安费诺代工但需放量确认</p>
+<p>四、修订版20只观察清单</p>
+<p>修订原则：</p>
+<p>① 美股超跌映射最直接的品种提权</p>
+<p>② 飞书群高频讨论+群主策略确认的品种提权</p>
+<p>③ 纯情绪标的（江顺科技等）降权或剔除</p>
+<p>④ 群主明确提示风险的品种（澜起减仓、深圳华强弱于上游）降优先级</p>
+<p>优先级：P0=退潮期优先配置 | P1=冰点出手 | P2=观察仓 | P3=长期跟踪</p>
+<p>No. 板块         代码    名称        优先级  修订理由                              买点要求</p>
+<p>──────────────────────────────────────────────────────────────────────────────────────────</p>
+<p>1   光纤         601869  长飞光纤    P0     群主6/2确认回踩买点+北美CSP+订单排27年   站稳5日线，破线离场</p>
+<p>2   光纤         600487  亨通光电    P0     确认切入北美CSP+光棒扩产+液冷协同       中期均线组附近低吸</p>
+<p>3   硅片         605358  立昂微      P0     硅片涨价龙头+群主明确逆势逻辑+成本做T   成本优势做T，冲高减仓</p>
+<p>4   MLCC上游     300285  国瓷材料    P0     陶瓷粉体龙头+5N级碳酸钡全球唯一矿源     中期均线组附近</p>
+<p>5   液冷cage     301365  奕东电子    P0     安费诺代工+市值仅鼎通一半+弹性大        放量突破年线+换手>8%</p>
+<p>6   光模块       300308  中际旭创    P1     美股Coherent/Marvell超跌映射+A股已提前调整 50%乖离值内做T</p>
+<p>7   PCB检测      300636  奕瑞科技    P1     群主专门讲策略+PCB检测+硅基OLED+RGA      30%乖离值试错</p>
+<p>8   电感         002263  顺络电子    P1     群主确认补涨+TLVR独家供应Empower+新高潜力 50%乖离值内</p>
+<p>9   光纤上游     603688  石英股份    P1     5N6N石英砂国内独家+长飞亨通长协锁单     乖离回归30%以内</p>
+<p>10  光纤上游     600497  驰宏锌锗    P1     磷化铟衬底+锗产业链+光纤上游联动        回踩买点结构出现</p>
+<p>11  连接芯片     688008  澜起科技    P1     群主反复讲+但50%乖离是硬约束            已持有等反弹减仓，新建仓等回踩中期均线组</p>
+<p>12  液冷cage     300681  意华股份    P1     华为超算cage 50%份额+液冷渗透率26年20%  回踩买点结构</p>
+<p>13  硅片         688126  沪硅产业    P1     硅光SOI国内唯一+大尺寸硅片+美股美光映射  回踩买点结构</p>
+<p>14  钽电容       000733  振华科技    P1     AI服务器钽电容核心+Rubin单柜3.85万      回踩买点结构</p>
+<p>15  PCB设备      301377  鼎泰高科    P1     群主确认板块行情可上修乖离+PCB通胀       回踩20日线</p>
+<p>16  MLCC分销     000062  深圳华强    P2     补涨品种+群主定位弱于上游+小仓位         60日线止损</p>
+<p>17  AIDC电源     300865  新雷能      P2     VPD电源+Google供应链+等6/15订单          缩量缩波+观察仓</p>
+<p>18  国产超节点   603296  华勤技术    P2     超节点Q3起量+N1X平台代工                 回踩年线低吸</p>
+<p>19  煤炭         600188  兖矿能源    P3     防守配置+AI耗电逻辑+焦煤涨价             焦煤主连站上1850</p>
+<p>20  光模块       300502  新易盛      P2     美股光模块超跌映射但弹性弱于中际旭创     回踩买点结构出现</p>
+<p>五、修订对比（原版 vs 修订版）</p>
+<p>剔除：</p>
+<p>· 万通发展 603881 — PCIe Switch量产不确定性高，飞书讨论少</p>
+<p>· 特变电工 603659 — MLCC粉体+稀土逻辑偏弱，P2降级</p>
+<p>· 信维通信 002281 — SpaceX窗口过后纯情绪退潮，不追</p>
+<p>· 石大胜华 603026 — 弱跌穿中期均线组，群主说"底仓可拿但不加仓"</p>
+<p>新增：</p>
+<p>· 新易盛 300502 — 美股光模块超跌最直接映射，补中际旭创的弹性</p>
+<p>· 鼎泰高科 301377（原P2升P1） — 群主5/22确认PCB板块行情可上修乖离</p>
+<p>· 澜起科技 688008（原P1保留但加条件） — 群主多次讲策略，明确50%乖离约束</p>
+<p>六、美股冲击下的操作策略</p>
+<p>核心判断：美股杀估值≠A股杀逻辑。A股AI硬件已提前2周调整，本轮美股暴跌是情绪的最后一击，不是新下跌的起点。</p>
+<p>操作节奏：</p>
+<p>① 周一如果大幅低开（沪指跌>1.5%），不恐慌割肉，等盘中企稳信号</p>
+<p>② 两市跌停>80家 → 冰点确认 → P0标的小仓位试错（长飞/立昂微/国瓷）</p>
+<p>③ 光模块（中际旭创/新易盛）如果周一继续杀跌至中期均线组附近 → 重点关注</p>
+<p>④ 群主铁律：前排不动，后排别碰。长飞亨通没破5日线，不碰后排光纤</p>
+<p>⑤ 所有试错仓硬止损在中期均线组，不讲情怀</p>
+<p>仓位管理：</p>
+<ul>
+<li>总仓位上限5成，单只上限3%，试错仓上限1%</li>
+<li>P0可先布局1-2只（长飞+立昂微），占总仓位10-15%</li>
+<li>P1等冰点信号后逐步建仓</li>
+<li>P2/P3仅观察不建仓</li>
+</ul>
+<p>七、本周关键窗口</p>
+<p>6/9 周一：美股暴跌后A股首个交易日，观察开盘情绪</p>
+<p>6/12 SpaceX上市（135美金定价）：首日涨超15%后关注映射标的</p>
+<p>6/15 前后：新雷能批量订单消息窗口</p>
+<p>持续跟踪：MLCC分销商（深圳华强）能否站稳60日线，不能则率先补跌</p></div></div>
+<div class="report-card"><h2>weekly-review</h2><div class="report-content"><p>📊 本周复盘 2026.06.02-06.07</p>
+<p>一、下周操作要点（老樊6/7课程核心）</p>
+<p>仓位：3-5成。等冰点再出手。</p>
+<p>冰点信号：两市跌停超80家 / 沪深300波动率VIX突破28 / 两融余额单周降超300亿。没出现就别动。</p>
+<p>三个铁律：</p>
+<p>① 前排不动，后排别碰。长飞亨通没破5日线，不碰浙江荣泰；立昂微还在做T，不抄底硅片设备股。</p>
+<p>② 从前排"讲故事"退守到"有订单、有认证、有排产"的硬件底层——光纤、硅片、TLVR、液冷cage。</p>
+<p>③ 所有试错仓位，硬止损在中期均线组。不讲情怀，不赌反转。</p>
+<p>SpaceX窗口：6月12日上市，135美金定价。首日涨超15%，次日信维/西部材料回踩20日线可轻仓介入。</p>
+<p>光纤右侧：长飞连续3日站稳5日线+亨通放量突破前高，启动光纤上游小仓位试错。</p>
+<p>做T时机：立昂微/沪硅波动率升至年内高位，5分钟MACD背离+30分钟布林收口，日内T+0降成本。</p>
+<p>二、板块个股走势</p>
+<p>📡 光纤与光连接</p>
+<p>长飞光纤（+24%）｜二连板+北美CSP认证+订单排至2027年。G.657.A2突破260元。策略：持股，破5日线或乖离过高除外</p>
+<p>亨通光电（+12%）｜确认切入北美CSP，光棒扩产+液冷cage协同。策略：50%乖离值内小仓位试错</p>
+<p>中天科技（+7%）｜光缆出海+海缆修复。弹性大于长飞但认证滞后。策略：亨通突破成功后补涨主轴</p>
+<p>⚡ 半导体硬材</p>
+<p>立昂微（+9%）/ 沪硅产业（+8%）｜12寸硅片Q2满载，AI服务器需求3.8倍。策略：成本优势多做T，新开仓单只3%以内</p>
+<p>云南锗业（+11%）/ 石英股份（+13%）｜磷化铟+5N6N石英砂国内独家。策略：小仓位顺势博弈，石英股份乖离48%需防兑现</p>
+<p>🔋 被动元件与电源</p>
+<p>顺络电子（+10%）｜TLVR电感独家供应Empower，缺货溢价35%。策略：50%乖离值内试错</p>
+<p>深圳华强（+16%）｜MLCC分销商补涨，逻辑弱于上游。策略：小仓位，60日线跌破即止损</p>
+<p>新雷能（+18%）｜VPD电源打入Google供应链。策略：观察仓，等6/15前后批量下单消息</p>
+<p>🚀 商业航天</p>
+<p>信维通信（+15%）｜SpaceX前夜回踩拉阳线，射频+星链终端双逻辑。策略：回踩买点结构后顺势博弈</p>
+<p>江顺科技（+22%）｜DED火箭3D打印龙头，纯主题。策略：高偏好观察仓，不追高</p>
+<p>⚫ 煤炭防守</p>
+<p>兖矿能源（+5%）/ 晋控煤业（+4%）｜焦化厂提涨+AI耗电逻辑。策略：焦煤主连站上1850并收阳，可加至20%</p>
+<p>三、风险提示</p>
+<p>① MLCC分销商脱离基本面，下周无法站稳60日线将率先补跌</p>
+<p>② 江顺科技等纯情绪标的，SpaceX上市后若无技术验证公告，大概率横盘消耗</p>
+<p>③ 欧洲贸易摩擦升温，PCB链/光模块海外订单需跟踪</p>
+<p>④ 所有试错仓必须设中期均线组硬止损</p>
+<p>四、本周金句</p>
+<p>"退潮不是主线死了，是主线在挤掉浮水，把位置让给真干活的人。"</p>
+<p>"人须在事上磨，方立得住。没在恐慌日买过长飞、没在石大胜华破位时忍住没抄底的人，永远学不会什么叫'等冰点'。"</p></div></div>
+<footer>
+🤖 Investment System · 自动更新 · 2026-06-12 15:29
+</footer>
+</div>
+<script>
+const AUTH_KEY = 'investment_auth';
+const AUTH_HASH = '000000000000000000000000640fade3'; // 简单hash，实际密码: Martin2026
+
+function simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).padStart(32, '0').substring(0, 32);
+}
+
+function checkPassword() {
+    const input = document.getElementById('authPassword').value;
+    const hash = simpleHash(input);
+    if (hash === AUTH_HASH) {
+        localStorage.setItem(AUTH_KEY, 'true');
+        document.getElementById('authOverlay').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+    } else {
+        document.getElementById('authError').style.display = 'block';
+        document.getElementById('authPassword').value = '';
+    }
+}
+
+// 检查是否已认证
+if (localStorage.getItem(AUTH_KEY) === 'true') {
+    document.getElementById('authOverlay').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+}
+
+// 回车提交
+document.getElementById('authPassword').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') checkPassword();
+});
+</script>
+</body>
+</html>

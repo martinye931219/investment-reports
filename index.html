@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>首页 - 投资报告</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif; background: #0d1117; color: #c9d1d9; line-height: 1.6; }
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+header { border-bottom: 1px solid #21262d; padding: 20px 0; margin-bottom: 30px; }
+header h1 { color: #58a6ff; font-size: 1.5em; }
+header .nav { margin-top: 10px; }
+header .nav a { color: #8b949e; text-decoration: none; margin-right: 20px; font-size: 0.9em; }
+header .nav a:hover { color: #58a6ff; }
+header .nav a.active { color: #58a6ff; font-weight: 600; }
+.report-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 24px; margin-bottom: 20px; }
+.report-card h2 { color: #58a6ff; font-size: 1.2em; margin-bottom: 12px; }
+.report-card .meta { color: #8b949e; font-size: 0.85em; margin-bottom: 16px; }
+.report-content { font-size: 0.95em; }
+.report-content h1 { font-size: 1.4em; color: #58a6ff; margin: 20px 0 10px; }
+.report-content h2 { font-size: 1.2em; color: #79c0ff; margin: 18px 0 8px; border-bottom: 1px solid #21262d; padding-bottom: 6px; }
+.report-content h3 { font-size: 1.05em; color: #d2a8ff; margin: 14px 0 6px; }
+.report-content p { margin: 8px 0; }
+.report-content ul, .report-content ol { margin: 8px 0 8px 24px; }
+.report-content li { margin: 4px 0; }
+.report-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.report-content th, .report-content td { border: 1px solid #21262d; padding: 8px 12px; text-align: left; }
+.report-content th { background: #1c2128; color: #58a6ff; }
+.report-content blockquote { border-left: 3px solid #58a6ff; padding-left: 12px; color: #8b949e; margin: 12px 0; }
+.report-content strong { color: #f0f6fc; }
+.report-content code { background: #1c2128; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+.date-list { list-style: none; }
+.date-list li { padding: 12px 16px; border-bottom: 1px solid #21262d; display: flex; justify-content: space-between; align-items: center; }
+.date-list li:hover { background: #1c2128; }
+.date-list a { color: #58a6ff; text-decoration: none; }
+.date-list .badge { background: #238636; color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 0.75em; }
+.signal-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: 600; }
+.signal-buy { background: #238636; color: #fff; }
+.signal-sell { background: #da3633; color: #fff; }
+.signal-watch { background: #9e6a03; color: #fff; }
+footer { text-align: center; color: #484f58; font-size: 0.8em; padding: 30px 0; border-top: 1px solid #21262d; margin-top: 40px; }
+/* 密码保护样式 */
+.auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d1117; z-index: 1000; display: flex; justify-content: center; align-items: center; }
+.auth-box { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 40px; text-align: center; max-width: 400px; width: 90%; }
+.auth-box h2 { color: #58a6ff; margin-bottom: 20px; font-size: 1.3em; }
+.auth-box input { width: 100%; padding: 12px 16px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-size: 16px; margin-bottom: 16px; outline: none; }
+.auth-box input:focus { border-color: #58a6ff; }
+.auth-box button { width: 100%; padding: 12px; background: #238636; color: #fff; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 600; }
+.auth-box button:hover { background: #2ea043; }
+.auth-error { color: #f85149; font-size: 0.85em; margin-top: 8px; display: none; }
+</style>
+</head>
+<body>
+<div class="auth-overlay" id="authOverlay">
+<div class="auth-box">
+<h2>🔐 投资决策系统</h2>
+<input type="password" id="authPassword" placeholder="请输入访问密码" autofocus>
+<button onclick="checkPassword()">进入</button>
+<p class="auth-error" id="authError">密码错误，请重试</p>
+</div>
+</div>
+<div class="container" id="mainContent" style="display:none;">
+<header>
+<h1>📊 投资决策系统</h1>
+<div class="nav">
+<a href="index.html" class="active">首页</a>
+<a href="signals.html">信号扫描</a>
+<a href="holdings.html">持仓</a>
+<a href="pool.html">选股池</a>
+<a href="backtest.html">策略回测</a>
+<a href="stats.html">每日统计</a>
+<a href="bitable.html">飞书报告库</a>
+<a href="knowledge.html">知识库</a>
+<a href="zsxq.html">知识星球</a>
+<a href="kline.html">K线分析</a>
+<a href="db.html">历史数据</a>
+</div>
+</header>
+<h2 style="color:#58a6ff; margin-bottom:20px;">📋 最近报告</h2>
+<ul class="date-list">
+<li><a href="reports/20260612.html">📅 2026-06-12</a> <span class="badge">afternoon-check</span> <span class="badge">daily-monitor</span> <span class="badge">daily-stats</span> <span class="badge">晚报</span> <span class="badge">midday-check</span> <span class="badge">morning</span> <span class="badge">pool-updates</span></li>
+<li><a href="reports/20260611.html">📅 2026-06-11</a> <span class="badge">afternoon-check</span> <span class="badge">daily-monitor</span> <span class="badge">evening-check</span> <span class="badge">晚报</span> <span class="badge">midday-check</span> <span class="badge">morning</span> <span class="badge">pool-updates</span> <span class="badge">信号</span></li>
+<li><a href="reports/20260610.html">📅 2026-06-10</a> <span class="badge">daily-monitor</span> <span class="badge">晚报</span> <span class="badge">midday-check</span> <span class="badge">pool-updates</span> <span class="badge">信号</span></li>
+<li><a href="reports/20260609.html">📅 2026-06-09</a> <span class="badge">afternoon-check</span> <span class="badge">daily-monitor</span> <span class="badge">evening-check</span> <span class="badge">晚报</span> <span class="badge">midday-check</span> <span class="badge">pool-updates</span> <span class="badge">pre-market-check</span> <span class="badge">信号</span></li>
+<li><a href="reports/20260608.html">📅 2026-06-08</a> <span class="badge">daily-monitor</span> <span class="badge">晚报</span> <span class="badge">feishu-digest</span> <span class="badge">pool-updates</span> <span class="badge">信号</span> <span class="badge">weekly-hot-stocks-scan</span></li>
+<li><a href="reports/20260607.html">📅 2026-06-07</a> <span class="badge">ai-hardware-watchlist</span> <span class="badge">us-market-mapping-revised-watchlist</span> <span class="badge">weekly-review</span></li>
+<li><a href="reports/20260605.html">📅 2026-06-05</a> <span class="badge">daily-monitor</span> <span class="badge">晚报</span> <span class="badge">pool-updates</span> <span class="badge">信号</span></li>
+<li><a href="reports/20260604.html">📅 2026-06-04</a> <span class="badge">daily-monitor</span> <span class="badge">晚报</span> <span class="badge">feishu-digest</span> <span class="badge">feishu-midday</span> <span class="badge">pool-updates</span> <span class="badge">信号</span></li>
+<li><a href="reports/20260603.html">📅 2026-06-03</a> <span class="badge">daily-monitor</span> <span class="badge">晚报</span> <span class="badge">feishu-digest</span> <span class="badge">pool-updates</span> <span class="badge">信号</span></li>
+<li><a href="reports/20260602.html">📅 2026-06-02</a> <span class="badge">daily-monitor</span> <span class="badge">daily-monitor</span> <span class="badge">daily-review</span> <span class="badge">晚报</span> <span class="badge">午报</span> <span class="badge">morning</span> <span class="badge">pool-updates</span> <span class="badge">pre-market</span> <span class="badge">risk-monitor</span> <span class="badge">信号</span> <span class="badge">weekly</span></li>
+<li><a href="reports/20260601.html">📅 2026-06-01</a> <span class="badge">daily-monitor</span> <span class="badge">daily-monitor</span> <span class="badge">daily-review</span> <span class="badge">daily-stats</span> <span class="badge">晚报</span> <span class="badge">午报</span> <span class="badge">morning</span> <span class="badge">pool-updates</span> <span class="badge">pre-market</span> <span class="badge">risk-monitor</span> <span class="badge">信号</span> <span class="badge">weekly</span></li>
+<li><a href="reports/20260531.html">📅 2026-05-31</a> <span class="badge">weekly-review-lite</span> <span class="badge">weekly-review</span></li>
+<li><a href="reports/20260529.html">📅 2026-05-29</a> <span class="badge">daily-monitor</span> <span class="badge">晚报</span> <span class="badge">pool-updates</span> <span class="badge">信号</span></li>
+<li><a href="reports/20260528.html">📅 2026-05-28</a> <span class="badge">daily-monitor</span> <span class="badge">晚报</span> <span class="badge">午报</span> <span class="badge">pool-updates</span> <span class="badge">信号</span></li>
+<li><a href="reports/20260527.html">📅 2026-05-27</a> <span class="badge">daily-monitor</span> <span class="badge">晚报</span> <span class="badge">午报</span> <span class="badge">pool-updates</span> <span class="badge">risk_monitor_20260527</span> <span class="badge">信号</span></li>
+<li><a href="reports/20260526.html">📅 2026-05-26</a> <span class="badge">晚报</span> <span class="badge">午报</span> <span class="badge">pool-updates</span> <span class="badge">risk_monitor_20260526</span> <span class="badge">信号</span></li>
+<li><a href="reports/20260525.html">📅 2026-05-25</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span> <span class="badge">晚报</span> <span class="badge">午报</span> <span class="badge">pool-updates</span> <span class="badge">risk_monitor_20260525</span> <span class="badge">信号</span></li>
+<li><a href="reports/20260524.html">📅 2026-05-24</a> <span class="badge">晚报</span> <span class="badge">午报</span></li>
+<li><a href="reports/20260523.html">📅 2026-05-23</a> <span class="badge">晚报</span> <span class="badge">weekly</span></li>
+<li><a href="reports/20260522.html">📅 2026-05-22</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span> <span class="badge">晚报</span> <span class="badge">午报</span> <span class="badge">pool-updates</span> <span class="badge">risk_monitor_20260522</span></li>
+<li><a href="reports/20260521.html">📅 2026-05-21</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span> <span class="badge">risk_monitor_20260521</span></li>
+<li><a href="reports/20260520.html">📅 2026-05-20</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span> <span class="badge">risk_monitor_20260520</span></li>
+<li><a href="reports/20260519.html">📅 2026-05-19</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span> <span class="badge">risk_monitor_20260519</span></li>
+<li><a href="reports/20260518.html">📅 2026-05-18</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span> <span class="badge">risk_monitor_20260518</span></li>
+<li><a href="reports/20260515.html">📅 2026-05-15</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span> <span class="badge">risk_monitor_20260515</span></li>
+<li><a href="reports/20260514.html">📅 2026-05-14</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span> <span class="badge">risk_monitor_20260514</span></li>
+<li><a href="reports/20260513.html">📅 2026-05-13</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span> <span class="badge">risk_monitor_20260513</span></li>
+<li><a href="reports/20260512.html">📅 2026-05-12</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span> <span class="badge">risk_monitor_20260512</span></li>
+<li><a href="reports/20260511.html">📅 2026-05-11</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span> <span class="badge">risk_monitor_20260511</span></li>
+<li><a href="reports/20260508.html">📅 2026-05-08</a> <span class="badge">daily-monitor</span> <span class="badge">risk_monitor_20260508</span></li>
+<li><a href="reports/20260507.html">📅 2026-05-07</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span> <span class="badge">risk_monitor_20260507</span></li>
+<li><a href="reports/20260506.html">📅 2026-05-06</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span> <span class="badge">risk_monitor_20260506</span></li>
+<li><a href="reports/20260505.html">📅 2026-05-05</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span> <span class="badge">risk_monitor_20260505</span></li>
+<li><a href="reports/20260504.html">📅 2026-05-04</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span> <span class="badge">risk_monitor_20260504</span></li>
+<li><a href="reports/20260501.html">📅 2026-05-01</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span> <span class="badge">risk_monitor_20260501</span></li>
+<li><a href="reports/20260430.html">📅 2026-04-30</a> <span class="badge">daily-monitor</span></li>
+<li><a href="reports/20260428.html">📅 2026-04-28</a> <span class="badge">daily-monitor</span></li>
+<li><a href="reports/20260427.html">📅 2026-04-27</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span> <span class="badge">risk_monitor_20260427</span></li>
+<li><a href="reports/20260426.html">📅 2026-04-26</a> <span class="badge">risk_monitor_20260426</span></li>
+<li><a href="reports/20260424.html">📅 2026-04-24</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span></li>
+<li><a href="reports/20260423.html">📅 2026-04-23</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span></li>
+<li><a href="reports/20260422.html">📅 2026-04-22</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span></li>
+<li><a href="reports/20260421.html">📅 2026-04-21</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span></li>
+<li><a href="reports/20260420.html">📅 2026-04-20</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span></li>
+<li><a href="reports/20260417.html">📅 2026-04-17</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span></li>
+<li><a href="reports/20260416.html">📅 2026-04-16</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span></li>
+<li><a href="reports/20260415.html">📅 2026-04-15</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span> <span class="badge">risk_monitor_20260415</span></li>
+<li><a href="reports/20260414.html">📅 2026-04-14</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span></li>
+<li><a href="reports/20260413.html">📅 2026-04-13</a> <span class="badge">daily_review</span></li>
+<li><a href="reports/20260412.html">📅 2026-04-12</a> <span class="badge">weekly_report</span></li>
+<li><a href="reports/20260410.html">📅 2026-04-10</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span></li>
+<li><a href="reports/20260409.html">📅 2026-04-09</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span> <span class="badge">risk_monitor_20260409</span></li>
+<li><a href="reports/20260408.html">📅 2026-04-08</a> <span class="badge">SECOND_RUN_REMINDER</span> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span> <span class="badge">市场热点板块信息面-第1次</span> <span class="badge">市场热点板块信息面-第2次</span> <span class="badge">观察池与持仓风险监控-第1次</span> <span class="badge">观察池与持仓风险监控-第2次</span></li>
+<li><a href="reports/20260407.html">📅 2026-04-07</a> <span class="badge">011 持仓追踪规则与自迭代模块</span> <span class="badge">012-多Agent协作流程图</span> <span class="badge">012-多Agent协作系统设计方案</span> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span> <span class="badge">投资体系演示文稿-演讲稿</span> <span class="badge">盘前报告-20260407</span></li>
+<li><a href="reports/20260406.html">📅 2026-04-06</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span></li>
+<li><a href="reports/20260403.html">📅 2026-04-03</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span></li>
+<li><a href="reports/20260402.html">📅 2026-04-02</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span></li>
+<li><a href="reports/20260401.html">📅 2026-04-01</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span></li>
+<li><a href="reports/20260331.html">📅 2026-03-31</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span></li>
+<li><a href="reports/20260330.html">📅 2026-03-30</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span></li>
+<li><a href="reports/20260329.html">📅 2026-03-29</a> <span class="badge">daily-monitor</span></li>
+<li><a href="reports/20260328.html">📅 2026-03-28</a> <span class="badge">daily-monitor</span> <span class="badge">daily_review</span></li>
+<li><a href="reports/20260327.html">📅 2026-03-27</a> <span class="badge">daily-monitor</span></li>
+<li><a href="reports/20260326.html">📅 2026-03-26</a> <span class="badge">daily-monitor</span> <span class="badge">nvda_value_investment</span></li>
+<li><a href="reports/20260325.html">📅 2026-03-25</a> <span class="badge">nvda_technical_analysis</span> <span class="badge">technical_scan_report</span> <span class="badge">持仓汇总_示例</span> <span class="badge">盘前报告_示例</span> <span class="badge">盘前资讯速览_示例</span></li>
+<li><a href="reports/20260324.html">📅 2026-03-24</a> <span class="badge">daily_review</span></li>
+</ul>
+<footer>
+🤖 Investment System · 自动更新 · 2026-06-12 15:29
+</footer>
+</div>
+<script>
+const AUTH_KEY = 'investment_auth';
+const AUTH_HASH = '000000000000000000000000640fade3'; // 简单hash，实际密码: Martin2026
+
+function simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).padStart(32, '0').substring(0, 32);
+}
+
+function checkPassword() {
+    const input = document.getElementById('authPassword').value;
+    const hash = simpleHash(input);
+    if (hash === AUTH_HASH) {
+        localStorage.setItem(AUTH_KEY, 'true');
+        document.getElementById('authOverlay').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+    } else {
+        document.getElementById('authError').style.display = 'block';
+        document.getElementById('authPassword').value = '';
+    }
+}
+
+// 检查是否已认证
+if (localStorage.getItem(AUTH_KEY) === 'true') {
+    document.getElementById('authOverlay').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+}
+
+// 回车提交
+document.getElementById('authPassword').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') checkPassword();
+});
+</script>
+</body>
+</html>

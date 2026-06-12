@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>报告 2026-06-08 - 投资报告</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif; background: #0d1117; color: #c9d1d9; line-height: 1.6; }
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+header { border-bottom: 1px solid #21262d; padding: 20px 0; margin-bottom: 30px; }
+header h1 { color: #58a6ff; font-size: 1.5em; }
+header .nav { margin-top: 10px; }
+header .nav a { color: #8b949e; text-decoration: none; margin-right: 20px; font-size: 0.9em; }
+header .nav a:hover { color: #58a6ff; }
+header .nav a.active { color: #58a6ff; font-weight: 600; }
+.report-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 24px; margin-bottom: 20px; }
+.report-card h2 { color: #58a6ff; font-size: 1.2em; margin-bottom: 12px; }
+.report-card .meta { color: #8b949e; font-size: 0.85em; margin-bottom: 16px; }
+.report-content { font-size: 0.95em; }
+.report-content h1 { font-size: 1.4em; color: #58a6ff; margin: 20px 0 10px; }
+.report-content h2 { font-size: 1.2em; color: #79c0ff; margin: 18px 0 8px; border-bottom: 1px solid #21262d; padding-bottom: 6px; }
+.report-content h3 { font-size: 1.05em; color: #d2a8ff; margin: 14px 0 6px; }
+.report-content p { margin: 8px 0; }
+.report-content ul, .report-content ol { margin: 8px 0 8px 24px; }
+.report-content li { margin: 4px 0; }
+.report-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.report-content th, .report-content td { border: 1px solid #21262d; padding: 8px 12px; text-align: left; }
+.report-content th { background: #1c2128; color: #58a6ff; }
+.report-content blockquote { border-left: 3px solid #58a6ff; padding-left: 12px; color: #8b949e; margin: 12px 0; }
+.report-content strong { color: #f0f6fc; }
+.report-content code { background: #1c2128; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+.date-list { list-style: none; }
+.date-list li { padding: 12px 16px; border-bottom: 1px solid #21262d; display: flex; justify-content: space-between; align-items: center; }
+.date-list li:hover { background: #1c2128; }
+.date-list a { color: #58a6ff; text-decoration: none; }
+.date-list .badge { background: #238636; color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 0.75em; }
+.signal-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: 600; }
+.signal-buy { background: #238636; color: #fff; }
+.signal-sell { background: #da3633; color: #fff; }
+.signal-watch { background: #9e6a03; color: #fff; }
+footer { text-align: center; color: #484f58; font-size: 0.8em; padding: 30px 0; border-top: 1px solid #21262d; margin-top: 40px; }
+/* 密码保护样式 */
+.auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d1117; z-index: 1000; display: flex; justify-content: center; align-items: center; }
+.auth-box { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 40px; text-align: center; max-width: 400px; width: 90%; }
+.auth-box h2 { color: #58a6ff; margin-bottom: 20px; font-size: 1.3em; }
+.auth-box input { width: 100%; padding: 12px 16px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-size: 16px; margin-bottom: 16px; outline: none; }
+.auth-box input:focus { border-color: #58a6ff; }
+.auth-box button { width: 100%; padding: 12px; background: #238636; color: #fff; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 600; }
+.auth-box button:hover { background: #2ea043; }
+.auth-error { color: #f85149; font-size: 0.85em; margin-top: 8px; display: none; }
+</style>
+</head>
+<body>
+<div class="auth-overlay" id="authOverlay">
+<div class="auth-box">
+<h2>🔐 投资决策系统</h2>
+<input type="password" id="authPassword" placeholder="请输入访问密码" autofocus>
+<button onclick="checkPassword()">进入</button>
+<p class="auth-error" id="authError">密码错误，请重试</p>
+</div>
+</div>
+<div class="container" id="mainContent" style="display:none;">
+<header>
+<h1>📊 投资决策系统</h1>
+<div class="nav">
+<a href="index.html">首页</a>
+<a href="signals.html">信号扫描</a>
+<a href="holdings.html">持仓</a>
+<a href="pool.html">选股池</a>
+<a href="backtest.html">策略回测</a>
+<a href="stats.html">每日统计</a>
+<a href="bitable.html">飞书报告库</a>
+<a href="knowledge.html">知识库</a>
+<a href="zsxq.html">知识星球</a>
+<a href="kline.html">K线分析</a>
+<a href="db.html">历史数据</a>
+</div>
+</header>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding:12px 16px; background:#161b22; border:1px solid #21262d; border-radius:8px;"><a href="20260607.html">← 2026-06-07</a><span style="color:#58a6ff; font-weight:600;">2026-06-08</span><a href="20260609.html">2026-06-09 →</a></div>
+<div class="report-card"><h2>daily-monitor-report</h2><div class="report-content"><h1>每日监测报告</h1>
+<blockquote>2026-06-08 16:02 · 观察池 148 只 · A股技术扫描</blockquote>
+<p>---</p>
+<h2>一、市场概况</h2>
+<p><strong>涨停板情绪</strong>: <strong>涨停 57</strong> · 🔴跌停 35 · 开板 24 · 连板 14 · 情绪🔥高潮 · 跌停潮⚠️ · 连板活跃(14) · 炸板率高⚡</p>
+<p><strong>美股AI</strong> 🔴 AI芯片大幅回落 · 🔴NVDA▼-6.20% · 🔴AMD▼-10.86% · 🔴SMCI▼-11.22% · 🔴AVGO▼-7.92% · 🔴QCOM▼-10.98% · 🔴MSFT▼-2.66% · 🔴GOOGL▼-0.98% · 🔴GOOG▼-0.95% · 🔴META▼-5.51% · 🔴AMZN▼-3.06% · 🔴TSLA▼-6.56%</p>
+<p><strong>涨跌分布</strong>: 🟢38 · 🔴109 | 🟢█████🔴▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬</p>
+<p><strong>板块构成</strong>: 机器人(30) · AI应用(15) · 航天(1) · AI算力(6) · 光模块(10) · 银发经济(7) · 航空运输(5) · 免税(5) · 化工(5) · 消费(2) · 其他(25)</p>
+<p>---</p>
+<h2>二、信号分类汇总</h2>
+<table>
+<tr><th>类别</th><th>数量</th><th>说明</th></tr>
+<tr><td>🔵 可买入</td><td>14</td><td>均线多头排列+动量共振（强烈买入信号）</td></tr>
+<tr><td>🟢 有利好</td><td>5</td><td>趋势向上但未完全共振（谨慎关注）</td></tr>
+<tr><td>🔴 可卖出</td><td>66</td><td>均线空头排列或趋势破坏（明确看空）</td></tr>
+<tr><td>⚠️ 有风险</td><td>0</td><td>大跌/跌停/高位放量滞涨</td></tr>
+</table>
+<p>---</p>
+<h2>三、🔵 可买入</h2>
+<table>
+<tr><th>代码</th><th>名称</th><th>现价</th><th>评分</th><th>阶段</th><th>信号</th></tr>
+<tr><td>601100</td><td>恒立液压</td><td>119.77</td><td>80</td><td>2️⃣积累</td><td>均线多头排列, MACD多头, MACD金叉, 突破布林上轨, 突破布林上轨 · 止损108.11</td></tr>
+<tr><td>603859</td><td>能科科技</td><td>49.87</td><td>80</td><td>2️⃣积累</td><td>均线多头排列, MACD多头, MACD金叉, 突破布林上轨, 突破布林上轨 · 止损44.32</td></tr>
+<tr><td>601939</td><td>建设银行</td><td>10.33</td><td>70</td><td>2️⃣积累</td><td>均线多头排列, MACD多头, MACD金叉, KDJ金叉 · 止损9.83</td></tr>
+<tr><td>688017</td><td>绿的谐波</td><td>428.25</td><td>65</td><td>2️⃣积累</td><td>均线多头排列, MACD多头, 突破布林上轨, 突破布林上轨 · 止损358.17</td></tr>
+<tr><td>688322</td><td>奥比中光</td><td>144.17</td><td>65</td><td>2️⃣积累</td><td>均线多头排列, MACD多头, 突破布林上轨, 突破布林上轨 · 止损120.46</td></tr>
+<tr><td>600378</td><td>昊华科技</td><td>50.22</td><td>65</td><td>2️⃣积累</td><td>均线多头排列, MACD多头, 突破布林上轨, 突破布林上轨 · 止损43.33</td></tr>
+<tr><td>601398</td><td>工商银行</td><td>7.50</td><td>65</td><td>2️⃣积累</td><td>均线多头排列, MACD多头, 突破布林上轨, 突破布林上轨 · 止损7.24</td></tr>
+<tr><td>002636</td><td>金安国纪</td><td>63.98</td><td>65</td><td>2️⃣积累</td><td>均线多头排列, MACD多头, 突破布林上轨, 突破布林上轨 · 止损54.98</td></tr>
+<tr><td>688498</td><td>源杰科技</td><td>1389.88</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损1188.06</td></tr>
+<tr><td>000725</td><td>京东方Ａ</td><td>6.29</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损5.33</td></tr>
+<tr><td>603005</td><td>晶方科技</td><td>45.15</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损36.72</td></tr>
+<tr><td>600036</td><td>招商银行</td><td>38.50</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损37.49</td></tr>
+<tr><td>601166</td><td>兴业银行</td><td>18.54</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损17.92</td></tr>
+<tr><td>301377</td><td>鼎泰高科</td><td>424.63</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损353.11</td></tr>
+</table>
+<p>---</p>
+<h2>四、🟢 有利好</h2>
+<table>
+<tr><th>代码</th><th>名称</th><th>现价</th><th>评分</th><th>阶段</th><th>信号</th></tr>
+<tr><td>603662</td><td>柯力传感</td><td>69.90</td><td>45</td><td>2️⃣积累</td><td>短期均线多头, MACD多头, MACD金叉 · 止损62.43</td></tr>
+<tr><td>600498</td><td>烽火通信</td><td>54.50</td><td>45</td><td>2️⃣积累</td><td>短期均线多头, MACD多头, MACD金叉 · 止损46.35</td></tr>
+<tr><td>000785</td><td>居然智家</td><td>2.72</td><td>40</td><td>3️⃣领先</td><td>短期均线多头, MACD多头, 突破布林上轨 · 止损2.51</td></tr>
+<tr><td>002965</td><td>祥鑫科技</td><td>37.12</td><td>30</td><td>2️⃣积累</td><td>短期均线多头, MACD多头 · 止损33.54</td></tr>
+<tr><td>603039</td><td>泛微网络</td><td>41.15</td><td>30</td><td>2️⃣积累</td><td>短期均线多头, MACD多头 · 止损35.92</td></tr>
+</table>
+<p>---</p>
+<h2>五、🔴 可卖出</h2>
+<table>
+<tr><th>代码</th><th>名称</th><th>现价</th><th>评分</th><th>阶段</th><th>信号</th></tr>
+<tr><td>002929</td><td>润建股份</td><td>62.33</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(16) · 止损49.68</td></tr>
+<tr><td>688008</td><td>澜起科技</td><td>224.31</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损183.25</td></tr>
+<tr><td>300442</td><td>润泽科技</td><td>74.11</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(18) · 止损64.94</td></tr>
+<tr><td>003028</td><td>振邦智能</td><td>26.24</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损22.97</td></tr>
+<tr><td>300548</td><td>长芯博创</td><td>213.00</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损177.59</td></tr>
+<tr><td>688502</td><td>茂莱光学</td><td>428.50</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(32) · 止损345.69</td></tr>
+<tr><td>000856</td><td>冀东装备</td><td>8.54</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(32) · 止损7.48</td></tr>
+<tr><td>300953</td><td>震裕科技</td><td>143.47</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(23) · 止损122.98</td></tr>
+<tr><td>301280</td><td>珠城科技</td><td>40.98</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(23) · 止损36.05</td></tr>
+<tr><td>002594</td><td>比亚迪</td><td>91.19</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损86.13</td></tr>
+<tr><td>002352</td><td>顺丰控股</td><td>34.58</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损33.3</td></tr>
+<tr><td>300358</td><td>楚天科技</td><td>7.95</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(19) · 止损7.35</td></tr>
+<tr><td>000880</td><td>潍柴重机</td><td>25.79</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(26) · 止损21.93</td></tr>
+<tr><td>603171</td><td>税友股份</td><td>45.72</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(25) · 止损39.99</td></tr>
+<tr><td>300418</td><td>昆仑万维</td><td>38.66</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(18) · 止损33.72</td></tr>
+<tr><td>688500</td><td>慧辰股份</td><td>44.06</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(32) · 止损35.48</td></tr>
+<tr><td>300624</td><td>万兴科技</td><td>55.06</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(20) · 止损48.63</td></tr>
+<tr><td>301606</td><td>绿联科技</td><td>62.52</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(23) · 止损54.46</td></tr>
+<tr><td>300785</td><td>值得买</td><td>40.02</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(17) · 止损34.05</td></tr>
+<tr><td>300253</td><td>卫宁健康</td><td>7.24</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(14) · 止损6.57</td></tr>
+<tr><td>300058</td><td>蓝色光标</td><td>15.05</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(28) · 止损12.88</td></tr>
+<tr><td>300699</td><td>光威复材</td><td>27.68</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(18) · 止损24.97</td></tr>
+<tr><td>300777</td><td>中简科技</td><td>29.35</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(20) · 止损25.14</td></tr>
+<tr><td>600399</td><td>抚顺特钢</td><td>4.37</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(11) · 止损4.01</td></tr>
+<tr><td>300034</td><td>钢研高纳</td><td>16.94</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(27) · 止损15.14</td></tr>
+<tr><td>301005</td><td>超捷股份</td><td>97.69</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(25) · 止损85.22</td></tr>
+<tr><td>002151</td><td>北斗星通</td><td>33.12</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(18) · 止损29.73</td></tr>
+<tr><td>000547</td><td>航天发展</td><td>20.07</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(20) · 止损17.76</td></tr>
+<tr><td>300115</td><td>长盈精密</td><td>32.21</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(24) · 止损27.95</td></tr>
+<tr><td>300010</td><td>ST豆神</td><td>2.67</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, RSI超卖(31) · 止损2.39</td></tr>
+<tr><td>300687</td><td>赛意信息</td><td>24.80</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(33) · 止损19.98</td></tr>
+<tr><td>300170</td><td>汉得信息</td><td>17.68</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(21) · 止损15.43</td></tr>
+<tr><td>301308</td><td>江波龙</td><td>485.06</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损403.9</td></tr>
+<tr><td>001309</td><td>德明利</td><td>588.10</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(35) · 止损495.44</td></tr>
+<tr><td>300395</td><td>菲利华</td><td>112.38</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损92.44</td></tr>
+<tr><td>300870</td><td>欧陆通</td><td>259.00</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损218.88</td></tr>
+<tr><td>688182</td><td>灿勤科技</td><td>32.65</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(23) · 止损27.03</td></tr>
+<tr><td>688521</td><td>芯原股份</td><td>213.00</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(24) · 止损170.85</td></tr>
+<tr><td>301421</td><td>波长光电</td><td>87.03</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损66.22</td></tr>
+<tr><td>002703</td><td>浙江世宝</td><td>16.41</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损13.62</td></tr>
+<tr><td>600346</td><td>恒力石化</td><td>16.60</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(23) · 止损14.92</td></tr>
+<tr><td>000822</td><td>山东海化</td><td>4.55</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(25) · 止损4.18</td></tr>
+<tr><td>600859</td><td>王府井</td><td>10.49</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(34) · 止损9.63</td></tr>
+<tr><td>603069</td><td>海汽集团</td><td>14.63</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(26) · 止损12.92</td></tr>
+<tr><td>600009</td><td>上海机场</td><td>23.01</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(20) · 止损21.78</td></tr>
+<tr><td>600004</td><td>白云机场</td><td>8.03</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(33) · 止损7.77</td></tr>
+<tr><td>600519</td><td>贵州茅台</td><td>1262.98</td><td>0</td><td>5️⃣消散</td><td>均线空头排列 · 止损1205.88</td></tr>
+<tr><td>000858</td><td>五 粮 液</td><td>79.96</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, RSI超卖(29) · 止损75.56</td></tr>
+<tr><td>600048</td><td>保利发展</td><td>5.27</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(16) · 止损4.88</td></tr>
+<tr><td>601601</td><td>中国太保</td><td>31.20</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(19) · 止损29.43</td></tr>
+<tr><td>601111</td><td>中国国航</td><td>6.16</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(28) · 止损5.75</td></tr>
+<tr><td>600029</td><td>南方航空</td><td>5.04</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损4.7</td></tr>
+<tr><td>600115</td><td>中国东航</td><td>3.75</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损3.37</td></tr>
+<tr><td>603885</td><td>吉祥航空</td><td>10.21</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损9.22</td></tr>
+<tr><td>603920</td><td>世运电路</td><td>57.75</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损48.54</td></tr>
+<tr><td>301150</td><td>中一科技</td><td>54.38</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(22) · 止损45.3</td></tr>
+<tr><td>300942</td><td>易瑞生物</td><td>6.25</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(18) · 止损5.7</td></tr>
+<tr><td>300684</td><td>中石科技</td><td>51.44</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损41.6</td></tr>
+<tr><td>301489</td><td>思泉新材</td><td>137.00</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(20) · 止损104.13</td></tr>
+<tr><td>300409</td><td>道氏技术</td><td>20.37</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(18) · 止损18.35</td></tr>
+<tr><td>002709</td><td>天赐材料</td><td>46.91</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(31) · 止损40.76</td></tr>
+<tr><td>002812</td><td>恩捷股份</td><td>61.10</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(18) · 止损53.97</td></tr>
+<tr><td>688295</td><td>中复神鹰</td><td>47.18</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损41.44</td></tr>
+<tr><td>603200</td><td>上海洗霸</td><td>45.30</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(16) · 止损40.28</td></tr>
+<tr><td>300801</td><td>泰和科技</td><td>24.08</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(25) · 止损21.07</td></tr>
+<tr><td>688020</td><td>方邦股份</td><td>130.00</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损100.98</td></tr>
+</table>
+<p>---</p>
+<h2>六、⚠️ 有风险</h2>
+<p>_暂无_</p>
+<p>---</p>
+<p>*本报告由系统自动生成，仅供参考，不构成投资建议。*</p></div></div>
+<div class="report-card"><h2>🌙 晚报</h2><div class="report-content"><p>🌙 晚间复盘 20260608</p>
+<p><strong>一、大盘</strong></p>
+<p>缩量阴线，沪指跌0.7%，两市成交7800亿——量比0.82，空头控场，但未破55日线，暂定为弱势震荡，不补仓。</p>
+<p><strong>二、持仓操作</strong></p>
+<ul>
+<li>卓易信息(688258) | <strong>清仓</strong> | 铁律触发：现价123.0跌破中期均线组均值124.19，无条件执行</li>
+<li>浙江世宝(002703) | <strong>持有</strong> | 站稳60日线（16.28），距中轨乖离-3.1%，未破位，浮亏23.7%未达止损线（成本×0.8=17.2）</li>
+<li>明阳电气(301291) | <strong>持有</strong> | 中轨45.12，现价44.93仅差0.4%，量比0.9，暂守，浮亏22.0%</li>
+<li>中国东航(600115) | <strong>持有</strong> | 中轨3.78，现价3.75贴近，乖离-2.3%，未破，浮亏15.5%</li>
+<li>中国国航(601111) | <strong>持有</strong> | 中轨6.21，现价6.16，乖离-1.2%，站稳55日线，浮亏11.5%</li>
+<li>招商轮船(601872) | <strong>持有</strong> | 中轨14.35，现价14.14乖离-1.5%，量比1.05，未破位</li>
+<li>招商南油(601975) | <strong>持有</strong> | 中轨4.15，现价4.08乖离-1.7%，浮亏23.2%，但未破65日线（4.02）</li>
+<li>石大胜华(603026) | <strong>持有</strong> | 中轨79.8，现价79.3乖离-0.6%，浮亏13.6%</li>
+<li>安井食品(603345) | <strong>持有</strong> | 中轨88.5，现价88.1乖离-0.5%，浮亏8.3%</li>
+<li>伯特利(603596) | <strong>持有</strong> | 中轨29.2，现价29.08逼近，乖离-0.4%，未破</li>
+<li>中概互联网ETF(159605) | <strong>持有</strong> | 中轨0.816，现价0.813乖离-0.4%，浮亏4.6%</li>
+<li>黄金股ETF永赢(517520) | <strong>持有</strong> | 中轨1.892，现价1.89乖离-0.1%，浮亏0.16%</li>
+<li>工业有色ETF(159880) | <strong>持有</strong> | 中轨1.845，现价1.833乖离-0.6%，浮亏13.6%</li>
+<li>中远海能(1138.HK) | <strong>持有</strong> | 平盘收于17.6，中轨17.58，乖离+0.1%，港股流动性弱，不追</li>
+<li>范式智能(6682.HK) | <strong>持有</strong> | 平盘，中轨32.45，乖离+0.2%，观望</li>
+</ul>
+<p><strong>三、观察池信号</strong></p>
+<ul>
+<li>无标的触发回踩/突破/高乖离信号。全部维持原状态，不新增关注。</li>
+</ul>
+<p><strong>四、群聊关键信息</strong></p>
+<ul>
+<li>无有效交易催化信息。飞书今日无个股动态、无会议预告、无逻辑修正。</li>
+</ul>
+<p><strong>五、明日操作</strong></p>
+<ul>
+<li>必须执行：卓易信息(688258) 全仓清出，挂单122.8止损价（若低开直接市价）</li>
+<li>关注：明阳电气(301291) 若放量站上45.2（中轨+0.2%），量比＞1.3，可试仓0.01；招商南油(601975) 若跌破4.02（65日线），减半仓</li>
+</ul></div></div>
+<div class="report-card"><h2>feishu-digest-report</h2><div class="report-content"><p>📊 每日市场报告 2026-06-08</p>
+<p>一、市场整体解读</p>
+<p>大盘二次回踩3950-3990区间获支撑，缩量震荡中完成技术性企稳；科技主线进入“进一退二”缩圈阶段，非主线虹吸衰竭致微盘指数单月跌超11%；流动性双压——美债收益率卡在4.4%+加息预期上修至12月63%，叠加SpaceX/长鑫IPO临近引发场内资金提前止盈；情绪面冰点再现但未破位，修复窗口明后天大概率开启；上证综指3900以下已成增量资金分水岭，政策底与估值底共振明确。</p>
+<p>二、板块个股动态</p>
+<p>📡 光通信/光纤增强</p>
+<p>中天科技 | 光棒+芳纶双驱动，涨停开板+40%乖离，光纤链唯一抗跌新高品种 | 部分减仓控节奏，等缩量回踩中期均线组</p>
+<p>泰和新材 | 芳纶为光缆增强核心材料，逻辑挂钩AI基建而非氨纶周期 | 持有，封板强势，圈子择机止盈</p>
+<p>永鼎股份 | 光芯片前排，近50%乖离承压明显 | 1/3仓位止盈，抱团未松动前不离场</p>
+<p>🔬 半导体设备/硅片</p>
+<p>立昂微 | 硅片环节抗跌标杆，国产替代+产能爬坡双验证 | 持有，等待7月中芯国际扩产招标催化</p>
+<p>茂莱光学 | 北美光通信Taara项目量产+波片试制订单落地，CPO检测设备6-12个月推出 | 波段操作，跟踪北美客户验厂进度与订单放量节奏</p>
+<p>🏗️ 工程机械</p>
+<p>三一重工 | 出口同比+34.2%，海外毛利率较国内高10.95pct，PB跌破1.8x | 低吸，赔率极高，静待风格切换修复</p>
+<p>徐工机械、中联重科 | 同步出口加速+省油技术壁垒兑现，PE仅13x/11x | 持有，重点观察厄尔尼诺高温带动的6-7月基建开工高频数据</p>
+<p>🎮 新消费/A受益方向</p>
+<p>游戏板块 | 出海能力扎实、未受A代冲击，反成A提效工具链受益方 | 观望，等7月暑期档及版号集中发放催化</p>
+<p>中科三环 | 稀土磁钢突破轴向磁通电机，人形机器人低位主题炒作 | 小仓位博弈，短线弹性强但持续性存疑</p>
+<p>⚡ 测试电源/硬件配套</p>
+<p>科威尔 | HVDC高功率赛道弯道超车，但产业催化真空期+50%乖离显压力 | 止盈1/3，中线跟踪光伏/算力客户订单落地</p>
+<p>🔧 物理AI/商业航天</p>
+<p>能科科技 | 物理AI探路尖兵模型，回踩买点结构初现 | 小仓位试错，博弈7月商业航天回收事件催化</p>
+<p>江顺科技 | 突破买点结构成型，但商业航天催化未兑现+大盘拖累 | 观望，等缺口回补+催化信号双重确认</p>
+<p>三、未来方向展望</p>
+<p>🎯 重点机会：</p>
+<p>① 工程机械全球化红利兑现——出口增速连续3月加速，6-7月厄尔尼诺高温+基建旺季将验证盈利跃升，赔率已至历史极值</p>
+<p>② A应用端左侧布局窗口——上游产能约束临近临界点，Q3起DRAM/光模块价格拐点+成本下降将倒逼应用端爆发，关注游戏、智能驾驶、工业软件</p>
+<p>⚠ 注意事项：</p>
+<p>• 风险点一：若7月中美财报季出现博通式“业绩达标但指引不及最乐观预期”，科技主线将面临EPS与估值双杀</p>
+<p>• 风险点二：美债利率若突破4.6%或美联储12月加息概率升至75%以上，将触发量化资金程序化减仓，放大科技波动</p>
+<p>四、群主原话</p>
+<p>“科技主线退潮是进一退二，不是断崖崩塌；每一次2-3根中阴线后，必有中小级别冰点修复。”</p>
+<p>“移动平均带三类买卖点，既适用于个股，也适用于科创板、半导体设备指数——5月29日科创板30%乖离就是退潮起点信号。”</p>
+<p>“做减法为主：世界杯+巨无霸IPO窗口期，量能中枢下移是常态，掉队品种会越来越多，防守比进攻更重要。”</p></div></div>
+<div class="report-card"><h2>pool-updates</h2><div class="report-content"><h1>观察池/持仓池更新记录</h1>
+<blockquote>20260608 evening报告自动更新 · 2026-06-08 16:03</blockquote>
+<p>---</p>
+<h2>观察池变更</h2>
+<h3>🔔 信号计数更新 (4 只)</h3>
+<table>
+<tr><th>代码</th><th>名称</th><th>分类</th><th>30日信号次数</th></tr>
+<tr><td>688258</td><td>卓易信息</td><td>ai_application</td><td>16 → 17</td></tr>
+<tr><td>002703</td><td>浙江世宝</td><td>other</td><td>16 → 17</td></tr>
+<tr><td>600115</td><td>中国东航</td><td>airlines</td><td>16 → 17</td></tr>
+<tr><td>601111</td><td>中国国航</td><td>airlines</td><td>16 → 17</td></tr>
+</table>
+<h2>持仓池变更</h2>
+<h3>📊 持仓更新 (15 只)</h3>
+<table>
+<tr><th>代码</th><th>名称</th><th>成本</th><th>现价</th><th>盈亏%</th></tr>
+<tr><td>002703</td><td>浙江世宝</td><td>21.5</td><td>16.41</td><td>-23.67%</td></tr>
+<tr><td>301291</td><td>明阳电气</td><td>57.58</td><td>44.93</td><td>-21.97%</td></tr>
+<tr><td>600115</td><td>中国东航</td><td>4.44</td><td>3.75</td><td>-15.54%</td></tr>
+<tr><td>601111</td><td>中国国航</td><td>6.96</td><td>6.16</td><td>-11.49%</td></tr>
+<tr><td>601872</td><td>招商轮船</td><td>17.26</td><td>14.14</td><td>-18.08%</td></tr>
+<tr><td>601975</td><td>招商南油</td><td>5.31</td><td>4.08</td><td>-23.16%</td></tr>
+<tr><td>603026</td><td>石大胜华</td><td>91.79</td><td>79.3</td><td>-13.61%</td></tr>
+<tr><td>603345</td><td>安井食品</td><td>96.03</td><td>88.1</td><td>-8.26%</td></tr>
+<tr><td>603596</td><td>伯特利</td><td>34.12</td><td>29.08</td><td>-14.77%</td></tr>
+<tr><td>688258</td><td>卓易信息</td><td>140.92</td><td>123.0</td><td>-12.72%</td></tr>
+<tr><td>159605</td><td>中概互联网ETF</td><td>0.852</td><td>0.813</td><td>-4.58%</td></tr>
+<tr><td>517520</td><td>黄金股ETF永赢</td><td>1.893</td><td>1.89</td><td>-0.16%</td></tr>
+<tr><td>159880</td><td>工业有色ETF</td><td>2.121</td><td>1.833</td><td>-13.58%</td></tr>
+<tr><td>1138.HK</td><td>中远海能</td><td>17.6</td><td>17.6</td><td>+0.00%</td></tr>
+<tr><td>6682.HK</td><td>范式智能</td><td>32.5</td><td>32.5</td><td>+0.00%</td></tr>
+</table>
+<h3>⚠️ 风险警告 (11 只)</h3>
+<p><strong>002703 浙江世宝</strong></p>
+<ul>
+<li>🚨 浮动亏损 -23.67%，接近硬止损</li>
+</ul>
+<p><strong>301291 明阳电气</strong></p>
+<ul>
+<li>🚨 浮动亏损 -21.97%，接近硬止损</li>
+</ul>
+<p><strong>600115 中国东航</strong></p>
+<ul>
+<li>🚨 浮动亏损 -15.54%，接近硬止损</li>
+</ul>
+<p><strong>601111 中国国航</strong></p>
+<ul>
+<li>🚨 浮动亏损 -11.49%，接近硬止损</li>
+</ul>
+<p><strong>601872 招商轮船</strong></p>
+<ul>
+<li>🚨 浮动亏损 -18.08%，接近硬止损</li>
+</ul>
+<p><strong>601975 招商南油</strong></p>
+<ul>
+<li>🚨 浮动亏损 -23.16%，接近硬止损</li>
+</ul>
+<p><strong>603026 石大胜华</strong></p>
+<ul>
+<li>🚨 浮动亏损 -13.61%，接近硬止损</li>
+</ul>
+<p><strong>603345 安井食品</strong></p>
+<ul>
+<li>🚨 浮动亏损 -8.26%，接近硬止损</li>
+</ul>
+<p><strong>603596 伯特利</strong></p>
+<ul>
+<li>🚨 浮动亏损 -14.77%，接近硬止损</li>
+</ul>
+<p><strong>688258 卓易信息</strong></p>
+<ul>
+<li>🚨 浮动亏损 -12.72%，接近硬止损</li>
+</ul>
+<p><strong>159880 工业有色ETF</strong></p>
+<ul>
+<li>🚨 浮动亏损 -13.72%，接近硬止损</li>
+</ul>
+<p>---</p>
+<p>*本文件由系统自动生成*</p></div></div>
+<div class="report-card"><h2>📡 信号扫描</h2><div class="report-content"><h1>📊 移动平均带信号扫描 20260608</h1>
+<h2>🔴 卖出信号</h2>
+<p><strong>卓易信息(688258)</strong> — 跌破中期均线组</p>
+<ul>
+<li>⚠️ 铁律触发：股价 123.0 跌破中期均线组均值 124.19，必须清仓</li>
+<li>建议：清仓</li>
+</ul></div></div>
+<div class="report-card"><h2>weekly-hot-stocks-scan</h2><div class="report-content"><h1>每周热股扫描 20260608</h1>
+<p>扫描范围: 最近16天 | 阈值: ≥3次提及</p>
+<p>数据覆盖: 11 天 (20260524 ~ 20260605)</p>
+<h2>建议新增观察池 (2 只)</h2>
+<table>
+<tr><th>代码</th><th>提及次数</th><th>出现日期</th></tr>
+<tr><td>300604</td><td>5</td><td>20260525, 20260526</td></tr>
+<tr><td>601600</td><td>3</td><td>20260525, 20260526</td></tr>
+</table>
+<h2>已在池中热股 (3 只)</h2>
+<table>
+<tr><th>代码</th><th>提及次数</th><th>出现日期</th></tr>
+<tr><td>300442</td><td>4</td><td>20260525, 20260526</td></tr>
+<tr><td>601872</td><td>4</td><td>20260525, 20260526</td></tr>
+<tr><td>601888</td><td>3</td><td>20260525, 20260526</td></tr>
+</table></div></div>
+<footer>
+🤖 Investment System · 自动更新 · 2026-06-12 15:29
+</footer>
+</div>
+<script>
+const AUTH_KEY = 'investment_auth';
+const AUTH_HASH = '000000000000000000000000640fade3'; // 简单hash，实际密码: Martin2026
+
+function simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).padStart(32, '0').substring(0, 32);
+}
+
+function checkPassword() {
+    const input = document.getElementById('authPassword').value;
+    const hash = simpleHash(input);
+    if (hash === AUTH_HASH) {
+        localStorage.setItem(AUTH_KEY, 'true');
+        document.getElementById('authOverlay').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+    } else {
+        document.getElementById('authError').style.display = 'block';
+        document.getElementById('authPassword').value = '';
+    }
+}
+
+// 检查是否已认证
+if (localStorage.getItem(AUTH_KEY) === 'true') {
+    document.getElementById('authOverlay').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+}
+
+// 回车提交
+document.getElementById('authPassword').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') checkPassword();
+});
+</script>
+</body>
+</html>

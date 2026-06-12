@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>历史数据 - 投资报告</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif; background: #0d1117; color: #c9d1d9; line-height: 1.6; }
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+header { border-bottom: 1px solid #21262d; padding: 20px 0; margin-bottom: 30px; }
+header h1 { color: #58a6ff; font-size: 1.5em; }
+header .nav { margin-top: 10px; }
+header .nav a { color: #8b949e; text-decoration: none; margin-right: 20px; font-size: 0.9em; }
+header .nav a:hover { color: #58a6ff; }
+header .nav a.active { color: #58a6ff; font-weight: 600; }
+.report-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 24px; margin-bottom: 20px; }
+.report-card h2 { color: #58a6ff; font-size: 1.2em; margin-bottom: 12px; }
+.report-card .meta { color: #8b949e; font-size: 0.85em; margin-bottom: 16px; }
+.report-content { font-size: 0.95em; }
+.report-content h1 { font-size: 1.4em; color: #58a6ff; margin: 20px 0 10px; }
+.report-content h2 { font-size: 1.2em; color: #79c0ff; margin: 18px 0 8px; border-bottom: 1px solid #21262d; padding-bottom: 6px; }
+.report-content h3 { font-size: 1.05em; color: #d2a8ff; margin: 14px 0 6px; }
+.report-content p { margin: 8px 0; }
+.report-content ul, .report-content ol { margin: 8px 0 8px 24px; }
+.report-content li { margin: 4px 0; }
+.report-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.report-content th, .report-content td { border: 1px solid #21262d; padding: 8px 12px; text-align: left; }
+.report-content th { background: #1c2128; color: #58a6ff; }
+.report-content blockquote { border-left: 3px solid #58a6ff; padding-left: 12px; color: #8b949e; margin: 12px 0; }
+.report-content strong { color: #f0f6fc; }
+.report-content code { background: #1c2128; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+.date-list { list-style: none; }
+.date-list li { padding: 12px 16px; border-bottom: 1px solid #21262d; display: flex; justify-content: space-between; align-items: center; }
+.date-list li:hover { background: #1c2128; }
+.date-list a { color: #58a6ff; text-decoration: none; }
+.date-list .badge { background: #238636; color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 0.75em; }
+.signal-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: 600; }
+.signal-buy { background: #238636; color: #fff; }
+.signal-sell { background: #da3633; color: #fff; }
+.signal-watch { background: #9e6a03; color: #fff; }
+footer { text-align: center; color: #484f58; font-size: 0.8em; padding: 30px 0; border-top: 1px solid #21262d; margin-top: 40px; }
+/* 密码保护样式 */
+.auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d1117; z-index: 1000; display: flex; justify-content: center; align-items: center; }
+.auth-box { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 40px; text-align: center; max-width: 400px; width: 90%; }
+.auth-box h2 { color: #58a6ff; margin-bottom: 20px; font-size: 1.3em; }
+.auth-box input { width: 100%; padding: 12px 16px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-size: 16px; margin-bottom: 16px; outline: none; }
+.auth-box input:focus { border-color: #58a6ff; }
+.auth-box button { width: 100%; padding: 12px; background: #238636; color: #fff; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 600; }
+.auth-box button:hover { background: #2ea043; }
+.auth-error { color: #f85149; font-size: 0.85em; margin-top: 8px; display: none; }
+</style>
+</head>
+<body>
+<div class="auth-overlay" id="authOverlay">
+<div class="auth-box">
+<h2>🔐 投资决策系统</h2>
+<input type="password" id="authPassword" placeholder="请输入访问密码" autofocus>
+<button onclick="checkPassword()">进入</button>
+<p class="auth-error" id="authError">密码错误，请重试</p>
+</div>
+</div>
+<div class="container" id="mainContent" style="display:none;">
+<header>
+<h1>📊 投资决策系统</h1>
+<div class="nav">
+<a href="index.html">首页</a>
+<a href="signals.html">信号扫描</a>
+<a href="holdings.html">持仓</a>
+<a href="pool.html">选股池</a>
+<a href="backtest.html">策略回测</a>
+<a href="stats.html">每日统计</a>
+<a href="bitable.html">飞书报告库</a>
+<a href="knowledge.html">知识库</a>
+<a href="zsxq.html">知识星球</a>
+<a href="kline.html">K线分析</a>
+<a href="db.html" class="active">历史数据</a>
+</div>
+</header>
+<div class="card" style="margin-bottom:24px;">
+<h2 style="color:#58a6ff; margin-bottom:16px;">历史数据查询</h2>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+<div><label style="color:#8b949e; display:block; margin-bottom:4px;">按日期查询</label>
+<select id="dateSelect" style="width:100%%; padding:8px; background:#0d1117; border:1px solid #30363d; border-radius:6px; color:#c9d1d9;" onchange="queryByDate(this.value)">
+<option value="">选择日期...</option><option value="2026-06-12">2026/-0/6-12</option><option value="2026-06-11">2026/-0/6-11</option><option value="2026-06-10">2026/-0/6-10</option><option value="2026-06-09">2026/-0/6-09</option><option value="2026-06-08">2026/-0/6-08</option><option value="2026-06-07">2026/-0/6-07</option><option value="2026-06-05">2026/-0/6-05</option><option value="2026-06-04">2026/-0/6-04</option><option value="2026-06-03">2026/-0/6-03</option><option value="2026-06-02">2026/-0/6-02</option><option value="2026-06-01">2026/-0/6-01</option><option value="2026-05-31">2026/-0/5-31</option><option value="2026-05-29">2026/-0/5-29</option><option value="2026-05-28">2026/-0/5-28</option><option value="2026-05-27">2026/-0/5-27</option><option value="2026-05-26">2026/-0/5-26</option><option value="2026-05-25">2026/-0/5-25</option><option value="2026-05-24">2026/-0/5-24</option><option value="2026-05-23">2026/-0/5-23</option><option value="2026-05-22">2026/-0/5-22</option><option value="2026-05-21">2026/-0/5-21</option><option value="2026-05-20">2026/-0/5-20</option><option value="2026-05-19">2026/-0/5-19</option><option value="2026-05-18">2026/-0/5-18</option><option value="2026-05-15">2026/-0/5-15</option><option value="2026-05-14">2026/-0/5-14</option><option value="2026-05-13">2026/-0/5-13</option><option value="2026-05-12">2026/-0/5-12</option><option value="2026-05-11">2026/-0/5-11</option><option value="2026-05-08">2026/-0/5-08</option><option value="2026-05-07">2026/-0/5-07</option><option value="2026-05-06">2026/-0/5-06</option><option value="2026-05-05">2026/-0/5-05</option><option value="2026-05-04">2026/-0/5-04</option><option value="2026-05-01">2026/-0/5-01</option><option value="2026-04-30">2026/-0/4-30</option><option value="2026-04-28">2026/-0/4-28</option><option value="2026-04-27">2026/-0/4-27</option><option value="2026-04-26">2026/-0/4-26</option><option value="2026-04-25">2026/-0/4-25</option><option value="2026-04-24">2026/-0/4-24</option><option value="2026-04-23">2026/-0/4-23</option><option value="2026-04-22">2026/-0/4-22</option><option value="2026-04-21">2026/-0/4-21</option><option value="2026-04-20">2026/-0/4-20</option><option value="2026-04-17">2026/-0/4-17</option><option value="2026-04-16">2026/-0/4-16</option><option value="2026-04-15">2026/-0/4-15</option><option value="2026-04-14">2026/-0/4-14</option><option value="2026-04-13">2026/-0/4-13</option><option value="2026-04-12">2026/-0/4-12</option><option value="2026-04-10">2026/-0/4-10</option><option value="2026-04-09">2026/-0/4-09</option><option value="2026-04-08">2026/-0/4-08</option><option value="2026-04-07">2026/-0/4-07</option><option value="2026-04-06">2026/-0/4-06</option><option value="2026-04-03">2026/-0/4-03</option><option value="2026-04-02">2026/-0/4-02</option><option value="2026-04-01">2026/-0/4-01</option><option value="2026-03-31">2026/-0/3-31</option><option value="2026-03-30">2026/-0/3-30</option><option value="2026-03-29">2026/-0/3-29</option><option value="2026-03-28">2026/-0/3-28</option><option value="2026-03-27">2026/-0/3-27</option><option value="2026-03-26">2026/-0/3-26</option><option value="2026-03-25">2026/-0/3-25</option><option value="2026-03-24">2026/-0/3-24</option></select></div>
+<div><label style="color:#8b949e; display:block; margin-bottom:4px;">按股票查询</label>
+<select id="stockSelect2" style="width:100%%; padding:8px; background:#0d1117; border:1px solid #30363d; border-radius:6px; color:#c9d1d9;" onchange="queryByStock(this.value)">
+<option value="">选择股票...</option><option value="000001">平安银行(000001)</option><option value="002594">比亚迪(002594)</option><option value="002703">浙江世宝(002703)</option><option value="1138.HK">中远海能(1138.HK)</option><option value="159605">中概互联网ETF(159605)</option><option value="159880">工业有色ETF(159880)</option><option value="300395">菲利华(300395)</option><option value="300442">润泽科技(300442)</option><option value="300604">长川科技(300604)</option><option value="301291">明阳电气(301291)</option><option value="517520">黄金股ETF永赢(517520)</option><option value="600115">中国东航(600115)</option><option value="601111">中国国航(601111)</option><option value="601600">中国铝业(601600)</option><option value="601872">招商轮船(601872)</option><option value="601888">中国中免(601888)</option><option value="601975">招商南油(601975)</option><option value="603026">石大胜华(603026)</option><option value="603345">安井食品(603345)</option><option value="603596">伯特利(603596)</option><option value="6682.HK">范式智能(6682.HK)</option><option value="688258">卓易信息(688258)</option><option value="688593">菲利华(688593)</option></select></div></div>
+<div id="queryResult" style="color:#8b949e;">选择日期或股票查看详情</div></div>
+<div class="card" style="margin-bottom:24px;"><h3 style="color:#58a6ff; margin-bottom:12px;">每日概览</h3>
+<div style="max-height:400px; overflow-y:auto;"><table style="width:100%%; font-size:13px;"><thead><tr><th>日期</th><th>信号数</th><th>买入</th><th>卖出</th><th>持仓数</th><th>总仓位</th></tr></thead><tbody><tr><td>2026-03-24</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>0</td><td>0.0%</td></tr><tr><td>2026-03-25</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>0</td><td>0.0%</td></tr><tr><td>2026-03-26</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>0</td><td>0.0%</td></tr><tr><td>2026-03-27</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>0</td><td>0.0%</td></tr><tr><td>2026-03-28</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>2</td><td>21.5%</td></tr><tr><td>2026-03-29</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>0</td><td>0.0%</td></tr><tr><td>2026-03-30</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>2</td><td>21.5%</td></tr><tr><td>2026-03-31</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>2</td><td>21.5%</td></tr><tr><td>2026-04-01</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>2</td><td>21.5%</td></tr><tr><td>2026-04-02</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>2</td><td>21.5%</td></tr><tr><td>2026-04-03</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>2</td><td>21.5%</td></tr><tr><td>2026-04-06</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>2</td><td>21.5%</td></tr><tr><td>2026-04-07</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>2</td><td>21.5%</td></tr><tr><td>2026-04-08</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>1</td><td>0.9%</td></tr><tr><td>2026-04-09</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>1</td><td>0.9%</td></tr><tr><td>2026-04-10</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>1</td><td>0.9%</td></tr><tr><td>2026-04-12</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>0</td><td>0.0%</td></tr><tr><td>2026-04-13</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>1</td><td>0.9%</td></tr><tr><td>2026-04-14</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>1</td><td>0.9%</td></tr><tr><td>2026-04-15</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>1</td><td>0.9%</td></tr><tr><td>2026-04-16</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>1</td><td>0.9%</td></tr><tr><td>2026-04-17</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>1</td><td>0.9%</td></tr><tr><td>2026-04-20</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>1</td><td>0.9%</td></tr><tr><td>2026-04-21</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>1</td><td>0.9%</td></tr><tr><td>2026-04-22</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>1</td><td>0.9%</td></tr><tr><td>2026-04-23</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>1</td><td>0.9%</td></tr><tr><td>2026-04-24</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>1</td><td>0.9%</td></tr><tr><td>2026-04-25</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>0</td><td>0.0%</td></tr><tr><td>2026-04-26</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>0</td><td>0.0%</td></tr><tr><td>2026-04-27</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>6</td><td>0.5%</td></tr><tr><td>2026-04-28</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>0</td><td>0.0%</td></tr><tr><td>2026-04-30</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>0</td><td>0.0%</td></tr><tr><td>2026-05-01</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>6</td><td>0.5%</td></tr><tr><td>2026-05-04</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>6</td><td>0.5%</td></tr><tr><td>2026-05-05</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>0</td><td>0.0%</td></tr><tr><td>2026-05-06</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>6</td><td>0.5%</td></tr><tr><td>2026-05-07</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>6</td><td>0.5%</td></tr><tr><td>2026-05-08</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>6</td><td>0.5%</td></tr><tr><td>2026-05-11</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>6</td><td>0.5%</td></tr><tr><td>2026-05-12</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>6</td><td>0.5%</td></tr><tr><td>2026-05-13</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>6</td><td>0.5%</td></tr><tr><td>2026-05-14</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>6</td><td>0.5%</td></tr><tr><td>2026-05-15</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>6</td><td>0.5%</td></tr><tr><td>2026-05-18</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>6</td><td>0.5%</td></tr><tr><td>2026-05-19</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>6</td><td>0.5%</td></tr><tr><td>2026-05-20</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>6</td><td>0.5%</td></tr><tr><td>2026-05-21</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>6</td><td>0.5%</td></tr><tr><td>2026-05-22</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>6</td><td>0.5%</td></tr><tr><td>2026-05-23</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>0</td><td>0.0%</td></tr><tr><td>2026-05-24</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>0</td><td>0.0%</td></tr><tr><td>2026-05-25</td><td>3</td><td style="color:#3fb950">0</td><td style="color:#f85149">3</td><td>6</td><td>0.5%</td></tr><tr><td>2026-05-26</td><td>3</td><td style="color:#3fb950">0</td><td style="color:#f85149">3</td><td>6</td><td>0.5%</td></tr><tr><td>2026-05-27</td><td>3</td><td style="color:#3fb950">0</td><td style="color:#f85149">3</td><td>6</td><td>0.5%</td></tr><tr><td>2026-05-28</td><td>4</td><td style="color:#3fb950">0</td><td style="color:#f85149">4</td><td>15</td><td>0.6%</td></tr><tr><td>2026-05-29</td><td>4</td><td style="color:#3fb950">0</td><td style="color:#f85149">3</td><td>15</td><td>0.6%</td></tr><tr><td>2026-05-31</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>0</td><td>0.0%</td></tr><tr><td>2026-06-01</td><td>4</td><td style="color:#3fb950">0</td><td style="color:#f85149">3</td><td>15</td><td>0.6%</td></tr><tr><td>2026-06-02</td><td>3</td><td style="color:#3fb950">0</td><td style="color:#f85149">3</td><td>15</td><td>0.6%</td></tr><tr><td>2026-06-03</td><td>1</td><td style="color:#3fb950">0</td><td style="color:#f85149">1</td><td>15</td><td>0.6%</td></tr><tr><td>2026-06-04</td><td>1</td><td style="color:#3fb950">0</td><td style="color:#f85149">1</td><td>15</td><td>0.6%</td></tr><tr><td>2026-06-05</td><td>1</td><td style="color:#3fb950">0</td><td style="color:#f85149">1</td><td>15</td><td>0.6%</td></tr><tr><td>2026-06-07</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>0</td><td>0.0%</td></tr><tr><td>2026-06-08</td><td>1</td><td style="color:#3fb950">0</td><td style="color:#f85149">1</td><td>15</td><td>0.6%</td></tr><tr><td>2026-06-09</td><td>1</td><td style="color:#3fb950">0</td><td style="color:#f85149">1</td><td>15</td><td>0.6%</td></tr><tr><td>2026-06-10</td><td>1</td><td style="color:#3fb950">0</td><td style="color:#f85149">1</td><td>15</td><td>0.6%</td></tr><tr><td>2026-06-11</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>15</td><td>0.6%</td></tr><tr><td>2026-06-12</td><td>0</td><td style="color:#3fb950">0</td><td style="color:#f85149">0</td><td>15</td><td>0.6%</td></tr></tbody></table></div></div>
+<div class="card" style="margin-bottom:24px;"><h3 style="color:#58a6ff; margin-bottom:12px;">最近信号 (30条)</h3>
+<div style="max-height:400px; overflow-y:auto;"><table style="width:100%%; font-size:13px;"><thead><tr><th>日期</th><th>股票</th><th>类型</th><th>强度</th><th>消息</th></tr></thead><tbody><tr><td>2026-06-10</td><td>🔴 卓易信息(688258)</td><td>sell_break_mid_ma</td><td>10</td><td>⚠️ 铁律触发：股价 122.26 跌破中期均线组均值 124.31，必须清仓</td></tr><tr><td>2026-06-09</td><td>🔴 卓易信息(688258)</td><td>sell_break_short_ma</td><td>5</td><td>🟠 股价 127.9 跌破短期均线组均值 134.57，考虑减仓</td></tr><tr><td>2026-06-08</td><td>🔴 卓易信息(688258)</td><td>sell_break_mid_ma</td><td>10</td><td>⚠️ 铁律触发：股价 123.0 跌破中期均线组均值 124.19，必须清仓</td></tr><tr><td>2026-06-05</td><td>🔴 卓易信息(688258)</td><td>sell_break_short_ma</td><td>5</td><td>🟠 股价 134.79 跌破短期均线组均值 140.35，考虑减仓</td></tr><tr><td>2026-06-04</td><td>🔴 卓易信息(688258)</td><td>sell_break_short_ma</td><td>5</td><td>🟠 股价 134.79 跌破短期均线组均值 140.35，考虑减仓</td></tr><tr><td>2026-06-03</td><td>🔴 伯特利(603596)</td><td>sell_break_mid_ma</td><td>10</td><td>⚠️ 铁律触发：股价 31.04 跌破中期均线组均值 31.59，必须清仓</td></tr><tr><td>2026-06-02</td><td>🔴 伯特利(603596)</td><td>sell_break_short_ma</td><td>5</td><td>🟠 股价 31.93 跌破短期均线组均值 32.96，考虑减仓</td></tr><tr><td>2026-06-02</td><td>🔴 安井食品(603345)</td><td>sell_break_mid_ma</td><td>10</td><td>⚠️ 铁律触发：股价 93.97 跌破中期均线组均值 95.35，必须清仓</td></tr><tr><td>2026-06-02</td><td>🔴 招商南油(601975)</td><td>sell_break_mid_ma</td><td>10</td><td>⚠️ 铁律触发：股价 4.71 跌破中期均线组均值 4.73，必须清仓</td></tr><tr><td>2026-06-01</td><td>🔴 伯特利(603596)</td><td>sell_break_short_ma</td><td>5</td><td>🟠 股价 32.11 跌破短期均线组均值 33.14，考虑减仓</td></tr><tr><td>2026-06-01</td><td>👀 安井食品(603345)</td><td>buy_pullback_watch</td><td>5</td><td>👀 回踩关注：股价 100.0 接近中期均线组 95.3，放量阳线，等待确认</td></tr><tr><td>2026-06-01</td><td>🔴 招商南油(601975)</td><td>sell_break_short_ma</td><td>5</td><td>🟠 股价 4.95 跌破短期均线组均值 5.14，考虑减仓</td></tr><tr><td>2026-06-01</td><td>🔴 明阳电气(301291)</td><td>sell_break_mid_ma</td><td>10</td><td>⚠️ 铁律触发：股价 56.04 跌破中期均线组均值 56.61，必须清仓</td></tr><tr><td>2026-05-29</td><td>🔴 伯特利(603596)</td><td>sell_break_short_ma</td><td>5</td><td>🟠 股价 32.09 跌破短期均线组均值 33.2，考虑减仓</td></tr><tr><td>2026-05-29</td><td>👀 安井食品(603345)</td><td>buy_pullback_watch</td><td>5</td><td>👀 回踩关注：股价 99.65 接近中期均线组 95.15，放量阳线，等待确认</td></tr><tr><td>2026-05-29</td><td>🔴 石大胜华(603026)</td><td>sell_break_mid_ma</td><td>10</td><td>⚠️ 铁律触发：股价 87.69 跌破中期均线组均值 89.42，必须清仓</td></tr><tr><td>2026-05-29</td><td>🔴 招商南油(601975)</td><td>sell_break_short_ma</td><td>5</td><td>🟠 股价 4.86 跌破短期均线组均值 5.19，考虑减仓</td></tr><tr><td>2026-05-28</td><td>🔴 安井食品(603345)</td><td>sell_break_short_ma</td><td>5</td><td>🟠 股价 97.33 跌破短期均线组均值 98.23，考虑减仓</td></tr><tr><td>2026-05-28</td><td>🔴 石大胜华(603026)</td><td>sell_break_short_ma</td><td>5</td><td>🟠 股价 90.06 跌破短期均线组均值 94.96，考虑减仓</td></tr><tr><td>2026-05-28</td><td>🔴 招商南油(601975)</td><td>sell_break_short_ma</td><td>5</td><td>🟠 股价 4.88 跌破短期均线组均值 5.25，考虑减仓</td></tr><tr><td>2026-05-28</td><td>🔴 浙江世宝(002703)</td><td>sell_break_mid_ma</td><td>10</td><td>⚠️ 铁律触发：股价 20.0 跌破中期均线组均值 20.39，必须清仓</td></tr><tr><td>2026-05-27</td><td>🔴 招商轮船(601872)</td><td>sell_break_mid_ma</td><td>10</td><td>⚠️ 铁律触发：股价 17.26 跌破中期均线组均值 17.65，必须清仓</td></tr><tr><td>2026-05-27</td><td>🔴 长川科技(300604)</td><td>sell_high_bias_heavy</td><td>9</td><td>🔴 乖离率 50.45% 超过 30%，建议止盈 1/2-2/3</td></tr><tr><td>2026-05-27</td><td>🔴 润泽科技(300442)</td><td>sell_break_mid_ma</td><td>10</td><td>⚠️ 铁律触发：股价 89.01 跌破中期均线组均值 90.81，必须清仓</td></tr><tr><td>2026-05-26</td><td>🔴 招商轮船(601872)</td><td>sell_break_mid_ma</td><td>10</td><td>⚠️ 铁律触发：股价 17.26 跌破中期均线组均值 17.65，必须清仓</td></tr><tr><td>2026-05-26</td><td>🔴 长川科技(300604)</td><td>sell_high_bias_heavy</td><td>9</td><td>🔴 乖离率 50.45% 超过 30%，建议止盈 1/2-2/3</td></tr><tr><td>2026-05-26</td><td>🔴 润泽科技(300442)</td><td>sell_break_mid_ma</td><td>10</td><td>⚠️ 铁律触发：股价 89.01 跌破中期均线组均值 90.81，必须清仓</td></tr><tr><td>2026-05-25</td><td>🔴 招商轮船(601872)</td><td>sell_break_short_ma</td><td>5</td><td>🟠 股价 17.77 跌破短期均线组均值 17.8，考虑减仓</td></tr><tr><td>2026-05-25</td><td>🔴 长川科技(300604)</td><td>sell_high_bias_heavy</td><td>9</td><td>🔴 乖离率 60.48% 超过 30%，建议止盈 1/2-2/3</td></tr><tr><td>2026-05-25</td><td>🔴 润泽科技(300442)</td><td>sell_break_short_ma</td><td>5</td><td>🟠 股价 93.35 跌破短期均线组均值 96.89，考虑减仓</td></tr></tbody></table></div></div>
+<div class="card"><h3 style="color:#58a6ff; margin-bottom:12px;">最近聚合信息</h3>
+<div style="max-height:400px; overflow-y:auto;"><table style="width:100%%; font-size:13px;"><thead><tr><th>日期</th><th>来源</th><th>类型</th><th>内容</th></tr></thead><tbody><tr><td>2026-06-12</td><td>feishu</td><td>text</td><td></td></tr><tr><td>2026-06-11</td><td>未知</td><td>zsxq</td><td>光伏：组件效率强标或将出台，加速推动落后产能淘汰
+# 光伏：组件效率强标或将出台，加速推动落后产能淘汰
+
+> **作者**: 未知
+> **发布时间**: 2026-06-11 09:26:12
+> </td></tr><tr><td>2026-06-11</td><td>未知</td><td>zsxq</td><td>🇨🇳#睿创微纳 26年20-25X 积极增配 广发军工
+# 🇨🇳#睿创微纳 26年20-25X 积极增配 广发军工
+
+> **作者**: 未知
+> **发布时间**: 2026-06-11 09:25</td></tr><tr><td>2026-06-11</td><td>未知</td><td>zsxq</td><td>【中信通信】六问六答：为什么说谷歌Coherent Lite光模块可能是薄膜铌酸锂（TFLN）的重要落地场景？
+# 【中信通信】六问六答：为什么说谷歌Coherent Lite光模块可能是薄膜铌酸锂（</td></tr><tr><td>2026-06-11</td><td>未知</td><td>zsxq</td><td>🧧【长江轻工&传媒】泡泡玛特和潮玩行业周跟踪0603~0610
+# 🧧【长江轻工&传媒】泡泡玛特和潮玩行业周跟踪0603~0610
+
+> **作者**: 未知
+> **发布时间**: 2026-06-</td></tr><tr><td>2026-06-11</td><td>未知</td><td>zsxq</td><td>坚定迭代大势判断，关注具备预期差+主业坚挺的AIDC标的，并重视错杀+低估的出海链
+# 坚定迭代大势判断，关注具备预期差+主业坚挺的AIDC标的，并重视错杀+低估的出海链
+
+> **作者**: 未知
+</td></tr><tr><td>2026-06-11</td><td>未知</td><td>zsxq</td><td>重视NPO/CPO时代无源光器件的价值通胀-260611
+# 重视NPO/CPO时代无源光器件的价值通胀-260611
+
+> **作者**: 未知
+> **发布时间**: 2026-06-11 09:</td></tr><tr><td>2026-06-11</td><td>未知</td><td>zsxq</td><td>5月餐食公司更新
+# 5月餐食公司更新
+
+> **作者**: 未知
+> **发布时间**: 2026-06-11 09:25:55
+> **类型**: 普通
+> **来源**: 知识星球 - 001 </td></tr><tr><td>2026-06-11</td><td>未知</td><td>zsxq</td><td>[红包]浙商机械 邱世梁|王华君【徐工机械】央视播报：工程机械绿色智造热销海内外市场；迈向全球龙头，海外业务和矿山机械业务是未来增长亮点，持续推荐！[福][福]
+# [红包]浙商机械 邱世梁|王华君【</td></tr><tr><td>2026-06-11</td><td>未知</td><td>zsxq</td><td>[红包]【申万轻工&电子&家电】影石新品Luna Ultra发布，开启云台相机双摄时代，持续推荐！
+# [红包]【申万轻工&电子&家电】影石新品Luna Ultra发布，开启云台相机双摄时代，持续推荐</td></tr><tr><td>2026-06-11</td><td>未知</td><td>zsxq</td><td>【申万互联网传媒】腾讯控股：近两周持续提示！微信Agent持续推进，关注AI叙事反转
+# 【申万互联网传媒】腾讯控股：近两周持续提示！微信Agent持续推进，关注AI叙事反转
+
+> **作者**: 未</td></tr><tr><td>2026-06-11</td><td>未知</td><td>zsxq</td><td>[红包]「品牌农业」深度｜走向世界的中国农业“新特产”【中金农业 王思洋】 
+# [红包]「品牌农业」深度｜走向世界的中国农业“新特产”【中金农业 王思洋】 
+
+> **作者**: 未知
+> **发布</td></tr><tr><td>2026-06-11</td><td>未知</td><td>zsxq</td><td>🔸5月CPI增长平稳但PPI增速显著加快 油价的大幅上涨抵消了节后服务价格的回落以及食品价格的进一步下跌,5月CPI同比增速维持在1.2%,核心CPI从4月的1
+# 🔸5月CPI增长平稳但PPI增速显</td></tr><tr><td>2026-06-11</td><td>未知</td><td>zsxq</td><td>【光大装备科技】被错杀的新雷能、欧陆通
+# 【光大装备科技】被错杀的新雷能、欧陆通
+
+> **作者**: 未知
+> **发布时间**: 2026-06-11 09:26:09
+> **类型**: 普通</td></tr><tr><td>2026-06-11</td><td>未知</td><td>zsxq</td><td>【国金新消费】创想三维深度报告&公司演讲：硬件为基AI生态为翼，创想万物全链布局演绎成长三部曲
+# 【国金新消费】创想三维深度报告&公司演讲：硬件为基AI生态为翼，创想万物全链布局演绎成长三部曲
+
+></td></tr><tr><td>2026-06-11</td><td>未知</td><td>zsxq</td><td>【中泰非银】资金风格再平衡，低位非银待滴灌
+# 【中泰非银】资金风格再平衡，低位非银待滴灌
+
+> **作者**: 未知
+> **发布时间**: 2026-06-11 09:26:18
+> **类型**</td></tr><tr><td>2026-06-11</td><td>未知</td><td>zsxq</td><td>🔥金山云底部推荐（0611）@HTJSJ
+# 🔥金山云底部推荐（0611）@HTJSJ
+
+> **作者**: 未知
+> **发布时间**: 2026-06-11 09:31:46
+> **类型**: </td></tr><tr><td>2026-06-11</td><td>未知</td><td>zsxq</td><td>华泰晨报0611
+# 华泰晨报0611
+
+> **作者**: 未知
+> **发布时间**: 2026-06-11 09:26:29
+> **类型**: 普通
+> **来源**: 知识星球 - 001 </td></tr><tr><td>2026-06-11</td><td>未知</td><td>zsxq</td><td>【中信建投宏观·周君芝团队】
+# 【中信建投宏观·周君芝团队】
+
+> **作者**: 未知
+> **发布时间**: 2026-06-11 09:26:26
+> **类型**: 普通
+> **来源**:</td></tr><tr><td>2026-06-11</td><td>未知</td><td>zsxq</td><td>🌊 通裕重工异动点评：子公司涉及硬质合金、碳化钨业务，ai 服务器 pcb 或有拉动（6.11）
+# 🌊 通裕重工异动点评：子公司涉及硬质合金、碳化钨业务，ai 服务器 pcb 或有拉动（6.11）
+</td></tr></tbody></table></div></div>
+<script>
+const QS = [{"date": "2026-03-24", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 0, "total_weight": 0.0, "zt_count": 0, "dt_count": 0}, {"date": "2026-03-25", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 0, "total_weight": 0.0, "zt_count": 0, "dt_count": 0}, {"date": "2026-03-26", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 0, "total_weight": 0.0, "zt_count": 0, "dt_count": 0}, {"date": "2026-03-27", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 0, "total_weight": 0.0, "zt_count": 0, "dt_count": 0}, {"date": "2026-03-28", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 2, "total_weight": 21.5, "zt_count": 0, "dt_count": 0}, {"date": "2026-03-29", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 0, "total_weight": 0.0, "zt_count": 0, "dt_count": 0}, {"date": "2026-03-30", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 2, "total_weight": 21.5, "zt_count": 0, "dt_count": 0}, {"date": "2026-03-31", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 2, "total_weight": 21.5, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-01", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 2, "total_weight": 21.5, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-02", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 2, "total_weight": 21.5, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-03", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 2, "total_weight": 21.5, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-06", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 2, "total_weight": 21.5, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-07", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 2, "total_weight": 21.5, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-08", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 1, "total_weight": 0.9, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-09", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 1, "total_weight": 0.9, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-10", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 1, "total_weight": 0.9, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-12", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 0, "total_weight": 0.0, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-13", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 1, "total_weight": 0.9, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-14", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 1, "total_weight": 0.9, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-15", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 1, "total_weight": 0.9, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-16", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 1, "total_weight": 0.9, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-17", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 1, "total_weight": 0.9, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-20", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 1, "total_weight": 0.9, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-21", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 1, "total_weight": 0.9, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-22", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 1, "total_weight": 0.9, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-23", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 1, "total_weight": 0.9, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-24", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 1, "total_weight": 0.9, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-25", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 0, "total_weight": 0.0, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-26", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 0, "total_weight": 0.0, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-27", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 6, "total_weight": 0.4998, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-28", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 0, "total_weight": 0.0, "zt_count": 0, "dt_count": 0}, {"date": "2026-04-30", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 0, "total_weight": 0.0, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-01", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 6, "total_weight": 0.4998, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-04", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 6, "total_weight": 0.4998, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-05", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 0, "total_weight": 0.0, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-06", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 6, "total_weight": 0.4998, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-07", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 6, "total_weight": 0.4998, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-08", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 6, "total_weight": 0.4998, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-11", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 6, "total_weight": 0.4998, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-12", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 6, "total_weight": 0.4998, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-13", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 6, "total_weight": 0.4998, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-14", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 6, "total_weight": 0.4998, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-15", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 6, "total_weight": 0.4998, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-18", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 6, "total_weight": 0.4998, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-19", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 6, "total_weight": 0.4998, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-20", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 6, "total_weight": 0.4998, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-21", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 6, "total_weight": 0.4998, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-22", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 6, "total_weight": 0.4998, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-23", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 0, "total_weight": 0.0, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-24", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 0, "total_weight": 0.0, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-25", "total_signals": 3, "buy_signals": 0, "sell_signals": 3, "holdings_count": 6, "total_weight": 0.4998, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-26", "total_signals": 3, "buy_signals": 0, "sell_signals": 3, "holdings_count": 6, "total_weight": 0.4998, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-27", "total_signals": 3, "buy_signals": 0, "sell_signals": 3, "holdings_count": 6, "total_weight": 0.4998, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-28", "total_signals": 4, "buy_signals": 0, "sell_signals": 4, "holdings_count": 15, "total_weight": 0.601, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-29", "total_signals": 4, "buy_signals": 0, "sell_signals": 3, "holdings_count": 15, "total_weight": 0.601, "zt_count": 0, "dt_count": 0}, {"date": "2026-05-31", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 0, "total_weight": 0.0, "zt_count": 0, "dt_count": 0}, {"date": "2026-06-01", "total_signals": 4, "buy_signals": 0, "sell_signals": 3, "holdings_count": 15, "total_weight": 0.601, "zt_count": 0, "dt_count": 0}, {"date": "2026-06-02", "total_signals": 3, "buy_signals": 0, "sell_signals": 3, "holdings_count": 15, "total_weight": 0.601, "zt_count": 0, "dt_count": 0}, {"date": "2026-06-03", "total_signals": 1, "buy_signals": 0, "sell_signals": 1, "holdings_count": 15, "total_weight": 0.601, "zt_count": 0, "dt_count": 0}, {"date": "2026-06-04", "total_signals": 1, "buy_signals": 0, "sell_signals": 1, "holdings_count": 15, "total_weight": 0.601, "zt_count": 0, "dt_count": 0}, {"date": "2026-06-05", "total_signals": 1, "buy_signals": 0, "sell_signals": 1, "holdings_count": 15, "total_weight": 0.601, "zt_count": 0, "dt_count": 0}, {"date": "2026-06-07", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 0, "total_weight": 0.0, "zt_count": 0, "dt_count": 0}, {"date": "2026-06-08", "total_signals": 1, "buy_signals": 0, "sell_signals": 1, "holdings_count": 15, "total_weight": 0.601, "zt_count": 0, "dt_count": 0}, {"date": "2026-06-09", "total_signals": 1, "buy_signals": 0, "sell_signals": 1, "holdings_count": 15, "total_weight": 0.601, "zt_count": 0, "dt_count": 0}, {"date": "2026-06-10", "total_signals": 1, "buy_signals": 0, "sell_signals": 1, "holdings_count": 15, "total_weight": 0.601, "zt_count": 0, "dt_count": 0}, {"date": "2026-06-11", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 15, "total_weight": 0.601, "zt_count": 0, "dt_count": 0}, {"date": "2026-06-12", "total_signals": 0, "buy_signals": 0, "sell_signals": 0, "holdings_count": 15, "total_weight": 0.601, "zt_count": 0, "dt_count": 0}];
+function queryByDate(d) { if (!d) return; const s = QS.find(x => x.date === d); if (!s) { document.getElementById("queryResult").innerHTML = "<p>无数据</p>"; return; } document.getElementById("queryResult").innerHTML = "<div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px;"><div style="text-align:center; padding:12px; background:#0d1117; border-radius:8px;"><div style="font-size:24px; font-weight:700; color:#58a6ff;">"+s.total_signals+"</div><div style="color:#8b949e; font-size:12px;">信号总数</div></div><div style="text-align:center; padding:12px; background:#0d1117; border-radius:8px;"><div style="font-size:24px; font-weight:700; color:#3fb950;">"+s.buy_signals+"</div><div style="color:#8b949e; font-size:12px;">买入</div></div><div style="text-align:center; padding:12px; background:#0d1117; border-radius:8px;"><div style="font-size:24px; font-weight:700; color:#f85149;">"+s.sell_signals+"</div><div style="color:#8b949e; font-size:12px;">卖出</div></div><div style="text-align:center; padding:12px; background:#0d1117; border-radius:8px;"><div style="font-size:24px; font-weight:700; color:#d29922;">"+s.holdings_count+"</div><div style="color:#8b949e; font-size:12px;">持仓</div></div></div>"; }
+function queryByStock(c) { if (!c) return; document.getElementById("queryResult").innerHTML = "<p>股票 <b>"+c+"</b> 的历史数据, 请查看信号表和K线分析页</p>"; }
+</script>
+<footer>
+🤖 Investment System · 自动更新 · 2026-06-12 15:29
+</footer>
+</div>
+<script>
+const AUTH_KEY = 'investment_auth';
+const AUTH_HASH = '000000000000000000000000640fade3'; // 简单hash，实际密码: Martin2026
+
+function simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).padStart(32, '0').substring(0, 32);
+}
+
+function checkPassword() {
+    const input = document.getElementById('authPassword').value;
+    const hash = simpleHash(input);
+    if (hash === AUTH_HASH) {
+        localStorage.setItem(AUTH_KEY, 'true');
+        document.getElementById('authOverlay').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+    } else {
+        document.getElementById('authError').style.display = 'block';
+        document.getElementById('authPassword').value = '';
+    }
+}
+
+// 检查是否已认证
+if (localStorage.getItem(AUTH_KEY) === 'true') {
+    document.getElementById('authOverlay').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+}
+
+// 回车提交
+document.getElementById('authPassword').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') checkPassword();
+});
+</script>
+</body>
+</html>

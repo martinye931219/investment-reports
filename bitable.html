@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>飞书报告库 - 投资报告</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif; background: #0d1117; color: #c9d1d9; line-height: 1.6; }
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+header { border-bottom: 1px solid #21262d; padding: 20px 0; margin-bottom: 30px; }
+header h1 { color: #58a6ff; font-size: 1.5em; }
+header .nav { margin-top: 10px; }
+header .nav a { color: #8b949e; text-decoration: none; margin-right: 20px; font-size: 0.9em; }
+header .nav a:hover { color: #58a6ff; }
+header .nav a.active { color: #58a6ff; font-weight: 600; }
+.report-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 24px; margin-bottom: 20px; }
+.report-card h2 { color: #58a6ff; font-size: 1.2em; margin-bottom: 12px; }
+.report-card .meta { color: #8b949e; font-size: 0.85em; margin-bottom: 16px; }
+.report-content { font-size: 0.95em; }
+.report-content h1 { font-size: 1.4em; color: #58a6ff; margin: 20px 0 10px; }
+.report-content h2 { font-size: 1.2em; color: #79c0ff; margin: 18px 0 8px; border-bottom: 1px solid #21262d; padding-bottom: 6px; }
+.report-content h3 { font-size: 1.05em; color: #d2a8ff; margin: 14px 0 6px; }
+.report-content p { margin: 8px 0; }
+.report-content ul, .report-content ol { margin: 8px 0 8px 24px; }
+.report-content li { margin: 4px 0; }
+.report-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.report-content th, .report-content td { border: 1px solid #21262d; padding: 8px 12px; text-align: left; }
+.report-content th { background: #1c2128; color: #58a6ff; }
+.report-content blockquote { border-left: 3px solid #58a6ff; padding-left: 12px; color: #8b949e; margin: 12px 0; }
+.report-content strong { color: #f0f6fc; }
+.report-content code { background: #1c2128; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+.date-list { list-style: none; }
+.date-list li { padding: 12px 16px; border-bottom: 1px solid #21262d; display: flex; justify-content: space-between; align-items: center; }
+.date-list li:hover { background: #1c2128; }
+.date-list a { color: #58a6ff; text-decoration: none; }
+.date-list .badge { background: #238636; color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 0.75em; }
+.signal-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: 600; }
+.signal-buy { background: #238636; color: #fff; }
+.signal-sell { background: #da3633; color: #fff; }
+.signal-watch { background: #9e6a03; color: #fff; }
+footer { text-align: center; color: #484f58; font-size: 0.8em; padding: 30px 0; border-top: 1px solid #21262d; margin-top: 40px; }
+/* 密码保护样式 */
+.auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d1117; z-index: 1000; display: flex; justify-content: center; align-items: center; }
+.auth-box { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 40px; text-align: center; max-width: 400px; width: 90%; }
+.auth-box h2 { color: #58a6ff; margin-bottom: 20px; font-size: 1.3em; }
+.auth-box input { width: 100%; padding: 12px 16px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-size: 16px; margin-bottom: 16px; outline: none; }
+.auth-box input:focus { border-color: #58a6ff; }
+.auth-box button { width: 100%; padding: 12px; background: #238636; color: #fff; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 600; }
+.auth-box button:hover { background: #2ea043; }
+.auth-error { color: #f85149; font-size: 0.85em; margin-top: 8px; display: none; }
+</style>
+</head>
+<body>
+<div class="auth-overlay" id="authOverlay">
+<div class="auth-box">
+<h2>🔐 投资决策系统</h2>
+<input type="password" id="authPassword" placeholder="请输入访问密码" autofocus>
+<button onclick="checkPassword()">进入</button>
+<p class="auth-error" id="authError">密码错误，请重试</p>
+</div>
+</div>
+<div class="container" id="mainContent" style="display:none;">
+<header>
+<h1>📊 投资决策系统</h1>
+<div class="nav">
+<a href="index.html">首页</a>
+<a href="signals.html">信号扫描</a>
+<a href="holdings.html">持仓</a>
+<a href="pool.html">选股池</a>
+<a href="backtest.html">策略回测</a>
+<a href="stats.html">每日统计</a>
+<a href="bitable.html" class="active">飞书报告库</a>
+<a href="knowledge.html">知识库</a>
+<a href="zsxq.html">知识星球</a>
+<a href="kline.html">K线分析</a>
+<a href="db.html">历史数据</a>
+</div>
+</header>
+<h2 style="color:#58a6ff; margin-bottom:20px;">📚 飞书报告归档 (27篇)</h2><div class="report-card">
+<h2>📊 午间市场报告 05/22<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">午间</span></h2>
+<div class="meta">📅 2026-05-21</div>
+<div class="report-content"><p><strong>市场概览：</strong>见完整版</p><p><strong>核心观点：</strong>见完整版</p><p><strong>涉及个股：</strong>群主、减cang防守、上影线风险、全局思维、减cang防守策略</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每日午间市场报告 05/22</p>
+<p>一、市场整体解读</p>
+<p>（午间窗口内暂无重大变量，观望情绪为主）</p>
+<p>二、板块个股动态</p>
+<p>🔥 商业航天</p>
+<p>【群主】:你还是没有全局思维，商业航天的前排gu是Space X链，以信维通信为代表，达到卖点出现调整行情，那后排gu的品种，比如超捷gu份在内，自然也是要调整的，况且超捷gu份也是弱跌穿中期均线组的。</p>
+<p>所以，不管从哪个角度去看，超捷gu份起码也是减cang防守的策略。</p>
+<p>-----</p>
+<p>🔥 半导体</p>
+<p>【群主】:半导体设备调整，看大盘vs移动平均带三类买卖点：</p>
+<p>1. 半导体设备，是当前主线前排，当前排开始调整时，大盘调整也是在情理之中的；</p>
+<p>2. 在上周日直播课中，老樊就强调过半导体设备的高乖离问题：</p>
+<p>三、午后关注</p>
+<p>• 成交量变化（突破关键点位需量能配合）</p>
+<p>• 北向资金动向</p>
+<p>• 午后消息面（政策/产业催化）</p>
+<p>四、风险提示</p>
+<p>⚠️ 当前市场波动加大，轻仓操作，切勿追高</p>
+<p>⚠️ 消息面不确定性较高，以防守为主</p>
+<p>📌 基于 26 条信息进行整理，于 2026-05-22 04:30 整理完毕并发送</p>
+<p>涉及个股：群主、减cang防守、上影线风险、全局思维、减cang防守策略</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>每日市场报告 5/22<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">晚间</span></h2>
+<div class="meta">📅 2026-05-21</div>
+<div class="report-content"><p><strong>市场概览：</strong>科技板块集体跳水，先知称唯一利空是涨多了。群主认为跳水是冰点出清，筹码重置，后续进入震荡期【反抽减，冰点加】策略。</p><p><strong>核心观点：</strong>1)震荡调整不改变牛市底色; 2)智能驾驶成为题材轮动新方向; 3)存储下半场扩产逻辑确定; 4)算力租赁涨价信号首次验证; 5)短线进入量化定价轮动环境</p><p><strong>涉及个股：</strong>阳光电源、伯特利、浙江世宝、世运电路、润建股份、利通电子、协创数据、润泽科技、宏景科技、盈峰环境</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>【一、市场整体解读】</p>
+<p>今日市场遭遇较大波动，科技板块集体跳水。先知明确指出：唯一的利空就是涨多了，不要给下跌加戏。前期领涨的半导体设备、AI等高位品种出现分歧，部分机构减仓触发量化择时信号，没有板块承接导致高波动。</p>
+<p>群主认为，这次跳水相当于一次冰点出清，筹码重置，对开新仓反而是好事（前期乖离降低、中期均线组有支撑）。后续市场进入震荡期，策略切换为【反抽减，冰点加】。</p>
+<p>先知回应半导体AI传闻："涨多了跌，不用加戏"，否认了市场关于异动核查的假消息。</p>
+<p>【二、板块个股动态】</p>
+<p>大储/储能：</p>
+<p><strong>阳光电源</strong> - 大储方向锚定品种，Q2-Q3潜在催化：海外签单旺季、AIDC储能订单、碳酸锂价格接近下游接受极限、国内容量电价落地。超短线可能回靠中期均线，乖离值不高，持股策略。</p>
+<p>智能驾驶：</p>
+<p><strong>伯特利</strong> - 线控底盘龙头，出现突破买点结构，特斯拉FSD入华测试+小鹏GX大定24863台催化。偏绿盘小仓位博弈（上影反攻模型）。</p>
+<p><strong>浙江世宝</strong> - 线控转向方向。先打观察仓，求稳策略等待突破买点结构出现。</p>
+<p><strong>世运电路</strong> - 智能驾驶PCB方向，具备产品通胀属性。</p>
+<p>算力租赁：</p>
+<p><strong>润建股份</strong> - tokens工厂分成核心股，北美算力租赁涨价60%首次真实信号。继续逢低关注。</p>
+<p><strong>利通电子</strong> - 大厂算力租赁规模龙头，商业闭环持续验证，核心绑定CSP大厂。</p>
+<p><strong>协创数据、润泽科技、宏景科技、盈峰环境</strong> - 算力租赁方向，官网涨价30-70%，利润弹性未完全反应。</p>
+<p>半导体/存储：</p>
+<p>存储方向 - 存储是印钞机，资本开支必然上行，下半场逻辑是扩产。长鑫框架总包订单落地，长存四期五期扩产加速，逢低分批关注。</p>
+<p>ASIC/SOC芯片：</p>
+<p><strong>SOC芯片</strong> - 端侧逻辑，股价相对低位受益高低切，近期走势较强。</p>
+<p>太阳能：</p>
+<p>中国阻止迈为科技向特斯拉出口太阳能设备，美股SolarEdge涨15%、First Solar涨5.5%，关注A股映射机会。</p>
+<p>【三、未来方向展望】</p>
+<p>🎯 重点机会：</p>
+<p>1. 震荡调整不改变牛市底色，十五五开局需要高效稳健资本市场支撑。</p>
+<p>2. 智能驾驶作为题材轮动新方向，关注有催化共识的标的。</p>
+<p>3. 存储下半场扩产逻辑确定，设备龙头持续上调招聘计划。</p>
+<p>4. 算力租赁涨价信号首次验证，关注tokens分成模式。</p>
+<p>⚠️ 风险提示：</p>
+<p>1. 短线进入量化定价轮动环境，不擅长交易博弈的同学减仓休息。</p>
+<p>2. 主题快速轮动阶段，必须严格遵守9大交易模型和移动平均带买卖点。</p>
+<p>3. 越涨越卖，拐头减仓放大盈利安全垫是正确姿势。</p>
+<p>【四、群主原话】</p>
+<p>"震荡调整，不改变牛市底色。谁近期有催化，谁可以形成市场共识的叙事类方向，谁就有可能被轮动到。"</p>
+<p>"涨多了跌，不用加戏。"</p>
+<p>📌 基于19条信息进行整理，于2026-05-22 09:15 整理完毕并发送</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>📊 晚间市场报告 05/22<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">晚间</span></h2>
+<div class="meta">📅 2026-05-21</div>
+<div class="report-content"><p><strong>市场概览：</strong>见完整版</p><p><strong>核心观点：</strong>见完整版</p><p><strong>涉及个股：</strong>群主、反抽减，冰点加、量化定价的轮动环境、高速轮动、9大交易模型</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每日市场报告 05/22（晚间）</p>
+<p>一、市场整体解读</p>
+<p>（今日市场整体走势平稳，暂无重大系统性风险）</p>
+<p>二、板块个股动态</p>
+<p>⚡ 半导体</p>
+<p>以前期领涨板块（半导体设备为代表）高位分歧-部分机构减cang-触发量化择时信号-没有板块出来承接，所以带来了向下的高波动性。</p>
+<p>2. 后面市场怎么看：</p>
+<p>a）全市场跌得快，跌得剧烈，相当于进行一次冰点出清，整个筹码重置，这对于新开cang是好事（前期是乖离变低or中期均线组有支撑）；</p>
+<p>⚡ 机器人</p>
+<p>b）大盘图走丑了，需要修复，后续切换到震荡期的打法-【反抽减，冰点加】，关注低点探明之后，和指数共振的方向（目前人形机器人方向，先具备逆势性）。</p>
+<p>【更多资源、续费+薇  Lind631】</p>
+<p>【群主】:智能驾驶，不少同学在问，统一回复：</p>
+<p>⚡ 电网</p>
+<p>【群主】:北美电网-sofc产业链，继续强势表现，短期刺激因素在于昨晚美gube大涨，创历史新高。</p>
+<p>京泉华是强者恒强的，同为产品通胀属性零部件的春晖智控在补涨，因为乖离值不高的因素；</p>
+<p>涨价的瓶颈环节，是振华gu份，新一轮收储量、价可能超预期，潍柴动力预计27年扩产至200MW，目前市场中期视角看并未对SOFC完全定价。</p>
+<p>三、未来方向展望</p>
+<p>🎯 重点机会</p>
+<p>• 2. 阳光电源，是大储方向的锚，后续仍旧是盯紧阳光电源的表现，如果反弹是一波三折的，那整个大储板块的beta向上阻力较高。</p>
+<p>• 以前期领涨板块（半导体设备为代表）高位分歧-部分机构减cang-触发量化择时信号-没有板块出来承接，所以带来了向下的高波动性。</p>
+<p>• b）大盘图走丑了，需要修复，后续切换到震荡期的打法-【反抽减，冰点加】，关注低点探明之后，和指数共振的方向（目前人形机器人方向，先具备逆势性）。</p>
+<p>• 目前sofc走的是板块性行情，正如昨天圈子讲到的，乖离值不同，上涨节奏不同，所以同学们要按照移动平均带三类买卖点卡节奏。</p>
+<p>⚠️ 风险提示</p>
+<p>• 市场波动加大，注意仓位控制</p>
+<p>• 消息面不确定性较高</p>
+<p>📅 后续关注</p>
+<p>• 明日开盘情绪变化</p>
+<p>• 量能是否配合突破</p>
+<p>四、群主原话</p>
+<p>（本日群内无高权重发言记录）</p>
+<p>📌 基于 7 条信息进行整理，于 2026-05-22 13:00 整理完毕并发送</p>
+<p>涉及个股：群主、反抽减，冰点加、量化定价的轮动环境、高速轮动、9大交易模型</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>📊 周复盘市场报告 05/22<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">周复盘</span></h2>
+<div class="meta">📅 2026-05-21</div>
+<div class="report-content"><p><strong>市场概览：</strong>见完整版</p><p><strong>核心观点：</strong>见完整版</p><p><strong>涉及个股：</strong>群主、重磅产业新催化、行业比较分析的方法论、站在逻辑角度看模型、半导体硅片涨价逻辑、移动平均带三类买卖点、低位置、移动平均带的低乖离值</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每周市场复盘 05/22</p>
+<p>一、本周市场回顾</p>
+<p>（本周市场整体走势回顾）</p>
+<p>二、核心板块复盘</p>
+<p>• AI算力链：持续活跃，消息面较多</p>
+<p>• 光通信/光模块：美股映射明显</p>
+<p>• 商业航天：SpaceX 催化不断</p>
+<p>三、重点个股跟踪</p>
+<p>（本周涉及个股较多，以实际群内信息为准）</p>
+<p>四、交易策略总结</p>
+<p>• 本周整体以观望为主，等待方向明朗</p>
+<p>• 仓位控制在合理范围</p>
+<p>五、下周展望</p>
+<p>• 关注政策面变化</p>
+<p>• 关注产业催化进展</p>
+<p>📌 基于 191 条信息进行整理，于 2026-05-22 13:00 整理完毕并发送</p>
+<p>涉及个股：群主、重磅产业新催化、行业比较分析的方法论、站在逻辑角度看模型、半导体硅片涨价逻辑、移动平均带三类买卖点、低位置、移动平均带的低乖离值</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>📊 晚间市场报告 05/21<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">晚间</span></h2>
+<div class="meta">📅 2026-05-20</div>
+<div class="report-content"><p><strong>市场概览：</strong>见完整版</p><p><strong>核心观点：</strong>见完整版</p><p><strong>涉及个股：</strong>群主、信息差+预期差机会、收个天线</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每日市场报告 05/21（晚间）</p>
+<p>一、市场整体解读</p>
+<p>（今日市场整体走势平稳，暂无重大系统性风险）</p>
+<p>二、板块个股动态</p>
+<p>⚡ 半导体</p>
+<p>RGA产品可用于ALD/PVD/CVD/Etch等场景，进行PVD及磁控溅射在线监测，该系列RGA产品已在多个半导体客户完成验证并实现销售。磁控溅射可用于光芯片镀膜领域，RGA可起到质量监控作用。</p>
+<p>2. 公司应定义为平台型产品公司，半导体先进封装，PCB等下游需求连续爆发，估值重估成为必然，所以当下走的是估值重构行情，只是短线涨幅过快，但中线仍然有很强潜力。</p>
+<p>【更多资源、续费+薇  Lind631】</p>
+<p>⚡ 机器人</p>
+<p>【群主】:人形机器人（浙江荣泰/斯菱智驱）跟踪点评：</p>
+<p>ps：交易策略看，浙江荣泰/斯菱智驱圈子提示突破买点，稳步上涨，目前乖离值不夸张，继续持gu策略。</p>
+<p>1. 圈子2个观点完美印证：</p>
+<p>⚡ 电网</p>
+<p>【群主】:北美电网-sofc链（振华gu份/潍柴动力）为代表跟踪点评：</p>
+<p>ps：交易策略看，30-50%是sofc链品种止盈区间，目前振华gu份乖离值不高，继续持gu待涨。</p>
+<p>1. SOFC为缺电板块同环比增速最快、景气度最好的子领域；</p>
+<p>三、未来方向展望</p>
+<p>🎯 重点机会</p>
+<p>• 【群主】:赶早班飞机去上海参加券商中期策略报告会，又是一场给同学们挖掘【信息差+预期差机会】之旅！</p>
+<p>• b）浙江荣泰/斯菱智驱是观察人形机器人受益高低切的方向标，能够看到二者表现是明显强于同一板块的其他品种。</p>
+<p>• 1. SOFC为缺电板块同环比增速最快、景气度最好的子领域；</p>
+<p>⚠️ 风险提示</p>
+<p>• 市场波动加大，注意仓位控制</p>
+<p>• 消息面不确定性较高</p>
+<p>📅 后续关注</p>
+<p>• 明日开盘情绪变化</p>
+<p>• 量能是否配合突破</p>
+<p>四、群主原话</p>
+<p>（本日群内无高权重发言记录）</p>
+<p>📌 基于 6 条信息进行整理，于 2026-05-21 13:00 整理完毕并发送</p>
+<p>涉及个股：群主、信息差+预期差机会、收个天线</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>📊 周复盘市场报告 05/21<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">周复盘</span></h2>
+<div class="meta">📅 2026-05-20</div>
+<div class="report-content"><p><strong>市场概览：</strong>见完整版</p><p><strong>核心观点：</strong>见完整版</p><p><strong>涉及个股：</strong>群主、重磅产业新催化、行业比较分析的方法论、站在逻辑角度看模型、半导体硅片涨价逻辑、移动平均带三类买卖点、低位置、移动平均带的低乖离值</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每周市场复盘 05/21</p>
+<p>一、本周市场回顾</p>
+<p>（本周市场整体走势回顾）</p>
+<p>二、核心板块复盘</p>
+<p>• AI算力链：持续活跃，消息面较多</p>
+<p>• 光通信/光模块：美股映射明显</p>
+<p>• 商业航天：SpaceX 催化不断</p>
+<p>三、重点个股跟踪</p>
+<p>（本周涉及个股较多，以实际群内信息为准）</p>
+<p>四、交易策略总结</p>
+<p>• 本周整体以观望为主，等待方向明朗</p>
+<p>• 仓位控制在合理范围</p>
+<p>五、下周展望</p>
+<p>• 关注政策面变化</p>
+<p>• 关注产业催化进展</p>
+<p>📌 基于 158 条信息进行整理，于 2026-05-21 13:00 整理完毕并发送</p>
+<p>涉及个股：群主、重磅产业新催化、行业比较分析的方法论、站在逻辑角度看模型、半导体硅片涨价逻辑、移动平均带三类买卖点、低位置、移动平均带的低乖离值</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>📊 午间市场报告 05/20<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">午间</span></h2>
+<div class="meta">📅 2026-05-19</div>
+<div class="report-content"><p><strong>市场概览：</strong>见完整版</p><p><strong>核心观点：</strong>见完整版</p><p><strong>涉及个股：</strong>群主</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每日午间市场报告 05/20</p>
+<p>一、市场整体解读</p>
+<p>（午间窗口内暂无重大变量，观望情绪为主）</p>
+<p>二、板块个股动态</p>
+<p>暂无明确板块信号</p>
+<p>三、午后关注</p>
+<p>• 成交量变化（突破关键点位需量能配合）</p>
+<p>• 北向资金动向</p>
+<p>• 午后消息面（政策/产业催化）</p>
+<p>四、风险提示</p>
+<p>⚠️ 当前市场波动加大，轻仓操作，切勿追高</p>
+<p>⚠️ 消息面不确定性较高，以防守为主</p>
+<p>📌 基于 1 条信息进行整理，于 2026-05-20 04:30 整理完毕并发送</p>
+<p>涉及个股：群主</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>📊 晚间市场报告 05/20<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">晚间</span></h2>
+<div class="meta">📅 2026-05-19</div>
+<div class="report-content"><p><strong>市场概览：</strong>见完整版</p><p><strong>核心观点：</strong>见完整版</p><p><strong>涉及个股：</strong>群主、移动平均带的低乖离值、爱米米、立昂微/沪硅产业</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每日市场报告 05/20（晚间）</p>
+<p>一、市场整体解读</p>
+<p>（今日市场整体走势平稳，暂无重大系统性风险）</p>
+<p>二、板块个股动态</p>
+<p>⚡ 半导体</p>
+<p>【群主】:半导体设备，继续大放异彩！</p>
+<p>1. 圈子率先挖掘出-后道测试设备，成为前排gu，随后圈子提示出现三类买卖点的拓荆科技/中科飞测，即跟着前排gu创新高。</p>
+<p>2. 但对于中科飞测，此前走势确实不出彩，但因为低乖离值，这两天的补涨相当精彩，恭喜严格执行交易纪律的同学，做到了坚定持gu。</p>
+<p>三、未来方向展望</p>
+<p>🎯 重点机会</p>
+<p>• 1. 传统主业增长慢，市场此前关注度较低；</p>
+<p>• 2. 逻辑角度看，未来有潜在反馈pcb检测设备逻辑的可能性（如果能反馈，则是受益高低切风格）。</p>
+<p>• 止盈逻辑：a）乖离值也达到50%（和前排gu乖离值差不多），即止盈条件触发；b）从过往几波上涨去看，碰触到50%乖离值时，都出现调整行情。</p>
+<p>• 同一板块/同一逻辑，但没有达到离场条件怎么办？</p>
+<p>• 主要是2点逻辑的考虑：</p>
+<p>• 【群主】:和早盘讲到的中科飞测，是相似的交易逻辑，同为半导体设备，当前也是50%乖离值附近，开始出现获利盘出逃，所以起码是部分减cang止盈策略的。</p>
+<p>⚠️ 风险提示</p>
+<p>• 市场波动加大，注意仓位控制</p>
+<p>• 消息面不确定性较高</p>
+<p>📅 后续关注</p>
+<p>• 明日开盘情绪变化</p>
+<p>• 量能是否配合突破</p>
+<p>四、群主原话</p>
+<p>（本日群内无高权重发言记录）</p>
+<p>📌 基于 20 条信息进行整理，于 2026-05-20 13:00 整理完毕并发送</p>
+<p>涉及个股：群主、移动平均带的低乖离值、爱米米、立昂微/沪硅产业</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>📊 周复盘市场报告 05/20<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">周复盘</span></h2>
+<div class="meta">📅 2026-05-19</div>
+<div class="report-content"><p><strong>市场概览：</strong>见完整版</p><p><strong>核心观点：</strong>见完整版</p><p><strong>涉及个股：</strong>群主、重磅产业新催化、行业比较分析的方法论、站在逻辑角度看模型、半导体硅片涨价逻辑、移动平均带三类买卖点、低位置、移动平均带的低乖离值</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每周市场复盘 05/20</p>
+<p>一、本周市场回顾</p>
+<p>（本周市场整体走势回顾）</p>
+<p>二、核心板块复盘</p>
+<p>• AI算力链：持续活跃，消息面较多</p>
+<p>• 光通信/光模块：美股映射明显</p>
+<p>• 商业航天：SpaceX 催化不断</p>
+<p>三、重点个股跟踪</p>
+<p>（本周涉及个股较多，以实际群内信息为准）</p>
+<p>四、交易策略总结</p>
+<p>• 本周整体以观望为主，等待方向明朗</p>
+<p>• 仓位控制在合理范围</p>
+<p>五、下周展望</p>
+<p>• 关注政策面变化</p>
+<p>• 关注产业催化进展</p>
+<p>📌 基于 116 条信息进行整理，于 2026-05-20 13:00 整理完毕并发送</p>
+<p>涉及个股：群主、重磅产业新催化、行业比较分析的方法论、站在逻辑角度看模型、半导体硅片涨价逻辑、移动平均带三类买卖点、低位置、移动平均带的低乖离值</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>每日午间市场报告 2026/5/21<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">午间</span></h2>
+<div class="meta">📅 2026-05-19</div>
+<div class="report-content"><p><strong>市场概览：</strong>NV财报落地+长鑫过会确定，半导体设备加速，券商反弹拉指数逼近前高。风格均衡修复，老登票集体反弹，半导体强势震荡。</p><p><strong>核心观点：</strong>上午拉得越凶下午越可能收天线；分歧调整中逢低布局景气确定性行业；Micro-LED叙事型品种被量化砸盘需注意</p><p><strong>涉及个股：</strong>长川科技、奕瑞科技、鼎龙股份、炬光科技、水晶光电、浙江荣泰、斯菱股份、振华股份、潍柴动力、华灿光电、新相微</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>【一、市场整体解读】</p>
+<p>今日早盘受多重事件催化共振：NV财报落地、长鑫过会时间确定、半导体设备加速走强，叠加券商短线反弹拉升，指数再次逼近前高。先知研报指出，上午拉得越凶，下午很可能指数收"天线"。风格呈现极致分化后的均衡修复，老登票集体反弹，半导体维持强势震荡。</p>
+<p>群主赶早班飞机去上海参加券商中期策略报告会，继续挖掘信息差和预期差机会。</p>
+<p>【二、板块个股动态】</p>
+<p>半导体设备：</p>
+<p><strong>长川科技</strong> - 26年收入上修至80-90亿，27年上修至120亿；华为系AI测试机有望获至少5亿订单；存储测试机国内全面突破。27年业绩有望近40亿量级。</p>
+<p><strong>奕瑞科技</strong> - PCB设备新晋玩家，推出刻蚀/沉积/磁控溅射核心部件，RGA产品用于ALD/PVD/CVD/Etch。乖离值即将50%，不涨停可止盈1/3。</p>
+<p><strong>鼎龙股份</strong> - 半导体材料板块最高增速，估值40倍低于设备；绑定长存最深，自主可控+先进制程通胀逻辑。材料板块千亿龙头候选。</p>
+<p>光通信/CPO/OCS：</p>
+<p><strong>炬光科技</strong> - 并购瑞士SMO公司，CPO高精度V-groove突破，N×N大透镜阵列小批量出货。技术卡位全球前三。</p>
+<p><strong>水晶光电</strong> - AI光学低估值高赔率，滤光片/透镜5-7月量产，26年PE仅35倍。</p>
+<p>人形机器人：</p>
+<p><strong>浙江荣泰/斯菱股份</strong> - 宇树IPO+云深处IPO受理，7月T链扩产催化。突破买点稳步上涨，行情未走完。</p>
+<p>北美电网-SOFC链：</p>
+<p><strong>振华股份/潍柴动力</strong> - SOFC景气度最好；5月底BE印度供应商大会。潍柴利润大头在机头(净利率40%)。</p>
+<p>Micro-LED光互连：</p>
+<p><strong>华灿光电/新相微</strong> - 京东方&康宁合作备忘录聚焦光互连；Micro LED产线稳定量产，首批样品交付海外客户。</p>
+<p>【三、午后关注】</p>
+<p>1. 指数前高附近震荡，警惕午后收天线</p>
+<p>2. 半导体设备/材料逢低布局</p>
+<p>3. Micro-LED短期回避追高</p>
+<p>【四、风险提示】</p>
+<p>NV财报需消化预期；Micro-LED等叙事型品种易被量化砸盘；高乖离品种严格执行止盈纪律。</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>📊 午间市场报告 05/19<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">午间</span></h2>
+<div class="meta">📅 2026-05-18</div>
+<div class="report-content"><p><strong>市场概览：</strong>见完整版</p><p><strong>核心观点：</strong>见完整版</p><p><strong>涉及个股：</strong>群主</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每日午间市场报告 05/19</p>
+<p>一、市场整体解读</p>
+<p>（午间窗口内暂无重大变量，观望情绪为主）</p>
+<p>二、板块个股动态</p>
+<p>暂无明确板块信号</p>
+<p>三、午后关注</p>
+<p>• 成交量变化（突破关键点位需量能配合）</p>
+<p>• 北向资金动向</p>
+<p>• 午后消息面（政策/产业催化）</p>
+<p>四、风险提示</p>
+<p>⚠️ 当前市场波动加大，轻仓操作，切勿追高</p>
+<p>⚠️ 消息面不确定性较高，以防守为主</p>
+<p>📌 基于 3 条信息进行整理，于 2026-05-19 04:30 整理完毕并发送</p>
+<p>涉及个股：群主</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>📊 晚间市场报告 05/19<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">晚间</span></h2>
+<div class="meta">📅 2026-05-18</div>
+<div class="report-content"><p><strong>市场概览：</strong>见完整版</p><p><strong>核心观点：</strong>见完整版</p><p><strong>涉及个股：</strong>群主、行业比较分析的方法论</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每日市场报告 05/19（晚间）</p>
+<p>一、市场整体解读</p>
+<p>（今日市场整体走势平稳，暂无重大系统性风险）</p>
+<p>二、板块个股动态</p>
+<p>暂无明确主线信号</p>
+<p>三、未来方向展望</p>
+<p>🎯 重点机会</p>
+<p>• 【群主】:百傲化学，单从模型去看，属于极值反转模型的，但暂未看到逻辑上的重要变化，还是单纯看筹码炒作（即低位品种的补涨轮动）。</p>
+<p>• 欢喜多米:老师，百傲化学属于极值反转模型吗？逻辑有变化吗？之前立案调查这个影响有多大？</p>
+<p>• 在大盘缩量的环境中，很多品种回落下来又是机会。</p>
+<p>• 【群主】:Token运营，开始给AI应用方向叙事了（今天走板块行情）！</p>
+<p>• 但咱们圈子，基于逻辑+9大模型选中的“易点天下”明显是处于领跑的角色，因为探路尖兵模型已经走出来的，所以继续持gu策略。</p>
+<p>• 止盈逻辑：a）乖离值进入30-50%止盈区间，主动控节奏；b）东方国信再创新高点，但板块联动性是偏弱的。</p>
+<p>⚠️ 风险提示</p>
+<p>• 市场波动加大，注意仓位控制</p>
+<p>• 消息面不确定性较高</p>
+<p>📅 后续关注</p>
+<p>• 明日开盘情绪变化</p>
+<p>• 量能是否配合突破</p>
+<p>四、群主原话</p>
+<p>（本日群内无高权重发言记录）</p>
+<p>📌 基于 26 条信息进行整理，于 2026-05-19 13:00 整理完毕并发送</p>
+<p>涉及个股：群主、行业比较分析的方法论</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>📊 周复盘市场报告 05/19<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">周复盘</span></h2>
+<div class="meta">📅 2026-05-18</div>
+<div class="report-content"><p><strong>市场概览：</strong>见完整版</p><p><strong>核心观点：</strong>见完整版</p><p><strong>涉及个股：</strong>群主、重磅产业新催化、行业比较分析的方法论</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每周市场复盘 05/19</p>
+<p>一、本周市场回顾</p>
+<p>（本周市场整体走势回顾）</p>
+<p>二、核心板块复盘</p>
+<p>• AI算力链：持续活跃，消息面较多</p>
+<p>• 光通信/光模块：美股映射明显</p>
+<p>• 商业航天：SpaceX 催化不断</p>
+<p>三、重点个股跟踪</p>
+<p>（本周涉及个股较多，以实际群内信息为准）</p>
+<p>四、交易策略总结</p>
+<p>• 本周整体以观望为主，等待方向明朗</p>
+<p>• 仓位控制在合理范围</p>
+<p>五、下周展望</p>
+<p>• 关注政策面变化</p>
+<p>• 关注产业催化进展</p>
+<p>📌 基于 64 条信息进行整理，于 2026-05-19 13:00 整理完毕并发送</p>
+<p>涉及个股：群主、重磅产业新催化、行业比较分析的方法论</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>📊 午间市场报告 05/18<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">午间</span></h2>
+<div class="meta">📅 2026-05-17</div>
+<div class="report-content"><p><strong>市场概览：</strong>见完整版</p><p><strong>核心观点：</strong>见完整版</p><p><strong>涉及个股：</strong>待确认</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每日午间市场报告 05/18</p>
+<p>一、市场整体解读</p>
+<p>（午间窗口内暂无重大变量，观望情绪为主）</p>
+<p>二、板块个股动态</p>
+<p>暂无明确板块信号</p>
+<p>三、午后关注</p>
+<p>• 成交量变化（突破关键点位需量能配合）</p>
+<p>• 北向资金动向</p>
+<p>• 午后消息面（政策/产业催化）</p>
+<p>四、风险提示</p>
+<p>⚠️ 当前市场波动加大，轻仓操作，切勿追高</p>
+<p>⚠️ 消息面不确定性较高，以防守为主</p>
+<p>📌 基于 1 条信息进行整理，于 2026-05-18 04:30 整理完毕并发送</p>
+<p>涉及个股：待确认</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>📊 周复盘市场报告 05/18<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">周复盘</span></h2>
+<div class="meta">📅 2026-05-17</div>
+<div class="report-content"><p><strong>市场概览：</strong>见完整版</p><p><strong>核心观点：</strong>见完整版</p><p><strong>涉及个股：</strong>群主</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每周市场复盘 05/18</p>
+<p>一、本周市场回顾</p>
+<p>（本周市场整体走势回顾）</p>
+<p>二、核心板块复盘</p>
+<p>• AI算力链：持续活跃，消息面较多</p>
+<p>• 光通信/光模块：美股映射明显</p>
+<p>• 商业航天：SpaceX 催化不断</p>
+<p>三、重点个股跟踪</p>
+<p>（本周涉及个股较多，以实际群内信息为准）</p>
+<p>四、交易策略总结</p>
+<p>• 本周整体以观望为主，等待方向明朗</p>
+<p>• 仓位控制在合理范围</p>
+<p>五、下周展望</p>
+<p>• 关注政策面变化</p>
+<p>• 关注产业催化进展</p>
+<p>📌 基于 18 条信息进行整理，于 2026-05-18 13:00 整理完毕并发送</p>
+<p>涉及个股：群主</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>📊 晚间市场报告 05/18<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">晚间</span></h2>
+<div class="meta">📅 2026-05-17</div>
+<div class="report-content"><p><strong>市场概览：</strong>见完整版</p><p><strong>核心观点：</strong>见完整版</p><p><strong>涉及个股：</strong>群主</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每日市场报告 05/18（晚间）</p>
+<p>一、市场整体解读</p>
+<p>（今日市场整体走势平稳，暂无重大系统性风险）</p>
+<p>二、板块个股动态</p>
+<p>⚡ SpaceX</p>
+<p>Cindy Q:老师好，想问问SpaceX周末IPO上市之前，会对信维通信和西部材料的走势产生什么影响，没经历过IPO上市的gupiao，想了解这个上市前前后后相关gupiao走势，谢谢</p>
+<p>【更多资源、续费+薇  Lind631】</p>
+<p>【群主】:不适用，9大模型仅限于gupiao，在可转债的使用是比较受限的；</p>
+<p>⚡ 商业航天</p>
+<p>【群主】:商业航天（信维通信/西部材料）跟踪点评：</p>
+<p>ps：交易策略，二者乖离值在50%附近，前期圈子强调的“部分减cang止盈策略”不变。</p>
+<p>1. 事件：传Space X最早于6月11日确定ipo价格，并于6月12日上市（未经证实，难辨真伪）；</p>
+<p>⚡ 机器人</p>
+<p>【群主】：:【转：特斯拉机器人近况调研】</p>
+<p>1）V3推迟发布是因灵巧手散热问题，灵巧手5月底会完成调试；V3在Q2做SOP准备，5-6月将发放下一轮供应链订单；</p>
+<p>2）2026按计划出货4-5万台，2027年要做到30万台，2028年要100万台；</p>
+<p>⚡ 电网</p>
+<p>【群主】:北美电网方向，近期略显强势。</p>
+<p>1. sofc、变压器2个环节，在板块中会相对不错；</p>
+<p>2. 当前能够看到sofc链-京泉华（圈内品种），在继续打高度，所以带动振华gu份等品种在走强，但考虑到京泉华的乖离值达到50%+，可以部分减cang止盈；</p>
+<p>三、未来方向展望</p>
+<p>🎯 重点机会</p>
+<p>• 1. sofc、变压器2个环节，在板块中会相对不错；</p>
+<p>• 【群主】:服务器，以板块轮动来看待（不存在超跌问题，因为超节点的产业趋势，服务器近期是走在中期上涨趋势中的），如果乖离值不高，可以继续持gu策略。</p>
+<p>⚠️ 风险提示</p>
+<p>• 市场波动加大，注意仓位控制</p>
+<p>• 消息面不确定性较高</p>
+<p>📅 后续关注</p>
+<p>• 明日开盘情绪变化</p>
+<p>• 量能是否配合突破</p>
+<p>四、群主原话</p>
+<p>（本日群内无高权重发言记录）</p>
+<p>📌 基于 18 条信息进行整理，于 2026-05-18 13:00 整理完毕并发送</p>
+<p>涉及个股：群主</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>📊 周复盘市场报告 05/17<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">周复盘</span></h2>
+<div class="meta">📅 2026-05-16</div>
+<div class="report-content"><p><strong>市场概览：</strong>见完整版</p><p><strong>核心观点：</strong>见完整版</p><p><strong>涉及个股：</strong>后道测试、移动平均带三类买卖点、群主、嘻嘻、程孟桥、9大模型、上影反攻模型、前后排</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每周市场复盘 05/17</p>
+<p>一、本周市场回顾</p>
+<p>（本周市场整体走势回顾）</p>
+<p>二、核心板块复盘</p>
+<p>• AI算力链：持续活跃，消息面较多</p>
+<p>• 光通信/光模块：美股映射明显</p>
+<p>• 商业航天：SpaceX 催化不断</p>
+<p>三、重点个股跟踪</p>
+<p>（本周涉及个股较多，以实际群内信息为准）</p>
+<p>四、交易策略总结</p>
+<p>• 本周整体以观望为主，等待方向明朗</p>
+<p>• 仓位控制在合理范围</p>
+<p>五、下周展望</p>
+<p>• 关注政策面变化</p>
+<p>• 关注产业催化进展</p>
+<p>📌 基于 227 条信息进行整理，于 2026-05-17 13:00 整理完毕并发送</p>
+<p>涉及个股：后道测试、移动平均带三类买卖点、群主、嘻嘻、程孟桥、9大模型、上影反攻模型、前后排</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>📊 周复盘市场报告 05/16<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">周复盘</span></h2>
+<div class="meta">📅 2026-05-15</div>
+<div class="report-content"><p><strong>市场概览：</strong>见完整版</p><p><strong>核心观点：</strong>见完整版</p><p><strong>涉及个股：</strong>后道测试、移动平均带三类买卖点、群主、嘻嘻、程孟桥、9大模型、上影反攻模型、前后排</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每周市场复盘 05/16</p>
+<p>一、本周市场回顾</p>
+<p>（本周市场整体走势回顾）</p>
+<p>二、核心板块复盘</p>
+<p>• AI算力链：持续活跃，消息面较多</p>
+<p>• 光通信/光模块：美股映射明显</p>
+<p>• 商业航天：SpaceX 催化不断</p>
+<p>三、重点个股跟踪</p>
+<p>（本周涉及个股较多，以实际群内信息为准）</p>
+<p>四、交易策略总结</p>
+<p>• 本周整体以观望为主，等待方向明朗</p>
+<p>• 仓位控制在合理范围</p>
+<p>五、下周展望</p>
+<p>• 关注政策面变化</p>
+<p>• 关注产业催化进展</p>
+<p>📌 基于 214 条信息进行整理，于 2026-05-16 13:00 整理完毕并发送</p>
+<p>涉及个股：后道测试、移动平均带三类买卖点、群主、嘻嘻、程孟桥、9大模型、上影反攻模型、前后排</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>📊 午间市场报告 05/15<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">午间</span></h2>
+<div class="meta">📅 2026-05-14</div>
+<div class="report-content"><p><strong>市场概览：</strong>见完整版</p><p><strong>核心观点：</strong>见完整版</p><p><strong>涉及个股：</strong>待确认</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每日午间市场报告 05/15</p>
+<p>一、市场整体解读</p>
+<p>（午间窗口内暂无重大变量，观望情绪为主）</p>
+<p>二、板块个股动态</p>
+<p>暂无明确板块信号</p>
+<p>三、午后关注</p>
+<p>• 成交量变化（突破关键点位需量能配合）</p>
+<p>• 北向资金动向</p>
+<p>• 午后消息面（政策/产业催化）</p>
+<p>四、风险提示</p>
+<p>⚠️ 当前市场波动加大，轻仓操作，切勿追高</p>
+<p>⚠️ 消息面不确定性较高，以防守为主</p>
+<p>📌 基于 0 条信息进行整理，于 2026-05-15 04:30 整理完毕并发送</p>
+<p>涉及个股：待确认</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>📊 晚间市场报告 05/15<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">晚间</span></h2>
+<div class="meta">📅 2026-05-14</div>
+<div class="report-content"><p><strong>市场概览：</strong>见完整版</p><p><strong>核心观点：</strong>见完整版</p><p><strong>涉及个股：</strong>群主、高九卖出结构、全局思维、移动平均带三类买卖点、人形机器人、机床、嘻嘻、可爱</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每日市场报告 05/15（晚间）</p>
+<p>一、市场整体解读</p>
+<p>（今日市场整体走势平稳，暂无重大系统性风险）</p>
+<p>二、板块个股动态</p>
+<p>⚡ 商业航天</p>
+<p>1. 前排gu，是商业航天Space X链-信维通信等，在乖离值超过50%后，开始出现调整动作，获利盘兑现；</p>
+<p>2. 后排gu，则是太空光伏，以钧达gu份/迈为gu份为代表；</p>
+<p>3. 能够清晰看到Space X链商业航天调整是，后排的迈为gu份也会调整，甚至调整更多，所以也是要部分减cang防守的，但目前gu价没有跌穿中期均线组，剩余cang位可以继续拿。</p>
+<p>⚡ 锂电</p>
+<p>2. 对于高乖离值的品种，适度逢高减cang；其次观察前期有调整的板块+能在中期均线组附近出现企稳动作（以新能源的锂电材料环节为例）。</p>
+<p>【更多资源、续费+薇  Lind631】</p>
+<p>【群主】：:碳化硅SiC-晶升gu份，中低偏好同学全cang止盈（高偏好同学，剩余底cang边涨边撤）。</p>
+<p>⚡ 半导体</p>
+<p>该订单上修，在老樊看来，就是先进制程&晶圆扩产的逻辑得到强化，所以引发整个半导体设备的上涨。</p>
+<p>但半导体设备板块，也必须遵守移动平均带三类买卖点策略。</p>
+<p>你像圈子提示出现信号的拓荆科技/中科飞测，最近走势也是不错的，目前可以继续持gu策略。</p>
+<p>⚡ 机器人</p>
+<p>上周日直播课挖掘的，相对低位的【人形机器人】/【机床】，今天同时大涨，将高低切2.0阶段推上一个新台阶！</p>
+<p>-----</p>
+<p>2026-05-15 11:01:39</p>
+<p>三、未来方向展望</p>
+<p>🎯 重点机会</p>
+<p>• 1. 各大指数今天陆续来到日线9转的高九位置，所以当下要避免的操作①追高，②在前期涨幅较大的板块小幅回调买入；</p>
+<p>• 2. 对于高乖离值的品种，适度逢高减cang；其次观察前期有调整的板块+能在中期均线组附近出现企稳动作（以新能源的锂电材料环节为例）。</p>
+<p>• 止盈逻辑：gu价与中期均线组的乖离值达到100%，达到交易条件。</p>
+<p>• 当然，这种主题性炒作品种，有卖飞的风险，但咱们吃到鱼身足以！</p>
+<p>• a）大盘势能>板块效应>个gu走势；</p>
+<p>• b）同一板块，前排gu是板块行情的方向标；</p>
+<p>⚠️ 风险提示</p>
+<p>• 市场波动加大，注意仓位控制</p>
+<p>• 消息面不确定性较高</p>
+<p>📅 后续关注</p>
+<p>• 明日开盘情绪变化</p>
+<p>• 量能是否配合突破</p>
+<p>四、群主原话</p>
+<p>（本日群内无高权重发言记录）</p>
+<p>📌 基于 22 条信息进行整理，于 2026-05-15 13:00 整理完毕并发送</p>
+<p>涉及个股：群主、高九卖出结构、全局思维、移动平均带三类买卖点、人形机器人、机床、嘻嘻、可爱</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>📊 晚间市场报告 05/14<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">晚间</span></h2>
+<div class="meta">📅 2026-05-13</div>
+<div class="report-content"><p><strong>市场概览：</strong>见完整版</p><p><strong>核心观点：</strong>见完整版</p><p><strong>涉及个股：</strong>群主、移动平均带三类买卖点、短线调整震荡、高乖离值品种、爱心</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每日市场报告 05/14（晚间）</p>
+<p>一、市场整体解读</p>
+<p>（今日市场整体走势平稳，暂无重大系统性风险）</p>
+<p>二、板块个股动态</p>
+<p>⚡ 锂电</p>
+<p>2. 对于高乖离值的品种，适度逢高减cang；其次观察前期有调整的板块+能在中期均线组附近出现企稳动作（以新能源的锂电材料环节为例）。</p>
+<p>【更多资源、续费+薇  Lind631】</p>
+<p>【群主】：:大盘走势点评：</p>
+<p>⚡ 电网</p>
+<p>【群主】：北美电网-明阳电气（圈内品种）跟踪点评：</p>
+<p>1. 暂未出现基本面利空，更多是资金扰动所致；</p>
+<p>2. 交易策略看，gu价目前有弱跌穿中期均线组的，要减cang防守（留底cang看中线），即移动平均带三类买卖点，买点买，卖点卖，心中无涨跌。</p>
+<p>三、未来方向展望</p>
+<p>🎯 重点机会</p>
+<p>• 1. 各大指数今天陆续来到日线9转的高九位置，所以当下要避免的操作①追高，②在前期涨幅较大的板块小幅回调买入；</p>
+<p>• 2. 对于高乖离值的品种，适度逢高减cang；其次观察前期有调整的板块+能在中期均线组附近出现企稳动作（以新能源的锂电材料环节为例）。</p>
+<p>• 1. 各大指数今天陆续来到日线9转的高九位置，所以当下要避免的操作①追高，②在前期涨幅较大的板块小幅回调买入；</p>
+<p>• 2. 对于高乖离值的品种，适度逢高减cang；其次观察前期有调整的板块+能在中期均线组附近出现企稳动作（以新能源的锂电材料环节为例）。</p>
+<p>• ps：交易策略看，目前gu价是强势封板的，且是板块领头羊，但考虑到乖离值来到80%，明后天如果不能连续封板，圈子会择机止盈离场（不开板，先拿着）。</p>
+<p>• 对于碳化硅，当前推荐的卖方机构明显变多，所以今天走出板块性行情。</p>
+<p>⚠️ 风险提示</p>
+<p>• 市场波动加大，注意仓位控制</p>
+<p>• 消息面不确定性较高</p>
+<p>📅 后续关注</p>
+<p>• 明日开盘情绪变化</p>
+<p>• 量能是否配合突破</p>
+<p>四、群主原话</p>
+<p>（本日群内无高权重发言记录）</p>
+<p>📌 基于 29 条信息进行整理，于 2026-05-14 13:00 整理完毕并发送</p>
+<p>涉及个股：群主、移动平均带三类买卖点、短线调整震荡、高乖离值品种、爱心</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>📊 周复盘市场报告 05/14<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">周复盘</span></h2>
+<div class="meta">📅 2026-05-13</div>
+<div class="report-content"><p><strong>市场概览：</strong>见完整版</p><p><strong>核心观点：</strong>见完整版</p><p><strong>涉及个股：</strong>后道测试、移动平均带三类买卖点、群主、嘻嘻、程孟桥、9大模型、上影反攻模型、前后排</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每周市场复盘 05/14</p>
+<p>一、本周市场回顾</p>
+<p>（本周市场整体走势回顾）</p>
+<p>二、核心板块复盘</p>
+<p>• AI算力链：持续活跃，消息面较多</p>
+<p>• 光通信/光模块：美股映射明显</p>
+<p>• 商业航天：SpaceX 催化不断</p>
+<p>三、重点个股跟踪</p>
+<p>（本周涉及个股较多，以实际群内信息为准）</p>
+<p>四、交易策略总结</p>
+<p>• 本周整体以观望为主，等待方向明朗</p>
+<p>• 仓位控制在合理范围</p>
+<p>五、下周展望</p>
+<p>• 关注政策面变化</p>
+<p>• 关注产业催化进展</p>
+<p>📌 基于 134 条信息进行整理，于 2026-05-14 13:00 整理完毕并发送</p>
+<p>涉及个股：后道测试、移动平均带三类买卖点、群主、嘻嘻、程孟桥、9大模型、上影反攻模型、前后排</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>每日午间市场报告 2026-05-14<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">午间</span></h2>
+<div class="meta">📅 2026-05-13</div>
+<div class="report-content"><p><strong>市场概览：</strong>日线高九卖出结构触发，大盘短线调整，4000+绿盘。板块A强B弱分化，碳化硅SiC和玻璃基板爆发，CPU方向缩圈。</p><p><strong>核心观点：</strong>高九结构带来短线调整但不改变趋势；避免追高和高乖离值品种；关注前期调整板块在中期均线组企稳（锂电材料）；板块缩圈背景下警惕掉队品种。</p><p><strong>涉及个股：</strong>晶升股份、天岳先进、帝尔激光、澜起科技、中国长城、芯原股份、长川科技、明阳电气、联德股份、信维通信、宇晶股份、宏工科技</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每日午间市场报告 2026-05-14</p>
+<p>一、市场整体解读</p>
+<p>各大指数来到日线9转高九位置，大盘短线调整压力，4000+绿盘。圈主强调当前看不到深度调整利空，高九结构带来的短线调整震荡不会改变原趋势。板块A强B弱分化：澜起科技新高vs中国长城跌停，板块开始缩圈。</p>
+<p>二、板块个股动态</p>
+<p>【碳化硅SiC】晶升股份20cm涨停（乖离80%，不连板则止盈）、天岳先进跟随（乖离近100%，逢高减仓）</p>
+<p>【玻璃基板】帝尔激光乖离50%（部分止盈，后续还有1-2波行情）</p>
+<p>【CPU/算力】澜起科技新高（乖离70%，部分减仓止盈，中线看好）、中国长城跌停、芯原股份力度不足、长川科技已止盈</p>
+<p>【北美电网】明阳电气跌破均线组（减仓防守留底仓）</p>
+<p>【其他】联德股份第三次大阳后中阴（观察均线支撑）、信维通信中线未完、宇晶股份消化套牢盘</p>
+<p>【固态电池】宏工科技横盘（等第二催化）</p>
+<p>三、午后关注</p>
+<p>1. 锂电材料等前期调整板块中期均线企稳</p>
+<p>2. 玻璃基板回调布局</p>
+<p>3. 高乖离值品种减仓纪律</p>
+<p>4. 板块缩圈警惕掉队</p>
+<p>四、风险提示</p>
+<p>日线高九结构触发、板块缩圈加剧、高乖离值品种止盈纪律</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>每日市场报告 2026-05-14 晚间<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">晚间</span></h2>
+<div class="meta">📅 2026-05-13</div>
+<div class="report-content"><p><strong>市场概览：</strong>日线高九卖出结构触发，大盘短线调整4000+绿盘。板块A强B弱分化加剧，硅光芯片代工和碳化硅SiC爆发，CPU方向缩圈。</p><p><strong>核心观点：</strong>高九结构带来短线调整但不改变趋势；避免追高和高乖离值品种；关注半导体设备零部件、硅光芯片代工、氨纶涨价、OCS光通信、Token工厂算力租赁五大方向。</p><p><strong>涉及个股：</strong>晶升股份、天岳先进、燕东微、卓胜微、富创精密、帝尔激光、澜起科技、中国长城、芯原股份、长川科技、润建股份、新乡化纤、和远气体、华特气体、英唐智控、领益智造、宏工科技、创世纪</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每日市场报告 2026-05-14 晚间</p>
+<p>一、市场整体解读</p>
+<p>高九卖出结构触发，大盘短线调整4000+绿盘。圈主强调当前看不到深度调整利空，短线震荡不会改变原趋势。板块A强B弱分化：澜起科技新高vs中国长城跌停。</p>
+<p>二、板块个股动态</p>
+<p>【碳化硅SiC】晶升股份20cm涨停(乖离80%)、天岳先进(乖离近100%)</p>
+<p>【硅光芯片代工】燕东微逆势创新高(北京首家硅光量产)、卓胜微(乖离50%半仓止盈)、富创精密(海外订单50%+增长)</p>
+<p>【玻璃基板】帝尔激光乖离50%上午提示止盈午后反跌，后续还有1-2波</p>
+<p>【CPU/算力】澜起科技新高(乖离70%减仓止盈)、中国长城跌停、芯原力度不足、长川已止盈、润建股份Token工厂创新高</p>
+<p>【化工/氨纶】新乡化纤探路尖兵模型继续持股</p>
+<p>【特种气体】和远气体N式倍量双涨停逆势涨停、华特气体乖离过高、金宏/广钢观察均线</p>
+<p>【OCS/光通信】英唐智控6月催化预期、领益智造补涨</p>
+<p>【固态电池】宏工科技横盘等第二催化</p>
+<p>【机床】创世纪在车上可拿，开新仓性价比不高</p>
+<p>【其他】明阳电气减仓防守、信维通信中线未完、超捷跟随止盈、佛塑科技基本面没利空、协鑫能科获利兑现、山东赫达回踩是机会、璞泰来高偏好可观察仓</p>
+<p>三、未来方向展望</p>
+<p>1.半导体设备零部件：产能为王</p>
+<p>2.硅光芯片代工：国产稀缺产能</p>
+<p>3.氨纶涨价：供给侧收缩</p>
+<p>4.OCS光通信：6月催化</p>
+<p>5.Token工厂：算力租赁景气</p>
+<p>四、风险提示</p>
+<p>高九结构、板块缩圈、高乖离值止盈纪律、H200配额情绪影响</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>📊 晚间市场报告 05/13<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">晚间</span></h2>
+<div class="meta">📅 2026-05-12</div>
+<div class="report-content"><p><strong>市场概览：</strong>见完整版</p><p><strong>核心观点：</strong>见完整版</p><p><strong>涉及个股：</strong>群主、北美电网、童一天、程孟桥、长存链、极致夸张</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每日市场报告 05/13（晚间）</p>
+<p>一、市场整体解读</p>
+<p>（今日市场整体走势平稳，暂无重大系统性风险）</p>
+<p>二、板块个股动态</p>
+<p>⚡ 锂电</p>
+<p>【群主】：唯产品论视角，因为产品不同，都是铜箔，但显然市场给载体铜箔/hvlp铜箔等更高的估值，但对于锂电铜箔，则是估值则不会这么高。</p>
+<p>产品的不同，也就体现出来乖离值的不同。</p>
+<p>-----</p>
+<p>⚡ 半导体</p>
+<p>完美契合圈子判断，只要咱们圈子挖掘的【半导体设备前排-后道测试】，gu价不断打高度，半导体设备后排品种，也能演绎补涨行情；</p>
+<p>圈子中后来强调的拓荆科技/中科飞测，走势也很优秀；</p>
+<p>当然从今日涨幅看，是微导纳米/京仪装备更胜一筹，主要是市场今天反馈【长存链】消息，即传言长存计划6月中旬提交ipo材料，所以长存敞口大的品种，反馈较为激烈。</p>
+<p>⚡ 机器人</p>
+<p>【群主】：人形机器人，我在上周日直播课讲过的，如果你是纯粹博弈事件，可以减；但如果你是埋伏策略，去博弈3季度的催化，则是持gu策略。</p>
+<p>-----</p>
+<p>2026-05-13 11:30:40</p>
+<p>⚡ 电网</p>
+<p>【群主】：这几天不出彩的【北美电网】，今天被轮动到。</p>
+<p>燃气轮机、变压器、sofc三个分支，今天均是有不错的表现。</p>
+<p>原因很简单：</p>
+<p>三、未来方向展望</p>
+<p>🎯 重点机会</p>
+<p>• c）大部分品种，gu价贴近中期均线组，所以被低吸资金关注到；</p>
+<p>• 它们不隶属于任何一个板块，都是靠自己的业绩拐点，走出一轮独立性行情。</p>
+<p>• 无异99:老师，迈为gu份和板块内走势完全不一样，是有什么利空吗？</p>
+<p>• 消化圈内逻辑的同时，还能进行延展：</p>
+<p>• 2. 今天上涨逻辑，也是北美电网（燃气轮机），因为公司是国内极少数具备F/H级重型燃机全链条能力的企业，叠加gu价相对位置不高，所以被刺激到，但可以按照移动平均带三类买卖点做动作。</p>
+<p>• 今天电气板块不错，明阳高开低走，今天回踩60日均线，这个位置是个好的做多位置，但感觉没有拉升。</p>
+<p>⚠️ 风险提示</p>
+<p>• 市场波动加大，注意仓位控制</p>
+<p>• 消息面不确定性较高</p>
+<p>📅 后续关注</p>
+<p>• 明日开盘情绪变化</p>
+<p>• 量能是否配合突破</p>
+<p>四、群主原话</p>
+<p>（本日群内无高权重发言记录）</p>
+<p>📌 基于 32 条信息进行整理，于 2026-05-13 18:17 整理完毕并发送</p>
+<p>涉及个股：群主、北美电网、童一天、程孟桥、长存链、极致夸张</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>每日市场报告 5/13<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">晚间</span></h2>
+<div class="meta">📅 2025-05-13</div>
+<div class="report-content"><p><strong>市场概览：</strong>高低切换延续，科技主线轮动加速，SOXX松动但5日线4200支撑仍在。CME推出全球首个算力期货合约，阿里腾讯今晚发布Q1业绩预期Capex大增。</p><p><strong>核心观点：</strong>半导体设备后排补涨+长存IPO催化、Token工厂模式变革、铜箔乖离极端化需止盈、独立行情品种一波波做</p><p><strong>涉及个股：</strong>长川科技,京仪装备,微导纳米,拓荆科技,中科飞测,骄成超声,东方国信,润泽科技,大位科技,安靠智电,金盘科技,伊戈尔,德福科技,铜冠铜箔,海亮股份,中一科技,键邦股份,道恩股份,飞凯材料,山东赫达,茂莱光学,澜起科技,芯原股份,盛科通信,润建股份,汇成真空,迈为股份,德方纳米,国际复材,华丰科技</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每日市场报告 5/13（晚间）</p>
+<p>一、市场整体解读</p>
+<p>今日A股高低切换延续，科技主线内部轮动加速。SOXX指数显示美股科技股出现松动迹象但收复部分失地，对A股影响更多体现在开盘情绪，5日线4200点支撑仍在。全天国产算力AIDC、半导体设备、北美电网、铜箔等方向交替活跃，成交量排名前十品种融资盘动向值得关注。</p>
+<p>CME正式推出全球首个算力期货合约，算力资产迎来标准化定价里程碑。高盛预测AI Token消耗量下个十年将飙升24倍，企业级智能体成为核心增长引擎，Token工厂模式毛利率可达50%以上，远超传统算力租赁。</p>
+<p>二、板块个股动态</p>
+<p>🚀 半导体设备-后道测试</p>
+<p>长川科技 | 继昨日矽电股份后今日领涨，后道测试前排持续打高度 | 盯住前排，前排调整或乖离50%触发止盈</p>
+<p>京仪装备 | 长存链催化（长存6月中旬提交IPO），冲高回落可减仓止盈 | 板块效应不够强，明后天冲高回落减部分</p>
+<p>微导纳米 | 今日涨幅突出，长存敞口大品种受益IPO预期 | 跟随前排节奏</p>
+<p>拓荆科技 | 走势优秀，后排补涨逻辑 | 持筹策略</p>
+<p>中科飞测 | 走势优秀，后排补涨逻辑 | 持筹策略</p>
+<p>骄成超声 | 长存长鑫无损检测突破，SAM设备市场空间30-45亿 | 兼具确定性与弹性，综合看300-400亿市值</p>
+<p>⚡ 国产算力AIDC</p>
+<p>东方国信 | 前排继续打高度，Token出海+算力租赁逻辑 | 前排标杆继续持有</p>
+<p>润泽科技 | 回踩中期均线获支撑后反弹创本轮反弹新高 | 波段持股策略</p>
+<p>大位科技 | 补涨品种创本轮反弹新高 | 高低切受益</p>
+<p>🔌 北美电网</p>
+<p>安靠智电 | 上修26年北美AIDC订单至1亿美金，产能翻倍仅6个月 | 继续持股策略</p>
+<p>金盘科技 | 回踩买点结构，Transformer订单预期 | 持股策略</p>
+<p>伊戈尔 | 北美缺电叙事，Trump访华抢跑逻辑 | 贴近中期均线组继续持有</p>
+<p>🔥 铜箔赛道</p>
+<p>德福科技 | 载体铜箔前排，100%乖离值后仍在拔高 | 前排风向标</p>
+<p>铜冠铜箔 | HVLP铜箔前排，100%乖离后继续冲高 | 前排风向标</p>
+<p>海亮股份 | 后排跟涨至50%乖离值 | 1/2仓位止盈，剩余等前排调整后全部离场</p>
+<p>中一科技 | 后排跟涨至50%乖离值 | 1/2仓位止盈</p>
+<p>诺德股份 | 锂电铜箔估值低于载体/HVLP铜箔，30%乖离即回调 | 产品差异决定乖离值差异</p>
+<p>💎 独立行情-业绩拐点</p>
+<p>键邦股份 | 赛克逻辑，业绩拐点独立行情 | 加入自选一波一波做，30-50%乖离减仓</p>
+<p>道恩股份 | TPV逻辑，业绩拐点 | 同上策略</p>
+<p>飞凯材料 | 光纤材料，独立行情 | 同上策略</p>
+<p>山东赫达 | 植物胶囊+铜箔新业务，今日跌停（传闻美国工厂问题未经证实） | 不急于抄底，等回踩买点结构低吸，27年估值仅10几倍</p>
+<p>🔬 光刻机/光通信</p>
+<p>茂莱光学 | 国产光刻机+北美光通信AH溢价64%，机构调研持续更新订单 | 中线空间不错，继续跟踪</p>
+<p>澜起科技 | 港A溢价64%，外资看好信号 | 中线继续看好</p>
+<p>芯原股份 | 字节自研CPU项目立项（4nm），IP授权受益 | 新催化落地</p>
+<p>盛科通信 | 阿里3万+颗scale out订单，字节3万颗框架订单 | Q2订单加速放量，静待腾讯6月订单</p>
+<p>⚠️ 其他方向</p>
+<p>炬光科技 | 乖离值向50%靠近，中线仍有新高潜力 | 部分减仓止盈控节奏</p>
+<p>德方纳米 | 乖离超50%，电池方向 | 部分减仓止盈</p>
+<p>国际复材 | 乖离率51% | 已止盈三分之一</p>
+<p>华丰科技 | 短线催化不足 | 适当减仓，中线继续看好</p>
+<p>浙江荣泰 | 人形机器人事件博弈/埋伏策略分化 | 博弈事件可减，埋伏Q3继续持</p>
+<p>上海电气 | 北美电网燃气轮机轮动，非标准上影反攻模型 | 按移动平均带三类买卖点操作</p>
+<p>振华股份 | 当强不强迹象 | 执行交易纪律</p>
+<p>润建股份 | Token工厂模式毛利率50%+，70%分成比例锁定高毛利 | 算力业务高增长确定性强</p>
+<p>汇成真空 | 苹果+Lumentum/旭创/光迅光通信客户 | 异动受益大客户逻辑</p>
+<p>迈为股份 | 短线资金扰动致走势异常，未见基本面利空 | 跌穿中期均线减仓防守</p>
+<p>三、未来方向展望</p>
+<p>🎯 重点机会：</p>
+<p>1. 半导体设备后排补涨+长存IPO催化（6月中旬），盯紧长川科技前排高度</p>
+<p>2. 阿里/腾讯今晚发布Q1业绩，预期资本支出大幅增长，算力产业链受益</p>
+<p>3. Token工厂商业模式变革，润建股份50%+毛利率远超传统算力租赁</p>
+<p>4. 铜箔前排100%乖离后仍在拔高，后排50%乖离执行减仓纪律</p>
+<p>5. 独立行情品种（业绩拐点）一波一波做，回踩中期均线是买点</p>
+<p>⚠️ 风险提示：</p>
+<p>1. SOXX指数若进入大跌态势才会真正冲击A股，当前更多影响开盘情绪</p>
+<p>2. 铜箔赛道乖离值极端化，后排品种及时止盈锁定利润</p>
+<p>3. 山东赫达跌停传闻未经证实，但需警惕黑天鹅</p>
+<p>4. 华丰科技短线催化不足，仓位偏重建议调整</p>
+<p>四、群主原话</p>
+<p>"只要咱们圈子挖掘的半导体设备前排-后道测试，股价不断打高度，半导体设备后排品种也能演绎补涨行情。要盯着前排股看，要么是前排股调整，要么是乖离值贴近50%，触发其一要做好部分仓位的止盈动作。"</p>
+<p>"低位时老樊强调铜箔的通胀逻辑说是下一个电子布，高位时基于移动平均带三类买卖点逐步离场收获利润。抄底和逃顶咱们都要比别人快一步！"</p>
+<p>📌 基于53条信息进行整理，于2026-05-14 09:18 整理完毕并发送</p></div>
+</details></div>
+</div>
+<div class="report-card">
+<h2>每日市场报告 5/12<span style="background:#484f58;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">晚间</span></h2>
+<div class="meta">📅 2025-05-12</div>
+<div class="report-content"><p><strong>市场概览：</strong>韩股跳水冲击情绪，5日线4200段观察支撑，5-6月主题炒作旺季，多品种乖离50%触发止盈信号，机构去弱留强分化加剧</p><p><strong>核心观点：</strong>韩股跳水影响超短情绪，碳化硅SiC/Space XAI/商业航天多主题活跃，午后分化加剧机构去弱留强</p><p><strong>涉及个股：</strong>晶升股份,矽电股份,世运电路,明阳电气,西部材料,信维通信,超捷股份,菲利华,石英股份,沪硅产业,北方稀土,龙芯中科,翱捷科技,新乡化纤,良信股份,京泉华,中际旭创,润泽科技,和远气体</p>
+<details style="margin-top:12px;">
+<summary style="color:#58a6ff;cursor:pointer;">展开完整报告</summary>
+<div class="report-content" style="margin-top:12px;"><p>📊 每日市场报告 | 2026-05-12（晚间）</p>
+<p>一、市场整体解读</p>
+<p>韩股跳水冲击超短线情绪，大盘5日线4200段附近观察支撑。群主基于情绪高点已对高乖离品种左侧减仓保利润，后续观察强度和结构判断大盘调整是否升级。</p>
+<p>5-6月份是炒主题的大月！今日碳化硅SiC、Space XAI、商业航天、半导体硅片等多条主题主线活跃，午后菲利华尾盘急拉13%，市场热度仍高但分化加剧，机构资金"去弱留强"特征明显。</p>
+<p>二、板块个股动态</p>
+<p>🔥 碳化硅SiC主题</p>
+<p>晶升股份 | 主题再创新高，乖离值冲50%可部分减仓止盈 | 主题大概率没走完还会反复活跃，优先看卖铲子股（设备商），细分隐形龙头</p>
+<p>天岳先进 | 高辨识度品种走势良好 | 跟涨晶升，前排调整后后排也会调整</p>
+<p>半导体设备-后道测试</p>
+<p>矽电股份 | 乖离值50%出现阶段性高点 | 盘中冲高遇阻半仓止盈，后道测试是半导体设备领头羊</p>
+<p>Space XAI</p>
+<p>世运电路 | PCB核心供应商领跑突破买点 | 偏绿盘低仓位博弈当日不追高，AI5芯片特斯拉首批14A客户</p>
+<p>明阳电气 | 反馈平淡 | 求稳建议均衡配置更稳妥</p>
+<p>🚀 商业航天-Space X链</p>
+<p>西部材料 | 早盘冲高50%乖离值后回落 | 部分减仓止盈，剩余底仓可拿，中线行情大概率没走完</p>
+<p>信维通信 | 前排出现中阴调整 | 前排调整带动整个板块，后排需适度减仓</p>
+<p>超捷股份 | 后排跟涨品种 | 求稳策略需部分减仓止盈</p>
+<p>⚡ 电子布-Q布</p>
+<p>菲利华 | 回踩买点后稳步涨，尾盘急拉13% | 继续波动持股，高低切走势越猛反而不利于中期，慢涨更稳</p>
+<p>石英股份 | Q布上游原材料+切入电子布预期 | 近期盘面反馈强烈，新增投资江苏芯晶鼎科技持股10%</p>
+<p>💎 半导体硅片</p>
+<p>沪硅产业 | 中阳线上涨乖离值有优势 | 立昂微/西安奕材乖离30-40%等调整回踩，缩量缩波更好</p>
+<p>稀土</p>
+<p>北方稀土 | Trump访华逻辑落地兑现盘离场 | 短线可减仓止盈一部分</p>
+<p>🔧 其他方向</p>
+<p>龙芯中科 | 国产CPU不看业绩看催化 | 中线角度继续看好</p>
+<p>翱捷科技 | ASIC芯片管理释放利好 | 存储3D DRAM合作、CPU生态协同、定制云端算力</p>
+<p>新乡化纤 | 探路尖兵模型走出 | 产品提价持续，波段可持续持股</p>
+<p>良信股份 | N式倍量双涨停模型 | 股价调整后出现模型结构</p>
+<p>和远气体 | 调整后N式倍量双涨停 | 可小仓位博弈，优先看前排企稳</p>
+<p>京泉华 | 乖离值未达50% | 部分止盈策略正确，不涉及上修</p>
+<p>中际旭创 | 50%乖离值 | 不是长久之计，注意风险</p>
+<p>润泽科技 | 利好当强不强 | 机构资金去弱留强，弱势品种更弱</p>
+<p>三、未来方向展望</p>
+<p>🎯 重点机会：</p>
+<p>1. 碳化硅SiC主题从炒主题向产业趋势切换，持续跟踪晶升股份</p>
+<p>2. Q布材料升级方向跟踪大规模备货动作，关注菲利华/石英股份</p>
+<p>3. 半导体硅片回踩买点结构是更好布局点</p>
+<p>⚠️ 风险提示：</p>
+<p>1. 韩股调整是否升级需观察5日线4200段支撑</p>
+<p>2. 多品种乖离值达50%触发止盈，注意节奏控制</p>
+<p>3. 前排调整时后排需跟随减仓，不要心存侥幸</p>
+<p>4. 特朗普访华邀请16位CEO未邀英伟达，前期关系紧张影响</p>
+<p>四、群主原话</p>
+<p>"任何一个板块，都会存在前排/后排股的问题……前排股达到止盈信号开始调整，通常走出前排股带着整个板块调整，那也需要适度减仓后排股。任何板块，都是遵循这一交易原则！"</p>
+<p>"体系，永远比代码更重要！因为没有成熟的体系，即便是同一个代码，但不同的同学最后的成绩可能是不同的。"</p>
+<p>📌 基于46条信息进行整理，于2026-05-13 00:55 整理完毕并发送</p></div>
+</details></div>
+</div>
+<footer>
+🤖 Investment System · 自动更新 · 2026-06-12 15:29
+</footer>
+</div>
+<script>
+const AUTH_KEY = 'investment_auth';
+const AUTH_HASH = '000000000000000000000000640fade3'; // 简单hash，实际密码: Martin2026
+
+function simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).padStart(32, '0').substring(0, 32);
+}
+
+function checkPassword() {
+    const input = document.getElementById('authPassword').value;
+    const hash = simpleHash(input);
+    if (hash === AUTH_HASH) {
+        localStorage.setItem(AUTH_KEY, 'true');
+        document.getElementById('authOverlay').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+    } else {
+        document.getElementById('authError').style.display = 'block';
+        document.getElementById('authPassword').value = '';
+    }
+}
+
+// 检查是否已认证
+if (localStorage.getItem(AUTH_KEY) === 'true') {
+    document.getElementById('authOverlay').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+}
+
+// 回车提交
+document.getElementById('authPassword').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') checkPassword();
+});
+</script>
+</body>
+</html>

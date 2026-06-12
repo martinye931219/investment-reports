@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>报告 2026-04-24 - 投资报告</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif; background: #0d1117; color: #c9d1d9; line-height: 1.6; }
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+header { border-bottom: 1px solid #21262d; padding: 20px 0; margin-bottom: 30px; }
+header h1 { color: #58a6ff; font-size: 1.5em; }
+header .nav { margin-top: 10px; }
+header .nav a { color: #8b949e; text-decoration: none; margin-right: 20px; font-size: 0.9em; }
+header .nav a:hover { color: #58a6ff; }
+header .nav a.active { color: #58a6ff; font-weight: 600; }
+.report-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 24px; margin-bottom: 20px; }
+.report-card h2 { color: #58a6ff; font-size: 1.2em; margin-bottom: 12px; }
+.report-card .meta { color: #8b949e; font-size: 0.85em; margin-bottom: 16px; }
+.report-content { font-size: 0.95em; }
+.report-content h1 { font-size: 1.4em; color: #58a6ff; margin: 20px 0 10px; }
+.report-content h2 { font-size: 1.2em; color: #79c0ff; margin: 18px 0 8px; border-bottom: 1px solid #21262d; padding-bottom: 6px; }
+.report-content h3 { font-size: 1.05em; color: #d2a8ff; margin: 14px 0 6px; }
+.report-content p { margin: 8px 0; }
+.report-content ul, .report-content ol { margin: 8px 0 8px 24px; }
+.report-content li { margin: 4px 0; }
+.report-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.report-content th, .report-content td { border: 1px solid #21262d; padding: 8px 12px; text-align: left; }
+.report-content th { background: #1c2128; color: #58a6ff; }
+.report-content blockquote { border-left: 3px solid #58a6ff; padding-left: 12px; color: #8b949e; margin: 12px 0; }
+.report-content strong { color: #f0f6fc; }
+.report-content code { background: #1c2128; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+.date-list { list-style: none; }
+.date-list li { padding: 12px 16px; border-bottom: 1px solid #21262d; display: flex; justify-content: space-between; align-items: center; }
+.date-list li:hover { background: #1c2128; }
+.date-list a { color: #58a6ff; text-decoration: none; }
+.date-list .badge { background: #238636; color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 0.75em; }
+.signal-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: 600; }
+.signal-buy { background: #238636; color: #fff; }
+.signal-sell { background: #da3633; color: #fff; }
+.signal-watch { background: #9e6a03; color: #fff; }
+footer { text-align: center; color: #484f58; font-size: 0.8em; padding: 30px 0; border-top: 1px solid #21262d; margin-top: 40px; }
+/* 密码保护样式 */
+.auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d1117; z-index: 1000; display: flex; justify-content: center; align-items: center; }
+.auth-box { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 40px; text-align: center; max-width: 400px; width: 90%; }
+.auth-box h2 { color: #58a6ff; margin-bottom: 20px; font-size: 1.3em; }
+.auth-box input { width: 100%; padding: 12px 16px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-size: 16px; margin-bottom: 16px; outline: none; }
+.auth-box input:focus { border-color: #58a6ff; }
+.auth-box button { width: 100%; padding: 12px; background: #238636; color: #fff; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 600; }
+.auth-box button:hover { background: #2ea043; }
+.auth-error { color: #f85149; font-size: 0.85em; margin-top: 8px; display: none; }
+</style>
+</head>
+<body>
+<div class="auth-overlay" id="authOverlay">
+<div class="auth-box">
+<h2>🔐 投资决策系统</h2>
+<input type="password" id="authPassword" placeholder="请输入访问密码" autofocus>
+<button onclick="checkPassword()">进入</button>
+<p class="auth-error" id="authError">密码错误，请重试</p>
+</div>
+</div>
+<div class="container" id="mainContent" style="display:none;">
+<header>
+<h1>📊 投资决策系统</h1>
+<div class="nav">
+<a href="index.html">首页</a>
+<a href="signals.html">信号扫描</a>
+<a href="holdings.html">持仓</a>
+<a href="pool.html">选股池</a>
+<a href="backtest.html">策略回测</a>
+<a href="stats.html">每日统计</a>
+<a href="bitable.html">飞书报告库</a>
+<a href="knowledge.html">知识库</a>
+<a href="zsxq.html">知识星球</a>
+<a href="kline.html">K线分析</a>
+<a href="db.html">历史数据</a>
+</div>
+</header>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding:12px 16px; background:#161b22; border:1px solid #21262d; border-radius:8px;"><a href="20260423.html">← 2026-04-23</a><span style="color:#58a6ff; font-weight:600;">2026-04-24</span><a href="20260426.html">2026-04-26 →</a></div>
+<div class="report-card"><h2>daily-monitor-report</h2><div class="report-content"><h1>每日监测报告</h1>
+<blockquote>2026-04-24 17:11 · 观察池 104 只 · A股技术扫描</blockquote>
+<p>---</p>
+<h2>一、市场概况</h2>
+<p><strong>涨停板情绪</strong>: <strong>涨停 59</strong> · 🔴跌停 20 · 开板 25 · 连板 8 · 情绪🔥高潮 · 跌停潮⚠️ · 连板(8) · 炸板率高⚡</p>
+<p><strong>美股AI</strong> 🔴 AI芯片大幅回落 · 🔴NVDA▼-1.41% · 🟢AMD▲+0.62% · 🔴SMCI▼-8.33% · 🔴AVGO▼-0.64% · 🔴QCOM▼-1.56% · 🔴MSFT▼-3.97% · 🔴GOOGL▼-0.13% · 🟢GOOG▲+0.01% · 🔴META▼-2.31% · 🔴AMZN▼-0.11% · 🔴TSLA▼-3.56%</p>
+<p><strong>涨跌分布</strong>: 🟢21 · 🔴82 · ⚪1 | 🟢████🔴▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬</p>
+<p><strong>板块构成</strong>: 机器人(28) · AI应用(12) · 航天(1) · AI算力(6) · 光模块(7) · 银发经济(7) · 航空运输(5) · 免税(5) · 化工(5) · 消费(2) · 其他(15)</p>
+<p>---</p>
+<h2>二、信号分类汇总</h2>
+<table>
+<tr><th>类别</th><th>数量</th><th>说明</th></tr>
+<tr><td>🔵 可买入</td><td>16</td><td>均线多头排列+动量共振（强烈买入信号）</td></tr>
+<tr><td>🟢 有利好</td><td>1</td><td>趋势向上但未完全共振（谨慎关注）</td></tr>
+<tr><td>🔴 可卖出</td><td>17</td><td>均线空头排列或趋势破坏（明确看空）</td></tr>
+<tr><td>⚠️ 有风险</td><td>0</td><td>大跌/跌停/高位放量滞涨</td></tr>
+</table>
+<p>---</p>
+<h2>三、🔵 可买入</h2>
+<table>
+<tr><th>代码</th><th>名称</th><th>现价</th><th>评分</th><th>阶段</th><th>信号</th></tr>
+<tr><td>688258</td><td>卓易信息</td><td>127.22</td><td>65</td><td>2️⃣积累</td><td>均线多头排列, MACD多头, 突破布林上轨, 突破布林上轨 · 止损111.0</td></tr>
+<tr><td>300687</td><td>赛意信息</td><td>23.95</td><td>65</td><td>2️⃣积累</td><td>均线多头排列, MACD多头, 突破布林上轨, 突破布林上轨 · 止损22.05</td></tr>
+<tr><td>688008</td><td>澜起科技</td><td>163.50</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损146.89</td></tr>
+<tr><td>002156</td><td>通富微电</td><td>48.42</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损44.25</td></tr>
+<tr><td>003028</td><td>振邦智能</td><td>28.40</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损26.49</td></tr>
+<tr><td>300308</td><td>中际旭创</td><td>886.99</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损799.43</td></tr>
+<tr><td>002281</td><td>光迅科技</td><td>128.70</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损112.99</td></tr>
+<tr><td>300953</td><td>震裕科技</td><td>217.90</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损192.63</td></tr>
+<tr><td>300496</td><td>中科创达</td><td>64.07</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损60.23</td></tr>
+<tr><td>300552</td><td>万集科技</td><td>27.25</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损25.54</td></tr>
+<tr><td>688629</td><td>华丰科技</td><td>141.67</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损121.99</td></tr>
+<tr><td>603039</td><td>泛微网络</td><td>46.00</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损42.38</td></tr>
+<tr><td>300034</td><td>钢研高纳</td><td>19.74</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损18.58</td></tr>
+<tr><td>301308</td><td>江波龙</td><td>373.19</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损330.02</td></tr>
+<tr><td>601233</td><td>桐昆股份</td><td>20.27</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损18.25</td></tr>
+<tr><td>601398</td><td>工商银行</td><td>7.58</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损7.34</td></tr>
+</table>
+<p>---</p>
+<h2>四、🟢 有利好</h2>
+<table>
+<tr><th>代码</th><th>名称</th><th>现价</th><th>评分</th><th>阶段</th><th>信号</th></tr>
+<tr><td>000822</td><td>山东海化</td><td>6.12</td><td>30</td><td>2️⃣积累</td><td>短期均线多头, MACD多头 · 止损5.56</td></tr>
+</table>
+<p>---</p>
+<h2>五、🔴 可卖出</h2>
+<table>
+<tr><th>代码</th><th>名称</th><th>现价</th><th>评分</th><th>阶段</th><th>信号</th></tr>
+<tr><td>300394</td><td>天孚通信</td><td>323.87</td><td>0</td><td>4️⃣出货</td><td>跌破MA20(341.27), MACD空头 · 止损270.55</td></tr>
+<tr><td>000856</td><td>冀东装备</td><td>10.46</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损9.69</td></tr>
+<tr><td>301413</td><td>安培龙</td><td>100.06</td><td>0</td><td>4️⃣出货</td><td>跌破MA20(117.73), MACD空头 · 止损89.18</td></tr>
+<tr><td>601100</td><td>恒立液压</td><td>96.85</td><td>0</td><td>4️⃣出货</td><td>跌破MA20(101.10), MACD空头 · 止损88.61</td></tr>
+<tr><td>603009</td><td>北特科技</td><td>46.49</td><td>0</td><td>4️⃣出货</td><td>跌破MA20(48.35), MACD空头 · 止损42.89</td></tr>
+<tr><td>002352</td><td>顺丰控股</td><td>36.50</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(35) · 止损35.42</td></tr>
+<tr><td>002139</td><td>拓邦股份</td><td>11.90</td><td>0</td><td>4️⃣出货</td><td>跌破MA20(12.20), MACD空头 · 止损11.4</td></tr>
+<tr><td>688500</td><td>慧辰股份</td><td>49.50</td><td>0</td><td>5️⃣消散</td><td>均线空头排列 · 止损44.63</td></tr>
+<tr><td>300010</td><td>豆神教育</td><td>5.47</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损5.1</td></tr>
+<tr><td>603225</td><td>新凤鸣</td><td>17.05</td><td>0</td><td>5️⃣消散</td><td>均线空头排列 · 止损15.31</td></tr>
+<tr><td>601888</td><td>中国中免</td><td>65.42</td><td>0</td><td>5️⃣消散</td><td>均线空头排列 · 止损62.14</td></tr>
+<tr><td>603069</td><td>海汽集团</td><td>16.72</td><td>0</td><td>5️⃣消散</td><td>均线空头排列 · 止损15.72</td></tr>
+<tr><td>600009</td><td>上海机场</td><td>27.04</td><td>0</td><td>5️⃣消散</td><td>均线空头排列 · 止损26.38</td></tr>
+<tr><td>600004</td><td>白云机场</td><td>8.79</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损8.61</td></tr>
+<tr><td>601166</td><td>兴业银行</td><td>18.18</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(35) · 止损17.76</td></tr>
+<tr><td>601601</td><td>中国太保</td><td>36.62</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损34.56</td></tr>
+<tr><td>600029</td><td>南方航空</td><td>5.56</td><td>0</td><td>5️⃣消散</td><td>均线空头排列 · 止损5.24</td></tr>
+</table>
+<p>---</p>
+<h2>六、⚠️ 有风险</h2>
+<p>_暂无_</p>
+<p>---</p>
+<p>*本报告由系统自动生成，仅供参考，不构成投资建议。*</p></div></div>
+<div class="report-card"><h2>daily_review</h2><div class="report-content"><h1>每日复盘 - 2026年04月24日</h1>
+<blockquote>生成时间: 2026-04-24 17:22</blockquote>
+<blockquote>数据来源: 本地扫描 + 公众号 + 笔记</blockquote>
+<p>---</p>
+<h2>📊 市场概况</h2>
+<h3>技术扫描结果</h3>
+<ul>
+<li><strong>扫描股票</strong>: 115 只</li>
+<li><strong>有效信号</strong>: 6 只</li>
+<li><strong>高分信号(≥60)</strong>: 0 只</li>
+</ul>
+<h3>重点信号</h3>
+<p>_暂无高分信号_</p>
+<h3>所有信号 (6只)</h3>
+<ul>
+<li><strong>688361</strong>: 20分 - RSI正常区间, KDJ金叉</li>
+<li><strong>300567</strong>: 20分 - RSI正常区间, KDJ金叉</li>
+<li><strong>300604</strong>: 20分 - RSI正常区间, KDJ金叉</li>
+<li><strong>301629</strong>: 10分 - RSI正常区间</li>
+<li><strong>300054</strong>: 10分 - RSI正常区间</li>
+<li><strong>603986</strong>: 10分 - RSI正常区间</li>
+</ul>
+<h2>💼 持仓回顾</h2>
+<ul>
+<li><strong>总资产</strong>: ¥0</li>
+<li><strong>持仓数量</strong>: 1 只</li>
+</ul>
+<table>
+<tr><th>代码</th><th>名称</th><th>盈亏%</th><th>仓位%</th></tr>
+<tr><td>300395</td><td>菲利华</td><td>+0.7%</td><td>0.9%</td></tr>
+</table>
+<h2>📰 公众号资讯 (0篇)</h2>
+<p>_暂无公众号文章_</p>
+<blockquote>提示: 配置公众号爬取后自动填充</blockquote>
+<h2>🎯 明日关注</h2>
+<h3>重点监控</h3>
+<ul>
+<li>[ ] 观察市场开盘情况</li>
+<li>[ ] 检查持仓股票新闻</li>
+</ul>
+<h3>预设条件</h3>
+<ul>
+<li><strong>如果大盘高开</strong>: 考虑减仓或观望</li>
+<li><strong>如果大盘低开</strong>: 关注抄底机会</li>
+<li><strong>止损检查</strong>: 检查持仓是否触及-7%</li>
+</ul>
+<h2>⚠️ 风险提示</h2>
+<ul>
+<li>[ ] 高分信号数量: 0（正常应≥3）</li>
+<li>[ ] 市场情绪: 待获取</li>
+</ul>
+<h2>📝 复盘笔记</h2>
+<p>（在此处添加个人思考...）</p>
+<p>---</p>
+<p><strong>复盘时间</strong>: 19:00-19:10</p>
+<p><strong>执行状态</strong>: ✅ 完成</p>
+<p><strong>数据完整性</strong>: ✅ 完整</p></div></div>
+<footer>
+🤖 Investment System · 自动更新 · 2026-06-12 15:29
+</footer>
+</div>
+<script>
+const AUTH_KEY = 'investment_auth';
+const AUTH_HASH = '000000000000000000000000640fade3'; // 简单hash，实际密码: Martin2026
+
+function simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).padStart(32, '0').substring(0, 32);
+}
+
+function checkPassword() {
+    const input = document.getElementById('authPassword').value;
+    const hash = simpleHash(input);
+    if (hash === AUTH_HASH) {
+        localStorage.setItem(AUTH_KEY, 'true');
+        document.getElementById('authOverlay').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+    } else {
+        document.getElementById('authError').style.display = 'block';
+        document.getElementById('authPassword').value = '';
+    }
+}
+
+// 检查是否已认证
+if (localStorage.getItem(AUTH_KEY) === 'true') {
+    document.getElementById('authOverlay').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+}
+
+// 回车提交
+document.getElementById('authPassword').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') checkPassword();
+});
+</script>
+</body>
+</html>

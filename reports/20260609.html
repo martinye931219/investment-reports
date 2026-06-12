@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>报告 2026-06-09 - 投资报告</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif; background: #0d1117; color: #c9d1d9; line-height: 1.6; }
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+header { border-bottom: 1px solid #21262d; padding: 20px 0; margin-bottom: 30px; }
+header h1 { color: #58a6ff; font-size: 1.5em; }
+header .nav { margin-top: 10px; }
+header .nav a { color: #8b949e; text-decoration: none; margin-right: 20px; font-size: 0.9em; }
+header .nav a:hover { color: #58a6ff; }
+header .nav a.active { color: #58a6ff; font-weight: 600; }
+.report-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 24px; margin-bottom: 20px; }
+.report-card h2 { color: #58a6ff; font-size: 1.2em; margin-bottom: 12px; }
+.report-card .meta { color: #8b949e; font-size: 0.85em; margin-bottom: 16px; }
+.report-content { font-size: 0.95em; }
+.report-content h1 { font-size: 1.4em; color: #58a6ff; margin: 20px 0 10px; }
+.report-content h2 { font-size: 1.2em; color: #79c0ff; margin: 18px 0 8px; border-bottom: 1px solid #21262d; padding-bottom: 6px; }
+.report-content h3 { font-size: 1.05em; color: #d2a8ff; margin: 14px 0 6px; }
+.report-content p { margin: 8px 0; }
+.report-content ul, .report-content ol { margin: 8px 0 8px 24px; }
+.report-content li { margin: 4px 0; }
+.report-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.report-content th, .report-content td { border: 1px solid #21262d; padding: 8px 12px; text-align: left; }
+.report-content th { background: #1c2128; color: #58a6ff; }
+.report-content blockquote { border-left: 3px solid #58a6ff; padding-left: 12px; color: #8b949e; margin: 12px 0; }
+.report-content strong { color: #f0f6fc; }
+.report-content code { background: #1c2128; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+.date-list { list-style: none; }
+.date-list li { padding: 12px 16px; border-bottom: 1px solid #21262d; display: flex; justify-content: space-between; align-items: center; }
+.date-list li:hover { background: #1c2128; }
+.date-list a { color: #58a6ff; text-decoration: none; }
+.date-list .badge { background: #238636; color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 0.75em; }
+.signal-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: 600; }
+.signal-buy { background: #238636; color: #fff; }
+.signal-sell { background: #da3633; color: #fff; }
+.signal-watch { background: #9e6a03; color: #fff; }
+footer { text-align: center; color: #484f58; font-size: 0.8em; padding: 30px 0; border-top: 1px solid #21262d; margin-top: 40px; }
+/* 密码保护样式 */
+.auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d1117; z-index: 1000; display: flex; justify-content: center; align-items: center; }
+.auth-box { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 40px; text-align: center; max-width: 400px; width: 90%; }
+.auth-box h2 { color: #58a6ff; margin-bottom: 20px; font-size: 1.3em; }
+.auth-box input { width: 100%; padding: 12px 16px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-size: 16px; margin-bottom: 16px; outline: none; }
+.auth-box input:focus { border-color: #58a6ff; }
+.auth-box button { width: 100%; padding: 12px; background: #238636; color: #fff; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 600; }
+.auth-box button:hover { background: #2ea043; }
+.auth-error { color: #f85149; font-size: 0.85em; margin-top: 8px; display: none; }
+</style>
+</head>
+<body>
+<div class="auth-overlay" id="authOverlay">
+<div class="auth-box">
+<h2>🔐 投资决策系统</h2>
+<input type="password" id="authPassword" placeholder="请输入访问密码" autofocus>
+<button onclick="checkPassword()">进入</button>
+<p class="auth-error" id="authError">密码错误，请重试</p>
+</div>
+</div>
+<div class="container" id="mainContent" style="display:none;">
+<header>
+<h1>📊 投资决策系统</h1>
+<div class="nav">
+<a href="index.html">首页</a>
+<a href="signals.html">信号扫描</a>
+<a href="holdings.html">持仓</a>
+<a href="pool.html">选股池</a>
+<a href="backtest.html">策略回测</a>
+<a href="stats.html">每日统计</a>
+<a href="bitable.html">飞书报告库</a>
+<a href="knowledge.html">知识库</a>
+<a href="zsxq.html">知识星球</a>
+<a href="kline.html">K线分析</a>
+<a href="db.html">历史数据</a>
+</div>
+</header>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding:12px 16px; background:#161b22; border:1px solid #21262d; border-radius:8px;"><a href="20260608.html">← 2026-06-08</a><span style="color:#58a6ff; font-weight:600;">2026-06-09</span><a href="20260610.html">2026-06-10 →</a></div>
+<div class="report-card"><h2>afternoon-check</h2><div class="report-content"><h1>交易检测 · 14:00 · 20260609</h1>
+<h2>一、持仓健康</h2>
+<table>
+<tr><th>代码</th><th>名称</th><th>成本</th><th>现价</th><th>今日%</th><th>浮盈亏%</th><th>仓位</th><th>信号</th></tr>
+<tr><td>002703</td><td>浙江世宝</td><td>21.5</td><td>16.46</td><td>0.3</td><td>-23.44</td><td>1.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>301291</td><td>明阳电气</td><td>57.58</td><td>45.91</td><td>2.18</td><td>-20.27</td><td>5.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>600115</td><td>中国东航</td><td>4.44</td><td>3.81</td><td>1.6</td><td>-14.19</td><td>3.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>601111</td><td>中国国航</td><td>6.96</td><td>6.21</td><td>0.81</td><td>-10.78</td><td>3.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>601872</td><td>招商轮船</td><td>17.26</td><td>14.35</td><td>1.49</td><td>-16.86</td><td>10.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>601975</td><td>招商南油</td><td>5.31</td><td>4.12</td><td>0.98</td><td>-22.41</td><td>3.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>603026</td><td>石大胜华</td><td>91.79</td><td>81.02</td><td>2.17</td><td>-11.73</td><td>2.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>603345</td><td>安井食品</td><td>96.03</td><td>89.01</td><td>1.03</td><td>-7.31</td><td>1.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>603596</td><td>伯特利</td><td>34.12</td><td>27.96</td><td>-3.85</td><td>-18.05</td><td>1.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>688258</td><td>卓易信息</td><td>140.92</td><td>127.9</td><td>3.98</td><td>-9.24</td><td>3.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>159605</td><td>中概互联网ETF</td><td>0.852</td><td>0.819</td><td>0.74</td><td>-3.87</td><td>0.1%</td><td>🟧 减仓</td></tr>
+<tr><td>517520</td><td>黄金股ETF永赢</td><td>1.893</td><td>1.89</td><td>NaN</td><td>-0.16</td><td>8.0%</td><td>🟢 正常</td></tr>
+<tr><td>159880</td><td>工业有色ETF</td><td>2.121</td><td>1.886</td><td>2.89</td><td>-11.08</td><td>8.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>1138.HK</td><td>中远海能</td><td>17.6</td><td>17.6</td><td>NaN</td><td>0.0</td><td>10.0%</td><td>🟢 正常</td></tr>
+<tr><td>6682.HK</td><td>范式智能</td><td>32.5</td><td>32.5</td><td>NaN</td><td>0.0</td><td>2.0%</td><td>🟢 正常</td></tr>
+</table>
+<h2>二、观察池新触发 Top10（飞书热度 × 实时价）</h2>
+<p>（暂无触发 — 飞书数据可能为空 / 或热度不足）</p>
+<h2>三、待审入池（21 只）</h2>
+<table>
+<tr><th>代码</th><th>名称</th><th>进池日</th></tr>
+<tr><td>688361</td><td>中科飞测</td><td></td></tr>
+<tr><td>688072</td><td>拓荆科技</td><td></td></tr>
+<tr><td>300567</td><td>精测电子</td><td></td></tr>
+<tr><td>688147</td><td>微导纳米</td><td></td></tr>
+<tr><td>603658</td><td>None</td><td>2026-05-26</td></tr>
+<tr><td>300604</td><td>None</td><td>2026-05-26</td></tr>
+<tr><td>601600</td><td>None</td><td>2026-05-26</td></tr>
+<tr><td>601872</td><td>None</td><td>2026-05-26</td></tr>
+<tr><td>301291</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>601975</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>603026</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>603345</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>603596</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>159605</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>517520</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>159880</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>688300</td><td>None</td><td>2026-06-01</td></tr>
+<tr><td>600168</td><td>None</td><td>2026-06-01</td></tr>
+<tr><td>002384</td><td>None</td><td>2026-06-01</td></tr>
+<tr><td>600183</td><td>None</td><td>2026-06-01</td></tr>
+<tr><td>...</td><td>还有 1 只</td></tr>
+</table>
+<h2>四、操作建议</h2>
+<p>🔴 <strong>清仓</strong>：002703 浙江世宝, 301291 明阳电气, 600115 中国东航, 601111 中国国航, 601872 招商轮船, 601975 招商南油, 603026 石大胜华, 603345 安井食品, 603596 伯特利, 688258 卓易信息, 159880 工业有色ETF（浮亏 ≥ 5%）</p>
+<p>🟠 <strong>减仓50%</strong>：159605 中概互联网ETF（浮亏 3-5%）</p>
+<p>---</p>
+<p>📌 生成于 2026-06-09 18:58 · slot=14:00</p></div></div>
+<div class="report-card"><h2>daily-monitor-report</h2><div class="report-content"><h1>每日监测报告</h1>
+<blockquote>2026-06-09 15:01 · 观察池 148 只 · A股技术扫描</blockquote>
+<p>---</p>
+<h2>一、市场概况</h2>
+<p><strong>涨停板情绪</strong>: <strong>涨停 130</strong> · 🔴跌停 9 · 开板 64 · 连板 10 · 情绪🔥高潮 · 连板活跃(10) · 炸板率高⚡</p>
+<p><strong>美股AI</strong> 🟢 AI芯片强势上涨 · 🟢NVDA▲+1.73% · 🟢AMD▲+5.14% · 🟢SMCI▲+5.64% · 🟢AVGO▲+2.82% · 🟢QCOM▲+0.85% · 🔴MSFT▼-1.18% · 🔴GOOGL▼-1.42% · 🔴GOOG▼-1.25% · 🔴META▼-1.28% · 🔴AMZN▼-0.33% · 🟢TSLA▲+4.59%</p>
+<p><strong>涨跌分布</strong>: 🟢108 · 🔴38 · ⚪1 | 🟢███████████████🔴▬▬▬▬▬</p>
+<p><strong>板块构成</strong>: 机器人(30) · AI应用(15) · 航天(1) · AI算力(6) · 光模块(10) · 银发经济(7) · 航空运输(5) · 免税(5) · 化工(5) · 消费(2) · 其他(25)</p>
+<p>---</p>
+<h2>二、信号分类汇总</h2>
+<table>
+<tr><th>类别</th><th>数量</th><th>说明</th></tr>
+<tr><td>🔵 可买入</td><td>26</td><td>均线多头排列+动量共振（强烈买入信号）</td></tr>
+<tr><td>🟢 有利好</td><td>4</td><td>趋势向上但未完全共振（谨慎关注）</td></tr>
+<tr><td>🔴 可卖出</td><td>56</td><td>均线空头排列或趋势破坏（明确看空）</td></tr>
+<tr><td>⚠️ 有风险</td><td>0</td><td>大跌/跌停/高位放量滞涨</td></tr>
+</table>
+<p>---</p>
+<h2>三、🔵 可买入</h2>
+<table>
+<tr><th>代码</th><th>名称</th><th>现价</th><th>评分</th><th>阶段</th><th>信号</th></tr>
+<tr><td>603186</td><td>华正新材</td><td>149.63</td><td>80</td><td>2️⃣积累</td><td>均线多头排列, MACD多头, MACD金叉, 突破布林上轨, 突破布林上轨 · 止损124.42</td></tr>
+<tr><td>688498</td><td>源杰科技</td><td>1475.00</td><td>65</td><td>2️⃣积累</td><td>均线多头排列, MACD多头, 突破布林上轨, 突破布林上轨 · 止损1259.37</td></tr>
+<tr><td>601100</td><td>恒立液压</td><td>122.50</td><td>65</td><td>2️⃣积累</td><td>均线多头排列, MACD多头, 突破布林上轨, 突破布林上轨 · 止损110.78</td></tr>
+<tr><td>688017</td><td>绿的谐波</td><td>420.17</td><td>65</td><td>2️⃣积累</td><td>均线多头排列, MACD多头, 突破布林上轨, 突破布林上轨 · 止损346.59</td></tr>
+<tr><td>688322</td><td>奥比中光</td><td>148.40</td><td>65</td><td>2️⃣积累</td><td>均线多头排列, MACD多头, 突破布林上轨, 突破布林上轨 · 止损123.29</td></tr>
+<tr><td>603859</td><td>XD能科科</td><td>52.95</td><td>65</td><td>2️⃣积累</td><td>均线多头排列, MACD多头, 突破布林上轨, 突破布林上轨 · 止损47.21</td></tr>
+<tr><td>603039</td><td>泛微网络</td><td>45.27</td><td>65</td><td>2️⃣积累</td><td>均线多头排列, MACD多头, 突破布林上轨, 突破布林上轨 · 止损39.49</td></tr>
+<tr><td>600378</td><td>昊华科技</td><td>52.80</td><td>65</td><td>2️⃣积累</td><td>均线多头排列, MACD多头, 突破布林上轨, 突破布林上轨 · 止损45.6</td></tr>
+<tr><td>601398</td><td>工商银行</td><td>7.54</td><td>65</td><td>2️⃣积累</td><td>均线多头排列, MACD多头, 突破布林上轨, 突破布林上轨 · 止损7.27</td></tr>
+<tr><td>002636</td><td>金安国纪</td><td>70.38</td><td>65</td><td>2️⃣积累</td><td>均线多头排列, MACD多头, 突破布林上轨, 突破布林上轨 · 止损60.75</td></tr>
+<tr><td>301377</td><td>鼎泰高科</td><td>439.30</td><td>55</td><td>2️⃣积累</td><td>均线多头排列, MACD多头, KDJ金叉 · 止损364.34</td></tr>
+<tr><td>603256</td><td>XD宏和科</td><td>207.34</td><td>55</td><td>2️⃣积累</td><td>均线多头排列, MACD多头, KDJ金叉 · 止损173.21</td></tr>
+<tr><td>300502</td><td>新易盛</td><td>785.73</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损682.39</td></tr>
+<tr><td>000785</td><td>居然智家</td><td>2.49</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损2.25</td></tr>
+<tr><td>688031</td><td>星环科技</td><td>140.58</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损109.88</td></tr>
+<tr><td>000725</td><td>京东方Ａ</td><td>6.52</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损5.5</td></tr>
+<tr><td>603005</td><td>晶方科技</td><td>46.79</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损38.36</td></tr>
+<tr><td>601233</td><td>桐昆股份</td><td>21.15</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损18.95</td></tr>
+<tr><td>601939</td><td>建设银行</td><td>10.36</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损9.84</td></tr>
+<tr><td>600036</td><td>招商银行</td><td>38.49</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损37.49</td></tr>
+<tr><td>002585</td><td>双星新材</td><td>12.20</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损9.92</td></tr>
+<tr><td>002484</td><td>江海股份</td><td>91.98</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损77.61</td></tr>
+<tr><td>002859</td><td>洁美科技</td><td>88.33</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损73.64</td></tr>
+<tr><td>000636</td><td>风华高科</td><td>61.08</td><td>45</td><td>2️⃣积累</td><td>均线多头排列, MACD多头 · 止损50.87</td></tr>
+<tr><td>002009</td><td>天奇股份</td><td>22.64</td><td>35</td><td>2️⃣积累</td><td>短期均线多头, RSI超卖(32) · 止损19.69</td></tr>
+<tr><td>688359</td><td>三孚新科</td><td>142.18</td><td>30</td><td>2️⃣积累</td><td>均线多头排列 · 止损119.79</td></tr>
+</table>
+<p>---</p>
+<h2>四、🟢 有利好</h2>
+<table>
+<tr><th>代码</th><th>名称</th><th>现价</th><th>评分</th><th>阶段</th><th>信号</th></tr>
+<tr><td>600879</td><td>航天电子</td><td>21.97</td><td>45</td><td>2️⃣积累</td><td>短期均线多头, MACD多头, MACD金叉 · 止损19.54</td></tr>
+<tr><td>603662</td><td>柯力传感</td><td>71.15</td><td>30</td><td>2️⃣积累</td><td>短期均线多头, MACD多头 · 止损63.01</td></tr>
+<tr><td>002965</td><td>祥鑫科技</td><td>37.03</td><td>30</td><td>2️⃣积累</td><td>短期均线多头, MACD多头 · 止损33.45</td></tr>
+<tr><td>600498</td><td>烽火通信</td><td>58.85</td><td>30</td><td>2️⃣积累</td><td>短期均线多头, MACD多头 · 止损50.69</td></tr>
+</table>
+<p>---</p>
+<h2>五、🔴 可卖出</h2>
+<table>
+<tr><th>代码</th><th>名称</th><th>现价</th><th>评分</th><th>阶段</th><th>信号</th></tr>
+<tr><td>002929</td><td>润建股份</td><td>62.06</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(20) · 止损50.31</td></tr>
+<tr><td>688008</td><td>澜起科技</td><td>236.40</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损195.34</td></tr>
+<tr><td>300442</td><td>润泽科技</td><td>76.03</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(23) · 止损67.09</td></tr>
+<tr><td>003028</td><td>振邦智能</td><td>25.93</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损22.68</td></tr>
+<tr><td>603083</td><td>剑桥科技</td><td>180.97</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损144.59</td></tr>
+<tr><td>688195</td><td>腾景科技</td><td>212.33</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损175.52</td></tr>
+<tr><td>000856</td><td>冀东装备</td><td>8.44</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(33) · 止损7.38</td></tr>
+<tr><td>600580</td><td>卧龙电驱</td><td>38.37</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损33.25</td></tr>
+<tr><td>603009</td><td>北特科技</td><td>48.10</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损40.84</td></tr>
+<tr><td>002594</td><td>比亚迪</td><td>91.89</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损86.95</td></tr>
+<tr><td>002352</td><td>顺丰控股</td><td>34.04</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(33) · 止损32.77</td></tr>
+<tr><td>300358</td><td>楚天科技</td><td>7.97</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(21) · 止损7.38</td></tr>
+<tr><td>000880</td><td>潍柴重机</td><td>26.21</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(6) · 止损22.71</td></tr>
+<tr><td>603171</td><td>税友股份</td><td>46.15</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(27) · 止损40.45</td></tr>
+<tr><td>300418</td><td>昆仑万维</td><td>39.59</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(25) · 止损34.8</td></tr>
+<tr><td>301606</td><td>绿联科技</td><td>63.10</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(19) · 止损55.49</td></tr>
+<tr><td>300785</td><td>值得买</td><td>40.56</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(21) · 止损34.87</td></tr>
+<tr><td>688629</td><td>华丰科技</td><td>128.98</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损104.58</td></tr>
+<tr><td>300253</td><td>卫宁健康</td><td>7.39</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(20) · 止损6.74</td></tr>
+<tr><td>300058</td><td>蓝色光标</td><td>15.56</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损13.42</td></tr>
+<tr><td>300699</td><td>光威复材</td><td>28.20</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(24) · 止损25.47</td></tr>
+<tr><td>300777</td><td>中简科技</td><td>29.62</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(22) · 止损25.46</td></tr>
+<tr><td>600399</td><td>抚顺特钢</td><td>4.30</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(11) · 止损3.94</td></tr>
+<tr><td>300034</td><td>钢研高纳</td><td>16.96</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(29) · 止损15.11</td></tr>
+<tr><td>301005</td><td>超捷股份</td><td>99.86</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(29) · 止损87.18</td></tr>
+<tr><td>688066</td><td>*ST航图</td><td>12.72</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, RSI超卖(33) · 止损10.94</td></tr>
+<tr><td>002151</td><td>北斗星通</td><td>33.90</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(25) · 止损30.54</td></tr>
+<tr><td>000547</td><td>航天发展</td><td>19.49</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(20) · 止损17.14</td></tr>
+<tr><td>300115</td><td>长盈精密</td><td>32.08</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(26) · 止损27.85</td></tr>
+<tr><td>300010</td><td>ST豆神</td><td>2.70</td><td>0</td><td>5️⃣消散</td><td>均线空头排列 · 止损2.42</td></tr>
+<tr><td>300687</td><td>赛意信息</td><td>24.36</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(21) · 止损20.09</td></tr>
+<tr><td>300170</td><td>汉得信息</td><td>17.99</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(27) · 止损15.79</td></tr>
+<tr><td>301308</td><td>江波龙</td><td>514.65</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损431.72</td></tr>
+<tr><td>001309</td><td>德明利</td><td>625.74</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损531.84</td></tr>
+<tr><td>688521</td><td>芯原股份</td><td>227.52</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(31) · 止损184.27</td></tr>
+<tr><td>301421</td><td>波长光电</td><td>90.82</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(33) · 止损70.91</td></tr>
+<tr><td>002703</td><td>浙江世宝</td><td>16.46</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损13.77</td></tr>
+<tr><td>600346</td><td>恒力石化</td><td>16.31</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(22) · 止损14.62</td></tr>
+<tr><td>000822</td><td>山东海化</td><td>4.51</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(26) · 止损4.13</td></tr>
+<tr><td>600859</td><td>王府井</td><td>10.31</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损9.46</td></tr>
+<tr><td>603069</td><td>海汽集团</td><td>14.29</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(24) · 止损12.54</td></tr>
+<tr><td>600004</td><td>白云机场</td><td>8.06</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损7.8</td></tr>
+<tr><td>600519</td><td>贵州茅台</td><td>1256.00</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损1200.12</td></tr>
+<tr><td>000858</td><td>五 粮 液</td><td>79.11</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, RSI超卖(28) · 止损74.77</td></tr>
+<tr><td>600048</td><td>保利发展</td><td>5.17</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(16) · 止损4.77</td></tr>
+<tr><td>601111</td><td>中国国航</td><td>6.21</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(32) · 止损5.81</td></tr>
+<tr><td>600029</td><td>南方航空</td><td>5.11</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损4.77</td></tr>
+<tr><td>600115</td><td>中国东航</td><td>3.81</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损3.44</td></tr>
+<tr><td>603885</td><td>吉祥航空</td><td>10.53</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损9.53</td></tr>
+<tr><td>300942</td><td>易瑞生物</td><td>6.37</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(25) · 止损5.82</td></tr>
+<tr><td>300684</td><td>中石科技</td><td>54.31</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头 · 止损44.98</td></tr>
+<tr><td>301489</td><td>思泉新材</td><td>144.08</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(25) · 止损112.45</td></tr>
+<tr><td>300409</td><td>道氏技术</td><td>20.77</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(22) · 止损18.77</td></tr>
+<tr><td>002709</td><td>天赐材料</td><td>47.97</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(20) · 止损42.21</td></tr>
+<tr><td>002812</td><td>恩捷股份</td><td>62.94</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(17) · 止损56.01</td></tr>
+<tr><td>603200</td><td>上海洗霸</td><td>46.40</td><td>0</td><td>5️⃣消散</td><td>均线空头排列, MACD空头, RSI超卖(18) · 止损41.55</td></tr>
+</table>
+<p>---</p>
+<h2>六、⚠️ 有风险</h2>
+<p>_暂无_</p>
+<p>---</p>
+<p>*本报告由系统自动生成，仅供参考，不构成投资建议。*</p></div></div>
+<div class="report-card"><h2>evening-check</h2><div class="report-content"><h1>交易检测 · evening · 20260609</h1>
+<h2>一、持仓健康</h2>
+<table>
+<tr><th>代码</th><th>名称</th><th>成本</th><th>现价</th><th>今日%</th><th>浮盈亏%</th><th>仓位</th><th>信号</th></tr>
+<tr><td>002703</td><td>浙江世宝</td><td>21.5</td><td>16.46</td><td>0.3</td><td>-23.44</td><td>1.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>301291</td><td>明阳电气</td><td>57.58</td><td>45.91</td><td>2.18</td><td>-20.27</td><td>5.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>600115</td><td>中国东航</td><td>4.44</td><td>3.81</td><td>1.6</td><td>-14.19</td><td>3.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>601111</td><td>中国国航</td><td>6.96</td><td>6.21</td><td>0.81</td><td>-10.78</td><td>3.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>601872</td><td>招商轮船</td><td>17.26</td><td>14.35</td><td>1.49</td><td>-16.86</td><td>10.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>601975</td><td>招商南油</td><td>5.31</td><td>4.12</td><td>0.98</td><td>-22.41</td><td>3.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>603026</td><td>石大胜华</td><td>91.79</td><td>81.02</td><td>2.17</td><td>-11.73</td><td>2.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>603345</td><td>安井食品</td><td>96.03</td><td>89.01</td><td>1.03</td><td>-7.31</td><td>1.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>603596</td><td>伯特利</td><td>34.12</td><td>27.96</td><td>-3.85</td><td>-18.05</td><td>1.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>688258</td><td>卓易信息</td><td>140.92</td><td>127.9</td><td>3.98</td><td>-9.24</td><td>3.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>159605</td><td>中概互联网ETF</td><td>0.852</td><td>0.819</td><td>0.74</td><td>-3.87</td><td>0.1%</td><td>🟧 减仓</td></tr>
+<tr><td>517520</td><td>黄金股ETF永赢</td><td>1.893</td><td>1.89</td><td>NaN</td><td>-0.16</td><td>8.0%</td><td>🟢 正常</td></tr>
+<tr><td>159880</td><td>工业有色ETF</td><td>2.121</td><td>1.886</td><td>2.89</td><td>-11.08</td><td>8.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>1138.HK</td><td>中远海能</td><td>17.6</td><td>17.6</td><td>NaN</td><td>0.0</td><td>10.0%</td><td>🟢 正常</td></tr>
+<tr><td>6682.HK</td><td>范式智能</td><td>32.5</td><td>32.5</td><td>NaN</td><td>0.0</td><td>2.0%</td><td>🟢 正常</td></tr>
+</table>
+<h2>二、观察池新触发 Top10（飞书热度 × 实时价）</h2>
+<p>（暂无触发 — 飞书数据可能为空 / 或热度不足）</p>
+<h2>三、待审入池（21 只）</h2>
+<table>
+<tr><th>代码</th><th>名称</th><th>进池日</th></tr>
+<tr><td>688361</td><td>中科飞测</td><td></td></tr>
+<tr><td>688072</td><td>拓荆科技</td><td></td></tr>
+<tr><td>300567</td><td>精测电子</td><td></td></tr>
+<tr><td>688147</td><td>微导纳米</td><td></td></tr>
+<tr><td>603658</td><td>None</td><td>2026-05-26</td></tr>
+<tr><td>300604</td><td>None</td><td>2026-05-26</td></tr>
+<tr><td>601600</td><td>None</td><td>2026-05-26</td></tr>
+<tr><td>601872</td><td>None</td><td>2026-05-26</td></tr>
+<tr><td>301291</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>601975</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>603026</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>603345</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>603596</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>159605</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>517520</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>159880</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>688300</td><td>None</td><td>2026-06-01</td></tr>
+<tr><td>600168</td><td>None</td><td>2026-06-01</td></tr>
+<tr><td>002384</td><td>None</td><td>2026-06-01</td></tr>
+<tr><td>600183</td><td>None</td><td>2026-06-01</td></tr>
+<tr><td>...</td><td>还有 1 只</td></tr>
+</table>
+<h2>四、操作建议</h2>
+<p>🔴 <strong>清仓</strong>：002703 浙江世宝, 301291 明阳电气, 600115 中国东航, 601111 中国国航, 601872 招商轮船, 601975 招商南油, 603026 石大胜华, 603345 安井食品, 603596 伯特利, 688258 卓易信息, 159880 工业有色ETF（浮亏 ≥ 5%）</p>
+<p>🟠 <strong>减仓50%</strong>：159605 中概互联网ETF（浮亏 3-5%）</p>
+<p>---</p>
+<p>📌 生成于 2026-06-09 18:58 · slot=evening</p></div></div>
+<div class="report-card"><h2>🌙 晚报</h2><div class="report-content"><p>🌙 晚间复盘 20260609</p>
+<p><strong>一、大盘</strong></p>
+<p>缩量阴线，沪指跌0.8%，成交7800亿，跌破55日线，中期均线带开始发散向下，空头占优。</p>
+<p><strong>二、持仓操作</strong></p>
+<ul>
+<li>浙江世宝(002703) | <strong>清仓</strong> | 跌破60日线（17.23），浮亏23.4%超止损阈值</li>
+<li>明阳电气(301291) | <strong>清仓</strong> | 跌破65日线（48.61），乖离率-20.3%，量能持续萎缩无承接</li>
+<li>中国东航(600115) | <strong>减仓50%</strong> | 跌破短期均线组均值（4.02），现价3.81距中轨3.97乖离-4.0%，未破中期带但失守关键支撑</li>
+<li>中国国航(601111) | <strong>持有</strong> | 站稳60日线（6.15），现价6.21距中轨6.38乖离-2.7%，暂未触发减仓信号</li>
+<li>招商轮船(601872) | <strong>清仓</strong> | 跌破55/60/65日线三线共振位（15.03），现价14.35乖离-16.9%，量比0.78无反抽</li>
+<li>招商南油(601975) | <strong>清仓</strong> | 跌破60日线（4.41），现价4.12距中轨4.52乖离-8.9%，MACD死叉确认</li>
+<li>石大胜华(603026) | <strong>持有</strong> | 中轨83.12，现价81.02乖离-2.5%，量比1.03，未破中轨</li>
+<li>安井食品(603345) | <strong>持有</strong> | 中轨91.25，现价89.01乖离-2.5%，站稳55日线（87.6）</li>
+<li>伯特利(603596) | <strong>清仓</strong> | 跌破60日线（29.45），现价27.96距中轨30.18乖离-7.4%，量比0.65</li>
+<li>卓易信息(688258) | <strong>减仓50%</strong> | 🟠 触发系统减仓信号：跌破短期均线组均值134.57，现价127.9，止损挂125.0</li>
+<li>中概互联网ETF(159605) | <strong>持有</strong> | 中轨0.835，现价0.819乖离-1.9%，未破55日线（0.822）</li>
+<li>黄金股ETF永赢(517520) | <strong>持有</strong> | 中轨1.892，现价1.89乖离-0.1%，量比0.92，黄金股抗跌结构 intact</li>
+<li>工业有色ETF(159880) | <strong>清仓</strong> | 跌破60日线（1.942），现价1.886乖离-11.1%，量比0.58，趋势破位</li>
+<li>中远海能(1138.HK) | <strong>持有</strong> | 中轨17.58，现价17.6乖离+0.1%，港股航运股唯一站稳中轨标的</li>
+<li>范式智能(6682.HK) | <strong>持有</strong> | 中轨32.45，现价32.5乖离+0.2%，量比1.32，港股AI算力唯一未破位</li>
+</ul>
+<p><strong>三、观察池信号</strong></p>
+<ul>
+<li>无标的触发买入/卖出信号（全池无回踩、突破、高乖离或止损信号）</li>
+</ul>
+<p><strong>四、群聊关键信息</strong></p>
+<ul>
+<li>无有效交易催化信息（今日飞书仅发送空消息，无个股更新）</li>
+</ul>
+<p><strong>五、明日操作</strong></p>
+<ul>
+<li>必须执行：卓易信息(688258) 减半仓，止损125.0；其余清仓标的明日开盘即执行</li>
+<li>关注：中远海能(1138.HK) 若放量站稳17.8，可考虑加仓；范式智能(6682.HK) 若量比＞1.5且收于33.0上方，跟踪突破买点</li>
+</ul></div></div>
+<div class="report-card"><h2>midday-check</h2><div class="report-content"><h1>交易检测 · 11:00 · 20260609</h1>
+<h2>一、持仓健康</h2>
+<table>
+<tr><th>代码</th><th>名称</th><th>成本</th><th>现价</th><th>今日%</th><th>浮盈亏%</th><th>仓位</th><th>信号</th></tr>
+<tr><td>002703</td><td>浙江世宝</td><td>21.5</td><td>16.46</td><td>0.3</td><td>-23.44</td><td>1.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>301291</td><td>明阳电气</td><td>57.58</td><td>45.91</td><td>2.18</td><td>-20.27</td><td>5.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>600115</td><td>中国东航</td><td>4.44</td><td>3.81</td><td>1.6</td><td>-14.19</td><td>3.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>601111</td><td>中国国航</td><td>6.96</td><td>6.21</td><td>0.81</td><td>-10.78</td><td>3.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>601872</td><td>招商轮船</td><td>17.26</td><td>14.35</td><td>1.49</td><td>-16.86</td><td>10.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>601975</td><td>招商南油</td><td>5.31</td><td>4.12</td><td>0.98</td><td>-22.41</td><td>3.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>603026</td><td>石大胜华</td><td>91.79</td><td>81.02</td><td>2.17</td><td>-11.73</td><td>2.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>603345</td><td>安井食品</td><td>96.03</td><td>89.01</td><td>1.03</td><td>-7.31</td><td>1.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>603596</td><td>伯特利</td><td>34.12</td><td>27.96</td><td>-3.85</td><td>-18.05</td><td>1.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>688258</td><td>卓易信息</td><td>140.92</td><td>127.9</td><td>3.98</td><td>-9.24</td><td>3.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>159605</td><td>中概互联网ETF</td><td>0.852</td><td>0.819</td><td>0.74</td><td>-3.87</td><td>0.1%</td><td>🟧 减仓</td></tr>
+<tr><td>517520</td><td>黄金股ETF永赢</td><td>1.893</td><td>1.89</td><td>NaN</td><td>-0.16</td><td>8.0%</td><td>🟢 正常</td></tr>
+<tr><td>159880</td><td>工业有色ETF</td><td>2.121</td><td>1.886</td><td>2.89</td><td>-11.08</td><td>8.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>1138.HK</td><td>中远海能</td><td>17.6</td><td>17.6</td><td>NaN</td><td>0.0</td><td>10.0%</td><td>🟢 正常</td></tr>
+<tr><td>6682.HK</td><td>范式智能</td><td>32.5</td><td>32.5</td><td>NaN</td><td>0.0</td><td>2.0%</td><td>🟢 正常</td></tr>
+</table>
+<h2>二、观察池新触发 Top10（飞书热度 × 实时价）</h2>
+<p>（暂无触发 — 飞书数据可能为空 / 或热度不足）</p>
+<h2>三、待审入池（21 只）</h2>
+<table>
+<tr><th>代码</th><th>名称</th><th>进池日</th></tr>
+<tr><td>688361</td><td>中科飞测</td><td></td></tr>
+<tr><td>688072</td><td>拓荆科技</td><td></td></tr>
+<tr><td>300567</td><td>精测电子</td><td></td></tr>
+<tr><td>688147</td><td>微导纳米</td><td></td></tr>
+<tr><td>603658</td><td>None</td><td>2026-05-26</td></tr>
+<tr><td>300604</td><td>None</td><td>2026-05-26</td></tr>
+<tr><td>601600</td><td>None</td><td>2026-05-26</td></tr>
+<tr><td>601872</td><td>None</td><td>2026-05-26</td></tr>
+<tr><td>301291</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>601975</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>603026</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>603345</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>603596</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>159605</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>517520</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>159880</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>688300</td><td>None</td><td>2026-06-01</td></tr>
+<tr><td>600168</td><td>None</td><td>2026-06-01</td></tr>
+<tr><td>002384</td><td>None</td><td>2026-06-01</td></tr>
+<tr><td>600183</td><td>None</td><td>2026-06-01</td></tr>
+<tr><td>...</td><td>还有 1 只</td></tr>
+</table>
+<h2>四、操作建议</h2>
+<p>🔴 <strong>清仓</strong>：002703 浙江世宝, 301291 明阳电气, 600115 中国东航, 601111 中国国航, 601872 招商轮船, 601975 招商南油, 603026 石大胜华, 603345 安井食品, 603596 伯特利, 688258 卓易信息, 159880 工业有色ETF（浮亏 ≥ 5%）</p>
+<p>🟠 <strong>减仓50%</strong>：159605 中概互联网ETF（浮亏 3-5%）</p>
+<p>---</p>
+<p>📌 生成于 2026-06-09 18:58 · slot=11:00</p></div></div>
+<div class="report-card"><h2>pool-updates</h2><div class="report-content"><h1>观察池/持仓池更新记录</h1>
+<blockquote>20260609 evening报告自动更新 · 2026-06-09 15:02</blockquote>
+<p>---</p>
+<h2>观察池变更</h2>
+<h3>🔔 信号计数更新 (4 只)</h3>
+<table>
+<tr><th>代码</th><th>名称</th><th>分类</th><th>30日信号次数</th></tr>
+<tr><td>002703</td><td>浙江世宝</td><td>other</td><td>18 → 19</td></tr>
+<tr><td>600115</td><td>中国东航</td><td>airlines</td><td>18 → 19</td></tr>
+<tr><td>601111</td><td>中国国航</td><td>airlines</td><td>18 → 19</td></tr>
+<tr><td>688258</td><td>卓易信息</td><td>ai_application</td><td>18 → 19</td></tr>
+</table>
+<h2>持仓池变更</h2>
+<h3>📊 持仓更新 (15 只)</h3>
+<table>
+<tr><th>代码</th><th>名称</th><th>成本</th><th>现价</th><th>盈亏%</th></tr>
+<tr><td>002703</td><td>浙江世宝</td><td>21.5</td><td>16.46</td><td>-23.44%</td></tr>
+<tr><td>301291</td><td>明阳电气</td><td>57.58</td><td>45.91</td><td>-20.27%</td></tr>
+<tr><td>600115</td><td>中国东航</td><td>4.44</td><td>3.81</td><td>-14.19%</td></tr>
+<tr><td>601111</td><td>中国国航</td><td>6.96</td><td>6.21</td><td>-10.78%</td></tr>
+<tr><td>601872</td><td>招商轮船</td><td>17.26</td><td>14.35</td><td>-16.86%</td></tr>
+<tr><td>601975</td><td>招商南油</td><td>5.31</td><td>4.12</td><td>-22.41%</td></tr>
+<tr><td>603026</td><td>石大胜华</td><td>91.79</td><td>81.02</td><td>-11.73%</td></tr>
+<tr><td>603345</td><td>安井食品</td><td>96.03</td><td>89.01</td><td>-7.31%</td></tr>
+<tr><td>603596</td><td>伯特利</td><td>34.12</td><td>27.96</td><td>-18.05%</td></tr>
+<tr><td>688258</td><td>卓易信息</td><td>140.92</td><td>127.9</td><td>-9.24%</td></tr>
+<tr><td>159605</td><td>中概互联网ETF</td><td>0.852</td><td>0.819</td><td>-3.87%</td></tr>
+<tr><td>517520</td><td>黄金股ETF永赢</td><td>1.893</td><td>1.89</td><td>-0.16%</td></tr>
+<tr><td>159880</td><td>工业有色ETF</td><td>2.121</td><td>1.886</td><td>-11.08%</td></tr>
+<tr><td>1138.HK</td><td>中远海能</td><td>17.6</td><td>17.6</td><td>+0.00%</td></tr>
+<tr><td>6682.HK</td><td>范式智能</td><td>32.5</td><td>32.5</td><td>+0.00%</td></tr>
+</table>
+<h3>⚠️ 风险警告 (11 只)</h3>
+<p><strong>002703 浙江世宝</strong></p>
+<ul>
+<li>🚨 浮动亏损 -23.44%，接近硬止损</li>
+</ul>
+<p><strong>301291 明阳电气</strong></p>
+<ul>
+<li>🚨 浮动亏损 -20.27%，接近硬止损</li>
+</ul>
+<p><strong>600115 中国东航</strong></p>
+<ul>
+<li>🚨 浮动亏损 -14.19%，接近硬止损</li>
+</ul>
+<p><strong>601111 中国国航</strong></p>
+<ul>
+<li>🚨 浮动亏损 -10.78%，接近硬止损</li>
+</ul>
+<p><strong>601872 招商轮船</strong></p>
+<ul>
+<li>🚨 浮动亏损 -16.86%，接近硬止损</li>
+</ul>
+<p><strong>601975 招商南油</strong></p>
+<ul>
+<li>🚨 浮动亏损 -22.41%，接近硬止损</li>
+</ul>
+<p><strong>603026 石大胜华</strong></p>
+<ul>
+<li>🚨 浮动亏损 -11.73%，接近硬止损</li>
+</ul>
+<p><strong>603345 安井食品</strong></p>
+<ul>
+<li>🚨 浮动亏损 -7.31%，接近硬止损</li>
+</ul>
+<p><strong>603596 伯特利</strong></p>
+<ul>
+<li>🚨 浮动亏损 -18.05%，接近硬止损</li>
+</ul>
+<p><strong>688258 卓易信息</strong></p>
+<ul>
+<li>🚨 浮动亏损 -9.24%，接近硬止损</li>
+</ul>
+<p><strong>159880 工业有色ETF</strong></p>
+<ul>
+<li>🚨 浮动亏损 -10.89%，接近硬止损</li>
+</ul>
+<p>---</p>
+<p>*本文件由系统自动生成*</p></div></div>
+<div class="report-card"><h2>pre-market-check</h2><div class="report-content"><h1>交易检测 · pre-market · 20260609</h1>
+<h2>一、持仓健康</h2>
+<table>
+<tr><th>代码</th><th>名称</th><th>成本</th><th>现价</th><th>今日%</th><th>浮盈亏%</th><th>仓位</th><th>信号</th></tr>
+<tr><td>002703</td><td>浙江世宝</td><td>21.5</td><td>16.46</td><td>0.3</td><td>-23.44</td><td>1.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>301291</td><td>明阳电气</td><td>57.58</td><td>45.91</td><td>2.18</td><td>-20.27</td><td>5.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>600115</td><td>中国东航</td><td>4.44</td><td>3.81</td><td>1.6</td><td>-14.19</td><td>3.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>601111</td><td>中国国航</td><td>6.96</td><td>6.21</td><td>0.81</td><td>-10.78</td><td>3.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>601872</td><td>招商轮船</td><td>17.26</td><td>14.35</td><td>1.49</td><td>-16.86</td><td>10.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>601975</td><td>招商南油</td><td>5.31</td><td>4.12</td><td>0.98</td><td>-22.41</td><td>3.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>603026</td><td>石大胜华</td><td>91.79</td><td>81.02</td><td>2.17</td><td>-11.73</td><td>2.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>603345</td><td>安井食品</td><td>96.03</td><td>89.01</td><td>1.03</td><td>-7.31</td><td>1.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>603596</td><td>伯特利</td><td>34.12</td><td>27.96</td><td>-3.85</td><td>-18.05</td><td>1.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>688258</td><td>卓易信息</td><td>140.92</td><td>127.9</td><td>3.98</td><td>-9.24</td><td>3.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>159605</td><td>中概互联网ETF</td><td>0.852</td><td>0.819</td><td>0.74</td><td>-3.87</td><td>0.1%</td><td>🟧 减仓</td></tr>
+<tr><td>517520</td><td>黄金股ETF永赢</td><td>1.893</td><td>1.89</td><td>NaN</td><td>-0.16</td><td>8.0%</td><td>🟢 正常</td></tr>
+<tr><td>159880</td><td>工业有色ETF</td><td>2.121</td><td>1.886</td><td>2.89</td><td>-11.08</td><td>8.0%</td><td>🟥 硬止损</td></tr>
+<tr><td>1138.HK</td><td>中远海能</td><td>17.6</td><td>17.6</td><td>NaN</td><td>0.0</td><td>10.0%</td><td>🟢 正常</td></tr>
+<tr><td>6682.HK</td><td>范式智能</td><td>32.5</td><td>32.5</td><td>NaN</td><td>0.0</td><td>2.0%</td><td>🟢 正常</td></tr>
+</table>
+<h2>二、观察池新触发 Top10（飞书热度 × 实时价）</h2>
+<p>（暂无触发 — 飞书数据可能为空 / 或热度不足）</p>
+<h2>三、待审入池（21 只）</h2>
+<table>
+<tr><th>代码</th><th>名称</th><th>进池日</th></tr>
+<tr><td>688361</td><td>中科飞测</td><td></td></tr>
+<tr><td>688072</td><td>拓荆科技</td><td></td></tr>
+<tr><td>300567</td><td>精测电子</td><td></td></tr>
+<tr><td>688147</td><td>微导纳米</td><td></td></tr>
+<tr><td>603658</td><td>None</td><td>2026-05-26</td></tr>
+<tr><td>300604</td><td>None</td><td>2026-05-26</td></tr>
+<tr><td>601600</td><td>None</td><td>2026-05-26</td></tr>
+<tr><td>601872</td><td>None</td><td>2026-05-26</td></tr>
+<tr><td>301291</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>601975</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>603026</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>603345</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>603596</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>159605</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>517520</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>159880</td><td>None</td><td>2026-05-28</td></tr>
+<tr><td>688300</td><td>None</td><td>2026-06-01</td></tr>
+<tr><td>600168</td><td>None</td><td>2026-06-01</td></tr>
+<tr><td>002384</td><td>None</td><td>2026-06-01</td></tr>
+<tr><td>600183</td><td>None</td><td>2026-06-01</td></tr>
+<tr><td>...</td><td>还有 1 只</td></tr>
+</table>
+<h2>四、操作建议</h2>
+<p>🔴 <strong>清仓</strong>：002703 浙江世宝, 301291 明阳电气, 600115 中国东航, 601111 中国国航, 601872 招商轮船, 601975 招商南油, 603026 石大胜华, 603345 安井食品, 603596 伯特利, 688258 卓易信息, 159880 工业有色ETF（浮亏 ≥ 5%）</p>
+<p>🟠 <strong>减仓50%</strong>：159605 中概互联网ETF（浮亏 3-5%）</p>
+<p>---</p>
+<p>📌 生成于 2026-06-09 18:58 · slot=pre-market</p></div></div>
+<div class="report-card"><h2>📡 信号扫描</h2><div class="report-content"><h1>📊 移动平均带信号扫描 20260609</h1>
+<h2>🔴 卖出信号</h2>
+<p><strong>卓易信息(688258)</strong> — 跌破短期均线</p>
+<ul>
+<li>🟠 股价 127.9 跌破短期均线组均值 134.57，考虑减仓</li>
+<li>建议：减仓/清仓</li>
+</ul></div></div>
+<footer>
+🤖 Investment System · 自动更新 · 2026-06-12 15:29
+</footer>
+</div>
+<script>
+const AUTH_KEY = 'investment_auth';
+const AUTH_HASH = '000000000000000000000000640fade3'; // 简单hash，实际密码: Martin2026
+
+function simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).padStart(32, '0').substring(0, 32);
+}
+
+function checkPassword() {
+    const input = document.getElementById('authPassword').value;
+    const hash = simpleHash(input);
+    if (hash === AUTH_HASH) {
+        localStorage.setItem(AUTH_KEY, 'true');
+        document.getElementById('authOverlay').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+    } else {
+        document.getElementById('authError').style.display = 'block';
+        document.getElementById('authPassword').value = '';
+    }
+}
+
+// 检查是否已认证
+if (localStorage.getItem(AUTH_KEY) === 'true') {
+    document.getElementById('authOverlay').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+}
+
+// 回车提交
+document.getElementById('authPassword').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') checkPassword();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日统计 - 投资报告</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif; background: #0d1117; color: #c9d1d9; line-height: 1.6; }
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+header { border-bottom: 1px solid #21262d; padding: 20px 0; margin-bottom: 30px; }
+header h1 { color: #58a6ff; font-size: 1.5em; }
+header .nav { margin-top: 10px; }
+header .nav a { color: #8b949e; text-decoration: none; margin-right: 20px; font-size: 0.9em; }
+header .nav a:hover { color: #58a6ff; }
+header .nav a.active { color: #58a6ff; font-weight: 600; }
+.report-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 24px; margin-bottom: 20px; }
+.report-card h2 { color: #58a6ff; font-size: 1.2em; margin-bottom: 12px; }
+.report-card .meta { color: #8b949e; font-size: 0.85em; margin-bottom: 16px; }
+.report-content { font-size: 0.95em; }
+.report-content h1 { font-size: 1.4em; color: #58a6ff; margin: 20px 0 10px; }
+.report-content h2 { font-size: 1.2em; color: #79c0ff; margin: 18px 0 8px; border-bottom: 1px solid #21262d; padding-bottom: 6px; }
+.report-content h3 { font-size: 1.05em; color: #d2a8ff; margin: 14px 0 6px; }
+.report-content p { margin: 8px 0; }
+.report-content ul, .report-content ol { margin: 8px 0 8px 24px; }
+.report-content li { margin: 4px 0; }
+.report-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.report-content th, .report-content td { border: 1px solid #21262d; padding: 8px 12px; text-align: left; }
+.report-content th { background: #1c2128; color: #58a6ff; }
+.report-content blockquote { border-left: 3px solid #58a6ff; padding-left: 12px; color: #8b949e; margin: 12px 0; }
+.report-content strong { color: #f0f6fc; }
+.report-content code { background: #1c2128; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+.date-list { list-style: none; }
+.date-list li { padding: 12px 16px; border-bottom: 1px solid #21262d; display: flex; justify-content: space-between; align-items: center; }
+.date-list li:hover { background: #1c2128; }
+.date-list a { color: #58a6ff; text-decoration: none; }
+.date-list .badge { background: #238636; color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 0.75em; }
+.signal-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: 600; }
+.signal-buy { background: #238636; color: #fff; }
+.signal-sell { background: #da3633; color: #fff; }
+.signal-watch { background: #9e6a03; color: #fff; }
+footer { text-align: center; color: #484f58; font-size: 0.8em; padding: 30px 0; border-top: 1px solid #21262d; margin-top: 40px; }
+/* 密码保护样式 */
+.auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d1117; z-index: 1000; display: flex; justify-content: center; align-items: center; }
+.auth-box { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 40px; text-align: center; max-width: 400px; width: 90%; }
+.auth-box h2 { color: #58a6ff; margin-bottom: 20px; font-size: 1.3em; }
+.auth-box input { width: 100%; padding: 12px 16px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-size: 16px; margin-bottom: 16px; outline: none; }
+.auth-box input:focus { border-color: #58a6ff; }
+.auth-box button { width: 100%; padding: 12px; background: #238636; color: #fff; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 600; }
+.auth-box button:hover { background: #2ea043; }
+.auth-error { color: #f85149; font-size: 0.85em; margin-top: 8px; display: none; }
+</style>
+</head>
+<body>
+<div class="auth-overlay" id="authOverlay">
+<div class="auth-box">
+<h2>🔐 投资决策系统</h2>
+<input type="password" id="authPassword" placeholder="请输入访问密码" autofocus>
+<button onclick="checkPassword()">进入</button>
+<p class="auth-error" id="authError">密码错误，请重试</p>
+</div>
+</div>
+<div class="container" id="mainContent" style="display:none;">
+<header>
+<h1>📊 投资决策系统</h1>
+<div class="nav">
+<a href="index.html">首页</a>
+<a href="signals.html">信号扫描</a>
+<a href="holdings.html">持仓</a>
+<a href="pool.html">选股池</a>
+<a href="backtest.html">策略回测</a>
+<a href="stats.html" class="active">每日统计</a>
+<a href="bitable.html">飞书报告库</a>
+<a href="knowledge.html">知识库</a>
+<a href="zsxq.html">知识星球</a>
+<a href="kline.html">K线分析</a>
+<a href="db.html">历史数据</a>
+</div>
+</header>
+<div style="margin-bottom:16px;color:#8b949e;font-size:13px;">更新时间: 2026-06-12 15:26:41 · 数据回溯 30 天</div><div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin-bottom:24px;">
+<div style="text-align:center; padding:16px; background:#161b22; border:1px solid #21262d; border-radius:8px;"><div style="font-size:28px; font-weight:700; color:#58a6ff;">30</div><div style="color:#8b949e; font-size:13px;">总信号</div></div>
+<div style="text-align:center; padding:16px; background:#161b22; border:1px solid #21262d; border-radius:8px;"><div style="font-size:28px; font-weight:700; color:#3fb950;">0</div><div style="color:#8b949e; font-size:13px;">买入信号</div></div>
+<div style="text-align:center; padding:16px; background:#161b22; border:1px solid #21262d; border-radius:8px;"><div style="font-size:28px; font-weight:700; color:#f0883e;">28</div><div style="color:#8b949e; font-size:13px;">卖出信号</div></div>
+<div style="text-align:center; padding:16px; background:#161b22; border:1px solid #21262d; border-radius:8px;"><div style="font-size:28px; font-weight:700; color:#d29922;">2</div><div style="color:#8b949e; font-size:13px;">观望信号</div></div>
+</div><div class="card" style="margin-bottom:24px;">
+<h3 style="color:#58a6ff; margin-bottom:12px;">持仓状态</h3>
+<div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px;">
+<div><span style="color:#8b949e;">总仓位:</span> <strong>60.1%</strong></div>
+<div><span style="color:#8b949e;">持仓数:</span> <strong>15只</strong></div>
+</div></div><div class="card" style="margin-bottom:24px;">
+<h3 style="color:#58a6ff; margin-bottom:12px;">持仓明细</h3>
+<table><thead><tr><th>股票</th><th>代码</th><th>仓位</th><th>浮盈</th></tr></thead>
+<tbody><tr><td>浙江世宝</td><td style="color:#8b949e;">002703</td><td>1%</td><td><span style="color:#f85149;">-28.19%</span></td></tr><tr><td>明阳电气</td><td style="color:#8b949e;">301291</td><td>5%</td><td><span style="color:#f85149;">-26.52%</span></td></tr><tr><td>招商南油</td><td style="color:#8b949e;">601975</td><td>3%</td><td><span style="color:#f85149;">-21.66%</span></td></tr><tr><td>伯特利</td><td style="color:#8b949e;">603596</td><td>1%</td><td><span style="color:#f85149;">-19.28%</span></td></tr><tr><td>卓易信息</td><td style="color:#8b949e;">688258</td><td>3%</td><td><span style="color:#f85149;">-13.71%</span></td></tr><tr><td>中国东航</td><td style="color:#8b949e;">600115</td><td>3%</td><td><span style="color:#f85149;">-12.16%</span></td></tr><tr><td>中国国航</td><td style="color:#8b949e;">601111</td><td>3%</td><td><span style="color:#f85149;">-9.91%</span></td></tr><tr><td>招商轮船</td><td style="color:#8b949e;">601872</td><td>10%</td><td><span style="color:#f85149;">-9.62%</span></td></tr><tr><td>工业有色ETF</td><td style="color:#8b949e;">159880</td><td>8%</td><td><span style="color:#f85149;">-6.51%</span></td></tr><tr><td>安井食品</td><td style="color:#8b949e;">603345</td><td>1%</td><td><span style="color:#f85149;">-6.09%</span></td></tr><tr><td>石大胜华</td><td style="color:#8b949e;">603026</td><td>2%</td><td><span style="color:#f85149;">-5.93%</span></td></tr><tr><td>中概互联网ETF</td><td style="color:#8b949e;">159605</td><td>0%</td><td><span style="color:#f85149;">-5.40%</span></td></tr><tr><td>黄金股ETF永赢</td><td style="color:#8b949e;">517520</td><td>8%</td><td><span style="color:#d29922;">-0.16%</span></td></tr><tr><td>中远海能</td><td style="color:#8b949e;">1138.HK</td><td>10%</td><td><span style="color:#3fb950;">+0.00%</span></td></tr><tr><td>范式智能</td><td style="color:#8b949e;">6682.HK</td><td>2%</td><td><span style="color:#3fb950;">+0.00%</span></td></tr></tbody></table></div><div class="card" style="margin-bottom:24px;">
+<h3 style="color:#58a6ff; margin-bottom:12px;">信号类型分布</h3>
+<table><thead><tr><th>信号类型</th><th>触发次数</th><th>平均强度</th></tr></thead>
+<tbody><tr><td><span style="color:#f85149;">跌破短期均线</span></td><td>13</td><td>5.0</td></tr><tr><td><span style="color:#f85149;">跌破中期均线组</span></td><td>12</td><td>10.0</td></tr><tr><td><span style="color:#f85149;">高乖离止盈（重仓）</span></td><td>3</td><td>9.0</td></tr><tr><td><span style="color:#d29922;">回踩关注</span></td><td>2</td><td>5.0</td></tr></tbody></table></div><div class="card" style="margin-bottom:24px;">
+<h3 style="color:#58a6ff; margin-bottom:12px;">策略回测指标</h3>
+<div style="margin-bottom:12px;color:#8b949e;">扫描 146 只 · 总信号 2285 条 · 买入胜率 <strong style="color:#3fb950;">54%</strong></div>
+<table><thead><tr><th>信号类型</th><th>触发次数</th><th>胜率</th></tr></thead>
+<tbody><tr><td>跌破短期均线</td><td>926</td>
+<td><div style="display:flex;align-items:center;gap:8px;">
+<div style="width:80px;height:6px;background:#21262d;border-radius:3px;overflow:hidden;">
+<div style="width:42%;height:100%;background:#f85149;border-radius:3px;"></div></div>
+<span>42%</span></div></td></tr><tr><td>高乖离止盈（重仓）</td><td>648</td>
+<td><div style="display:flex;align-items:center;gap:8px;">
+<div style="width:80px;height:6px;background:#21262d;border-radius:3px;overflow:hidden;">
+<div style="width:48%;height:100%;background:#f85149;border-radius:3px;"></div></div>
+<span>48%</span></div></td></tr><tr><td>跌破中期均线组（铁律）</td><td>198</td>
+<td><div style="display:flex;align-items:center;gap:8px;">
+<div style="width:80px;height:6px;background:#21262d;border-radius:3px;overflow:hidden;">
+<div style="width:43%;height:100%;background:#f85149;border-radius:3px;"></div></div>
+<span>43%</span></div></td></tr><tr><td>高乖离止盈</td><td>158</td>
+<td><div style="display:flex;align-items:center;gap:8px;">
+<div style="width:80px;height:6px;background:#21262d;border-radius:3px;overflow:hidden;">
+<div style="width:47%;height:100%;background:#f85149;border-radius:3px;"></div></div>
+<span>47%</span></div></td></tr><tr><td>突破买点</td><td>136</td>
+<td><div style="display:flex;align-items:center;gap:8px;">
+<div style="width:80px;height:6px;background:#21262d;border-radius:3px;overflow:hidden;">
+<div style="width:56%;height:100%;background:#3fb950;border-radius:3px;"></div></div>
+<span>57%</span></div></td></tr><tr><td>回踩买点</td><td>108</td>
+<td><div style="display:flex;align-items:center;gap:8px;">
+<div style="width:80px;height:6px;background:#21262d;border-radius:3px;overflow:hidden;">
+<div style="width:57%;height:100%;background:#3fb950;border-radius:3px;"></div></div>
+<span>58%</span></div></td></tr><tr><td>回踩关注</td><td>101</td>
+<td><div style="display:flex;align-items:center;gap:8px;">
+<div style="width:80px;height:6px;background:#21262d;border-radius:3px;overflow:hidden;">
+<div style="width:49%;height:100%;background:#f85149;border-radius:3px;"></div></div>
+<span>49%</span></div></td></tr><tr><td>乖离买点（超跌反弹）</td><td>10</td>
+<td><div style="display:flex;align-items:center;gap:8px;">
+<div style="width:80px;height:6px;background:#21262d;border-radius:3px;overflow:hidden;">
+<div style="width:20%;height:100%;background:#f85149;border-radius:3px;"></div></div>
+<span>20%</span></div></td></tr></tbody></table></div><div class="card" style="margin-bottom:24px;">
+<h3 style="color:#58a6ff; margin-bottom:12px;">最近信号记录</h3>
+<table><thead><tr><th>日期</th><th>股票</th><th>代码</th><th>信号类型</th><th>强度</th></tr></thead>
+<tbody><tr><td style="color:#8b949e;">2026/06/10</td><td>🟠 卓易信息</td><td style="color:#8b949e;">688258</td><td>sell_break_mid_ma</td><td>10</td></tr><tr><td style="color:#8b949e;">2026/06/09</td><td>🟠 卓易信息</td><td style="color:#8b949e;">688258</td><td>sell_break_short_ma</td><td>5</td></tr><tr><td style="color:#8b949e;">2026/06/08</td><td>🟠 卓易信息</td><td style="color:#8b949e;">688258</td><td>sell_break_mid_ma</td><td>10</td></tr><tr><td style="color:#8b949e;">2026/06/05</td><td>🟠 卓易信息</td><td style="color:#8b949e;">688258</td><td>sell_break_short_ma</td><td>5</td></tr><tr><td style="color:#8b949e;">2026/06/04</td><td>🟠 卓易信息</td><td style="color:#8b949e;">688258</td><td>sell_break_short_ma</td><td>5</td></tr><tr><td style="color:#8b949e;">2026/06/03</td><td>🟠 伯特利</td><td style="color:#8b949e;">603596</td><td>sell_break_mid_ma</td><td>10</td></tr><tr><td style="color:#8b949e;">2026/06/02</td><td>🟠 招商南油</td><td style="color:#8b949e;">601975</td><td>sell_break_mid_ma</td><td>10</td></tr><tr><td style="color:#8b949e;">2026/06/02</td><td>🟠 安井食品</td><td style="color:#8b949e;">603345</td><td>sell_break_mid_ma</td><td>10</td></tr><tr><td style="color:#8b949e;">2026/06/02</td><td>🟠 伯特利</td><td style="color:#8b949e;">603596</td><td>sell_break_short_ma</td><td>5</td></tr><tr><td style="color:#8b949e;">2026/06/01</td><td>🟠 明阳电气</td><td style="color:#8b949e;">301291</td><td>sell_break_mid_ma</td><td>10</td></tr></tbody></table></div>
+<footer>
+🤖 Investment System · 自动更新 · 2026-06-12 15:29
+</footer>
+</div>
+<script>
+const AUTH_KEY = 'investment_auth';
+const AUTH_HASH = '000000000000000000000000640fade3'; // 简单hash，实际密码: Martin2026
+
+function simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).padStart(32, '0').substring(0, 32);
+}
+
+function checkPassword() {
+    const input = document.getElementById('authPassword').value;
+    const hash = simpleHash(input);
+    if (hash === AUTH_HASH) {
+        localStorage.setItem(AUTH_KEY, 'true');
+        document.getElementById('authOverlay').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+    } else {
+        document.getElementById('authError').style.display = 'block';
+        document.getElementById('authPassword').value = '';
+    }
+}
+
+// 检查是否已认证
+if (localStorage.getItem(AUTH_KEY) === 'true') {
+    document.getElementById('authOverlay').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+}
+
+// 回车提交
+document.getElementById('authPassword').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') checkPassword();
+});
+</script>
+</body>
+</html>
