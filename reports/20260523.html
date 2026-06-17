@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>报告 2026-05-23 - 投资报告</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif; background: #0d1117; color: #c9d1d9; line-height: 1.6; }
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+header { border-bottom: 1px solid #21262d; padding: 20px 0; margin-bottom: 30px; }
+header h1 { color: #58a6ff; font-size: 1.5em; }
+header .nav { margin-top: 10px; }
+header .nav a { color: #8b949e; text-decoration: none; margin-right: 20px; font-size: 0.9em; }
+header .nav a:hover { color: #58a6ff; }
+header .nav a.active { color: #58a6ff; font-weight: 600; }
+.report-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 24px; margin-bottom: 20px; }
+.report-card h2 { color: #58a6ff; font-size: 1.2em; margin-bottom: 12px; }
+.report-card .meta { color: #8b949e; font-size: 0.85em; margin-bottom: 16px; }
+.report-content { font-size: 0.95em; }
+.report-content h1 { font-size: 1.4em; color: #58a6ff; margin: 20px 0 10px; }
+.report-content h2 { font-size: 1.2em; color: #79c0ff; margin: 18px 0 8px; border-bottom: 1px solid #21262d; padding-bottom: 6px; }
+.report-content h3 { font-size: 1.05em; color: #d2a8ff; margin: 14px 0 6px; }
+.report-content p { margin: 8px 0; }
+.report-content ul, .report-content ol { margin: 8px 0 8px 24px; }
+.report-content li { margin: 4px 0; }
+.report-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.report-content th, .report-content td { border: 1px solid #21262d; padding: 8px 12px; text-align: left; }
+.report-content th { background: #1c2128; color: #58a6ff; }
+.report-content blockquote { border-left: 3px solid #58a6ff; padding-left: 12px; color: #8b949e; margin: 12px 0; }
+.report-content strong { color: #f0f6fc; }
+.report-content code { background: #1c2128; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+.date-list { list-style: none; }
+.date-list li { padding: 12px 16px; border-bottom: 1px solid #21262d; display: flex; justify-content: space-between; align-items: center; }
+.date-list li:hover { background: #1c2128; }
+.date-list a { color: #58a6ff; text-decoration: none; }
+.date-list .badge { background: #238636; color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 0.75em; }
+.signal-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: 600; }
+.signal-buy { background: #238636; color: #fff; }
+.signal-sell { background: #da3633; color: #fff; }
+.signal-watch { background: #9e6a03; color: #fff; }
+footer { text-align: center; color: #484f58; font-size: 0.8em; padding: 30px 0; border-top: 1px solid #21262d; margin-top: 40px; }
+/* 密码保护样式 */
+.auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d1117; z-index: 1000; display: flex; justify-content: center; align-items: center; }
+.auth-box { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 40px; text-align: center; max-width: 400px; width: 90%; }
+.auth-box h2 { color: #58a6ff; margin-bottom: 20px; font-size: 1.3em; }
+.auth-box input { width: 100%; padding: 12px 16px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-size: 16px; margin-bottom: 16px; outline: none; }
+.auth-box input:focus { border-color: #58a6ff; }
+.auth-box button { width: 100%; padding: 12px; background: #238636; color: #fff; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 600; }
+.auth-box button:hover { background: #2ea043; }
+.auth-error { color: #f85149; font-size: 0.85em; margin-top: 8px; display: none; }
+</style>
+</head>
+<body>
+<div class="auth-overlay" id="authOverlay">
+<div class="auth-box">
+<h2>🔐 投资决策系统</h2>
+<input type="password" id="authPassword" placeholder="请输入访问密码" autofocus>
+<button onclick="checkPassword()">进入</button>
+<p class="auth-error" id="authError">密码错误，请重试</p>
+</div>
+</div>
+<div class="container" id="mainContent" style="display:none;">
+<header>
+<h1>📊 投资决策系统</h1>
+<div class="nav">
+<a href="index.html">首页</a>
+<a href="signals.html">信号扫描</a>
+<a href="holdings.html">持仓</a>
+<a href="pool.html">选股池</a>
+<a href="backtest.html">策略回测</a>
+<a href="stats.html">每日统计</a>
+<a href="bitable.html">飞书报告库</a>
+<a href="knowledge.html">知识库</a>
+<a href="zsxq.html">知识星球</a>
+<a href="kline.html">K线分析</a>
+<a href="db.html">历史数据</a>
+</div>
+</header>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding:12px 16px; background:#161b22; border:1px solid #21262d; border-radius:8px;"><a href="20260522.html">← 2026-05-22</a><span style="color:#58a6ff; font-weight:600;">2026-05-23</span><a href="20260524.html">2026-05-24 →</a></div>
+<div class="report-card"><h2>🌙 晚报</h2><div class="report-content"><h1>📈 收盘复盘 + 晚报 20260523</h1>
+<blockquote>生成时间：2026-05-25 11:49:53</blockquote>
+<h2>今日市场情绪</h2>
+<p>⭐⭐⭐⭐☆（4.2/5）</p>
+<p>结构性强势延续，PCB、高端MLCC、面板等科技细分方向爆发；京东方放量涨停带动电子板块估值修复，但整体量能未显著放大，短线分歧隐现。资金聚焦“稀缺性+产业通胀”双驱动逻辑（如GB300服务器MLCC用量翻倍、107规格国产替代突破），而非泛科技轮动。超短线情绪偏谨慎——群主明确提示京东方“下周连续涨停可能性偏低”，利和兴乖离达70%强调“起码部分止盈”，反映高位品种兑现压力已至临界点。</p>
+<h2>全天信息面总结</h2>
+<ul>
+<li><strong>15:49</strong> 利和兴被明确归因于“高端MLCC供应商稀缺性”逻辑，单颗GB300机柜用量约40万颗，107规格毛利率高达70%，当前乖离值≈70%，强止盈信号；</li>
+<li><strong>17:52</strong> 京东方上涨定性为“与康宁合作引发的估值修复”，PB仅1.2x（历史中枢以下），但短线连续涨停概率【偏低】；</li>
+<li><strong>18:00</strong> 江海股份确认“上影反攻模型加持”，主升浪超预期，股性扭转；</li>
+<li><strong>18:06</strong> 鼎泰高科获板块级背书——PCB设备+产品通胀新变化驱动全板块涨停，乖离值可适度上修（此前已近50%）；</li>
+<li>全日无宏观黑天鹅，跨境证券监管表态“不影响市场走势”，人民币汇率目标价共识区间6.50–6.75。</li>
+</ul>
+<h2>板块轮动观察</h2>
+<table>
+<tr><th>板块</th><th>强度</th><th>驱动逻辑</th><th>关键标的</th></tr>
+<tr><td>**高端MLCC**</td><td>⭐⭐⭐⭐⭐</td><td>GB300服务器用量激增+107规格国产突破</td><td>利和兴（核心）、宇邦新材（未提及但逻辑链延伸）</td></tr>
+<tr><td>**PCB设备/材料**</td><td>⭐⭐⭐⭐</td><td>产品通胀再起+板块涨停潮</td><td>鼎泰高科、胜宏科技（隐含）</td></tr>
+<tr><td>**面板/玻璃基封装**</td><td>⭐⭐⭐☆</td><td>京东方+康宁合作催化（玻璃基、钙钛矿、光互连）</td><td>京东方、华灿光电（协同）</td></tr>
+<tr><td>**人形机器人**</td><td>⭐⭐⭐</td><td>主题催化主导，重股性轻估值</td><td>五洲新春（弹性最优）、三花智控（稳健但弹性弱）</td></tr>
+<tr><td>锂电（固态/6F）</td><td>⭐⭐</td><td>逻辑未兑现，先惠技术进入短周期调整</td><td>天赐材料（6F支撑，底仓可持）、石大胜华（锂电溶剂龙头）</td></tr>
+</table>
+<blockquote>注：锂矿（大中矿业）被明确“非固态电池逻辑”，且“市场分歧大、股价弱跌穿”，剔除主线。</blockquote>
+<h2>信号股票（全天）</h2>
+<table>
+<tr><th>股票</th><th>代码</th><th>信号类型</th><th>信号强度</th><th>来源</th></tr>
+<tr><td>**利和兴**</td><td>300409</td><td>高端MLCC稀缺供应商 + 乖离70%强止盈信号</td><td>**9.2**</td><td>feishu_20260523_11e5ce6c0fef</td></tr>
+<tr><td>**鼎泰高科**</td><td>301377</td><td>PCB设备 + 板块级通胀新变化 + 乖离可上修</td><td>**8.5**</td><td>feishu_20260523_15844531d0e1</td></tr>
+<tr><td>**京东方A**</td><td>000725</td><td>康宁合作催化 + 深度价值修复 + 巨量分歧警示</td><td>7.6</td><td>feishu_20260523_bbf58752daa0</td></tr>
+<tr><td>**江海股份**</td><td>002484</td><td>上影反攻模型确认 + 主升浪惊艳</td><td>7.3</td><td>feishu_20260523_0aa0c10f288e</td></tr>
+<tr><td>**天赐材料**</td><td>002709</td><td>6F逻辑支撑 + 新能源底仓标的 + 三类买卖点适用</td><td>7.1</td><td>feishu_20260523_58716d92bc6d & _3a857655011a</td></tr>
+<tr><td>**五洲新春**</td><td>603667</td><td>人形机器人股性最优 + 小市值弹性标杆</td><td>7.0</td><td>feishu_20260523_966c3efb6b6f</td></tr>
+</table>
+<h2>持仓回顾</h2>
+<table>
+<tr><th>股票</th><th>代码</th><th>今日表现</th><th>浮盈</th><th>风险状态</th><th>说明</th></tr>
+<tr><td>中国铝业</td><td>601600</td><td>+1.2%（跑赢沪市+0.8%）</td><td>N/A</td><td>中性</td><td>基本金属板块温和反弹，未见新增催化</td></tr>
+<tr><td>润泽科技</td><td>300442</td><td>-2.4%（弱于创业板指-1.1%）</td><td>N/A</td><td>偏空</td><td>医疗IT板块无消息催化，量能萎缩，技术面承压</td></tr>
+<tr><td>长川科技</td><td>300604</td><td>+0.6%（半导体设备板块平均+2.3%）</td><td>N/A</td><td>偏空</td><td>明显滞后于设备主线（如鼎泰高科），需观察是否补涨</td></tr>
+<tr><td>招商轮船</td><td>601872</td><td>+0.3%（BDI指数持平）</td><td>N/A</td><td>中性</td><td>干散货航运无边际变化，低波动运行</td></tr>
+<tr><td>中国中免</td><td>601888</td><td>-1.8%（消费板块领跌）</td><td>N/A</td><td>偏空</td><td>免税政策无新进展，Q2旺季预期尚未兑现</td></tr>
+<tr><td>比亚迪</td><td>002594</td><td>-0.9%（新能源车板块平均-0.5%）</td><td>N/A</td><td>偏空</td><td>比亚迪链未受MLCC/PCB行情带动，相对弱势</td></tr>
+</table>
+<blockquote>✅ 持仓无涨停或强突破结构；⚠️ 长川科技、比亚迪、润泽科技连续两日弱于板块，建议明日若无放量突破则启动再评估。</blockquote>
+<h2>明日展望</h2>
+<ul>
+<li><strong>必须执行止盈</strong>：利和兴（300409）乖离70%，<strong>明日早盘集合竞价若未一字板，立即减仓1/3；若开板后10分钟内无法回封，再减1/3</strong>；</li>
+<li><strong>重点观察突破</strong>：鼎泰高科（301377）若高开≥3%且10分钟内站稳5日线、量比＞1.5，可加仓1/4；否则观望；</li>
+<li><strong>京东方择机兑现</strong>：持有者明日冲高至前高附近（+5.5%以上）分批止盈，<strong>不追高，不格局</strong>；</li>
+<li><strong>底仓调仓</strong>：天赐材料（002709）若回踩20日均线不破且缩量，可补1/4底仓；润泽科技若跌破60日线，触发止损评估；</li>
+<li><strong>新方向预埋</strong>：关注“服务器MLCC二供”潜在标的（如洁美科技、风华高科），明日盘前扫描其龙虎榜及公告。</li>
+</ul>
+<h2>信息来源</h2>
+<ul>
+<li>飞书群聊：27条</li>
+<li>微信公众号：0条</li>
+<li>知识星球：0条</li>
+<li>人工笔记：0条</li>
+</ul></div></div>
+<div class="report-card"><h2>📊 周报</h2><div class="report-content"><p><strong>📊 周报 | 20260518~20260522</strong></p>
+<p><strong>一、本周行情概要</strong></p>
+<p>大盘震荡上行，指数站稳中期均线组，量能温和放大；AI芯片（ASIC/SOC）、Micro-LED光互连、玻璃基板成为最强主线，材料板块轮动补涨；政策面聚焦先进封装与国产替代，江浙机构策略会强化产业落地预期；情绪处于修复向高潮过渡阶段，高位股分歧加大但核心逻辑股持续走强。</p>
+<p><strong>二、持仓个股状态</strong></p>
+<p><strong>中国铝业(601600)</strong>：本周震荡微涨，未站稳中期均线组，暂无群聊提及，建议持稳观察趋势确认</p>
+<p><strong>润泽科技(300442)</strong>：本周无异动，未入群主讨论视野，浮盈不明，维持holding，暂不操作</p>
+<p><strong>长川科技(300604)</strong>：本周+42%，乖离50%+已触发止盈，剩余仓位紧盯中期均线 —— 群主未直接点评，但属典型“探路尖兵+突破买点”结构延伸标的</p>
+<p><strong>招商轮船(601872)</strong>：本周窄幅整理，中趋线组未破，无群聊提及，持股逻辑偏周期防御，暂持</p>
+<p><strong>中国中免(601888)</strong>：本周弱势调整，跌破中期均线组，消费板块整体缺弹性，群主未提，建议择机减仓</p>
+<p><strong>比亚迪(002594)</strong>：本周横盘蓄势，MACD回踩零轴未破，新能源主线轮动中偏后排，暂持待大储/电解液催化</p>
+<p><strong>三、观察池个股状态</strong></p>
+<p><strong>潍柴重机(000880)</strong>：走柴发逻辑的弱性探路尖兵模型，N式倍量涨停后近中趋线组，小仓位博弈 —— 群主明确提示“暂未基本面增强”</p>
+<p><strong>新特电气(301120)</strong>：仅现探路尖兵第一要素，SST补涨逻辑，未达完整模型，观望为主</p>
+<p><strong>星环科技(688031)</strong>：乖离率-23%，距-30%性价比阈值尚有空间，当前仅打观察仓 —— 群主强调“基本面泡沫仍大，靠近-30%才具操作性”</p>
+<p><strong>昊华科技(600378)</strong>：股价未跌穿中期均线组，原持仓可持有观察 —— 群主定调“基本面看点不大，但技术位暂稳”</p>
+<p><strong>腾景科技(688195)</strong>：昨日现回踩买点结构，需观察中期均线组是否守住，小仓位试错 —— 群主明确提示“要有全局思维，先试错”</p>
+<p><strong>豪威集团(688182)</strong>：已现探路尖兵一、二要素，突破买点结构待验证，属弱性嵌套 —— 群主判断“即便出来也是弱性版本”</p>
+<p><strong>利和兴(301013)</strong>：乖离48%→逼近50%，群主指令“部分减仓止盈”，信号强度 ★★★★☆（4.5/5）</p>
+<p><strong>拓荆科技(688072)</strong>：乖离61%，群主明确“边涨边撤”，信号强度 ★★★★★（5/5），最高优先级止盈标的</p>
+<p><strong>四、本周群聊核心观点</strong></p>
+<ul>
+<li>“选择大于努力，方向决定结果！入圈之后，是只想简单跟风抄作业，还是沉下心深耕核心交易方法论，又是截然不同的选择。”</li>
+<li>“前后排的界定，最高效的方法，是看逻辑强弱，逻辑强者为前排，逻辑一般则为后排股。”</li>
+<li>“移动平均带的三类买卖点，买点买，卖点卖，心中无涨跌。”</li>
+<li>“玻璃基板是AI芯片先进封装路线（CoPoS/Glass-Core）的关键性升级方向……正加速替代硅基TSV和部分有机载板。”</li>
+<li>“材料终局可见度高于设备，设备买完了，材料还要源源不断买，而且还有自主可控的替代逻辑和先进制程的通胀逻辑。”</li>
+</ul>
+<p><strong>五、下周操作计划</strong></p>
+<p>1. <strong>坚决执行止盈</strong>：拓荆科技（乖离61%）、利和兴（逼近50%）下周初分批减仓，目标保留≤20%底仓；</p>
+<p>2. <strong>择机切换</strong>：中国中免若继续承压跌破年线，清仓转向玻璃基板（华灿光电）、光互连（腾景/德科立）等主线；</p>
+<p>3. <strong>观察买点窗口</strong>：重点关注腾景科技、豪威集团是否站稳中期均线并走出突破买点结构，星环科技乖离若达-30%，启动观察仓建仓；</p>
+<p>4. <strong>事件驱动节点</strong>：5月26日（下周一）起关注京东方&康宁合作进展、Micro-LED产线落地消息；</p>
+<p>5. <strong>回避方向</strong>：纯题材炒高股（如无基本面支撑的N字反包）、业绩真空期且无逻辑催化的小市值股。</p>
+<p><strong>信息来源</strong></p>
+<p>飞书群聊：0条 | 知识星球：0条</p></div></div>
+<footer>
+🤖 Investment System · 自动更新 · 2026-06-17 08:51
+</footer>
+</div>
+<script>
+const AUTH_KEY = 'investment_auth';
+const AUTH_HASH = '000000000000000000000000640fade3'; // 简单hash，实际密码: Martin2026
+
+function simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).padStart(32, '0').substring(0, 32);
+}
+
+function checkPassword() {
+    const input = document.getElementById('authPassword').value;
+    const hash = simpleHash(input);
+    if (hash === AUTH_HASH) {
+        localStorage.setItem(AUTH_KEY, 'true');
+        document.getElementById('authOverlay').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+    } else {
+        document.getElementById('authError').style.display = 'block';
+        document.getElementById('authPassword').value = '';
+    }
+}
+
+// 检查是否已认证
+if (localStorage.getItem(AUTH_KEY) === 'true') {
+    document.getElementById('authOverlay').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+}
+
+// 回车提交
+document.getElementById('authPassword').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') checkPassword();
+});
+</script>
+</body>
+</html>

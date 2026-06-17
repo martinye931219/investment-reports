@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>知识库 - 投资报告</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif; background: #0d1117; color: #c9d1d9; line-height: 1.6; }
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+header { border-bottom: 1px solid #21262d; padding: 20px 0; margin-bottom: 30px; }
+header h1 { color: #58a6ff; font-size: 1.5em; }
+header .nav { margin-top: 10px; }
+header .nav a { color: #8b949e; text-decoration: none; margin-right: 20px; font-size: 0.9em; }
+header .nav a:hover { color: #58a6ff; }
+header .nav a.active { color: #58a6ff; font-weight: 600; }
+.report-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 24px; margin-bottom: 20px; }
+.report-card h2 { color: #58a6ff; font-size: 1.2em; margin-bottom: 12px; }
+.report-card .meta { color: #8b949e; font-size: 0.85em; margin-bottom: 16px; }
+.report-content { font-size: 0.95em; }
+.report-content h1 { font-size: 1.4em; color: #58a6ff; margin: 20px 0 10px; }
+.report-content h2 { font-size: 1.2em; color: #79c0ff; margin: 18px 0 8px; border-bottom: 1px solid #21262d; padding-bottom: 6px; }
+.report-content h3 { font-size: 1.05em; color: #d2a8ff; margin: 14px 0 6px; }
+.report-content p { margin: 8px 0; }
+.report-content ul, .report-content ol { margin: 8px 0 8px 24px; }
+.report-content li { margin: 4px 0; }
+.report-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.report-content th, .report-content td { border: 1px solid #21262d; padding: 8px 12px; text-align: left; }
+.report-content th { background: #1c2128; color: #58a6ff; }
+.report-content blockquote { border-left: 3px solid #58a6ff; padding-left: 12px; color: #8b949e; margin: 12px 0; }
+.report-content strong { color: #f0f6fc; }
+.report-content code { background: #1c2128; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+.date-list { list-style: none; }
+.date-list li { padding: 12px 16px; border-bottom: 1px solid #21262d; display: flex; justify-content: space-between; align-items: center; }
+.date-list li:hover { background: #1c2128; }
+.date-list a { color: #58a6ff; text-decoration: none; }
+.date-list .badge { background: #238636; color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 0.75em; }
+.signal-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: 600; }
+.signal-buy { background: #238636; color: #fff; }
+.signal-sell { background: #da3633; color: #fff; }
+.signal-watch { background: #9e6a03; color: #fff; }
+footer { text-align: center; color: #484f58; font-size: 0.8em; padding: 30px 0; border-top: 1px solid #21262d; margin-top: 40px; }
+/* 密码保护样式 */
+.auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d1117; z-index: 1000; display: flex; justify-content: center; align-items: center; }
+.auth-box { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 40px; text-align: center; max-width: 400px; width: 90%; }
+.auth-box h2 { color: #58a6ff; margin-bottom: 20px; font-size: 1.3em; }
+.auth-box input { width: 100%; padding: 12px 16px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-size: 16px; margin-bottom: 16px; outline: none; }
+.auth-box input:focus { border-color: #58a6ff; }
+.auth-box button { width: 100%; padding: 12px; background: #238636; color: #fff; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 600; }
+.auth-box button:hover { background: #2ea043; }
+.auth-error { color: #f85149; font-size: 0.85em; margin-top: 8px; display: none; }
+</style>
+</head>
+<body>
+<div class="auth-overlay" id="authOverlay">
+<div class="auth-box">
+<h2>🔐 投资决策系统</h2>
+<input type="password" id="authPassword" placeholder="请输入访问密码" autofocus>
+<button onclick="checkPassword()">进入</button>
+<p class="auth-error" id="authError">密码错误，请重试</p>
+</div>
+</div>
+<div class="container" id="mainContent" style="display:none;">
+<header>
+<h1>📊 投资决策系统</h1>
+<div class="nav">
+<a href="index.html">首页</a>
+<a href="signals.html">信号扫描</a>
+<a href="holdings.html">持仓</a>
+<a href="pool.html">选股池</a>
+<a href="backtest.html">策略回测</a>
+<a href="stats.html">每日统计</a>
+<a href="bitable.html">飞书报告库</a>
+<a href="knowledge.html" class="active">知识库</a>
+<a href="zsxq.html">知识星球</a>
+<a href="kline.html">K线分析</a>
+<a href="db.html">历史数据</a>
+</div>
+</header>
+<div class="report-card"><h2>📖 投资方法论手册</h2><div class="report-content"><h1>投资方法论手册</h1>
+<blockquote>更新时间：2026-03-26</blockquote>
+<blockquote>来源：NVDA 价值/技术分析脚本提取整理</blockquote>
+<p>---</p>
+<h2>一、方法论总览</h2>
+<p>本体系融合<strong>价值投资</strong>（基本面）与<strong>技术分析</strong>（量价）两条主线，A股适配优先，兼顾美股/港股分析场景。</p>
+<table>
+<tr><th>类型</th><th>方法论</th><th>适用场景</th><th>当前状态</th></tr>
+<tr><td>价值</td><td>格雷厄姆数</td><td>价值股安全边际</td><td>✅ 已实现</td></tr>
+<tr><td>价值</td><td>DCF三阶段</td><td>成长股内在价值</td><td>✅ 已实现</td></tr>
+<tr><td>价值</td><td>巴菲特护城河</td><td>基本面定性分析</td><td>✅ 已实现</td></tr>
+<tr><td>价值</td><td>霍华德·马克斯周期</td><td>周期位置判断</td><td>✅ 已实现</td></tr>
+<tr><td>技术</td><td>道氏理论</td><td>趋势判断</td><td>✅ 已实现</td></tr>
+<tr><td>技术</td><td>艾略特波浪</td><td>波浪计数/Fib</td><td>✅ 已实现</td></tr>
+<tr><td>技术</td><td>CAN SLIM</td><td>七维度选股评分</td><td>✅ 已实现</td></tr>
+<tr><td>技术</td><td>技术指标系统</td><td>RSI/MACD/布林/均线</td><td>✅ 已实现（A股）</td></tr>
+</table>
+<p>---</p>
+<h2>二、价值投资框架</h2>
+<h3>2.1 格雷厄姆安全边际（Graham Number）</h3>
+<p><strong>公式</strong>：<code>√(22.5 × EPS × 每股净资产)</code></p>
+<p><strong>判断标准</strong>：</p>
+<table>
+<tr><th>当前股价 vs 格雷厄姆数</th><th>判断</th><th>操作</th></tr>
+<tr><td>< 50%</td><td>强烈买入</td><td>安全边际充足</td></tr>
+<tr><td>50%-100%</td><td>买入</td><td>存在安全边际</td></tr>
+<tr><td>100%-150%</td><td>持有</td><td>安全边际较小</td></tr>
+<tr><td>> 150%</td><td>卖出</td><td>无安全边际</td></tr>
+</table>
+<p><strong>局限性</strong>：</p>
+<ul>
+<li>格雷厄姆公式设计于20世纪，适用于<strong>成熟、稳定、低增长</strong>的价值股</li>
+<li>对高成长股（AI、半导体）<strong>不适用</strong>，此类股票应优先用 DCF + PEG</li>
+</ul>
+<p><strong>适用</strong>：<code>贵州茅台</code>、<code>银行股</code>等低增速、高净资产股票</p>
+<p>---</p>
+<h3>2.2 DCF内在价值（三阶段）</h3>
+<p><strong>核心参数</strong>：</p>
+<ul>
+<li>当前自由现金流（FCF）</li>
+<li>营收增速假设（保守/中性/乐观）</li>
+<li>折现率（默认10%）</li>
+<li>永续增长率（默认3%）</li>
+<li>终值倍数（保守15x / 中性20x / 乐观25x）</li>
+</ul>
+<p><strong>三场景示例（NVDA）</strong>：</p>
+<table>
+<tr><th>场景</th><th>增速假设</th><th>内在价值/股</th><th>与现价差</th></tr>
+<tr><td>保守</td><td>56%/年</td><td>$261</td><td>+46%</td></tr>
+<tr><td>中性</td><td>80%/年</td><td>$673</td><td>+276%</td></tr>
+<tr><td>乐观</td><td>104%/年</td><td>$1526</td><td>+753%</td></tr>
+</table>
+<p><strong>A股适用</strong>：</p>
+<ul>
+<li>对现金流稳定的龙头（茅台、宁德）做DCF时，增速假设应保守（10-20%/年）</li>
+<li>终值倍数参考行业平均 PE（如消费20x、科技30x）</li>
+</ul>
+<p>---</p>
+<h3>2.3 巴菲特护城河分析（五维度）</h3>
+<table>
+<tr><th>维度</th><th>评估内容</th><th>评级标准</th></tr>
+<tr><td>**品牌/生态锁定**</td><td>护城河宽度、核心壁垒、可持续性</td><td>★★★★★ 最强</td></tr>
+<tr><td>**转换成本**</td><td>软件迁移成本、硬件锁定、人员习惯</td><td>★★★★★ 极高</td></tr>
+<tr><td>**网络效应**</td><td>用户生态、云厂商合作、客户粘性</td><td>★★★★☆ 强</td></tr>
+<tr><td>**成本优势**</td><td>制程优势、规模效应、独特资源</td><td>★★★☆☆ 中等</td></tr>
+<tr><td>**无形资产**</td><td>专利、资质、品牌溢价</td><td>视行业</td></tr>
+</table>
+<p><strong>五维度综合评级</strong>：</p>
+<ul>
+<li>宽护城河：NVDA（CUDA生态）、茅台（品牌）</li>
+<li>中等护城河：比亚迪（成本+品牌）、宁德时代（规模）</li>
+<li>窄护城河：大多数制造业公司</li>
+</ul>
+<p>---</p>
+<h3>2.4 霍华德·马克斯周期思维</h3>
+<p><strong>周期四阶段</strong>：</p>
+<table>
+<tr><th>阶段</th><th>特征</th><th>当前AI芯片判断</th></tr>
+<tr><td>早期</td><td>需求萌芽、怀疑论多</td><td>❌ 已过</td></tr>
+<tr><td>中期</td><td>扩张确认、参与者增加</td><td>✅ 目前所处</td></tr>
+<tr><td>过热</td><td>估值泡沫、杠杆上升</td><td>⚠️ 接近</td></tr>
+<tr><td>衰退</td><td>需求萎缩、去库存</td><td>❌ 未至</td></tr>
+</table>
+<p><strong>估值情绪指标检查清单</strong>：</p>
+<table>
+<tr><th>指标</th><th>过高危险信号</th><th>过低机会信号</th></tr>
+<tr><td>PE (TTM)</td><td>> 历史均值+2σ</td><td>< 历史均值-2σ</td></tr>
+<tr><td>PS</td><td>> 20x（科技）</td><td>< 5x</td></tr>
+<tr><td>PEG</td><td>> 2x</td><td>< 0.8x</td></tr>
+<tr><td>52周位置</td><td>> 90%</td><td>< 10%</td></tr>
+<tr><td>Beta</td><td>> 2.0（高波动）</td><td>< 0.8</td></tr>
+<tr><td>云厂商CapEx</td><td>同比持平/下降</td><td>同比大增</td></tr>
+</table>
+<p><strong>CapEx周期信号（AI专用）</strong>：</p>
+<ul>
+<li>关注：微软/谷歌/亚马逊/Meta 的季度AI CapEx指引</li>
+<li>信号：合计CapEx同比>30% → 周期扩张中；<10% → 周期减速</li>
+</ul>
+<p>---</p>
+<h2>三、技术分析框架</h2>
+<h3>3.1 道氏理论（Dow Theory）</h3>
+<p><strong>核心原则</strong>：</p>
+<p>1. 主要趋势（Primary）持续数月到数年：用<strong>200日均线</strong>判断</p>
+<p>2. 次要趋势（Secondary）持续数周到数月：用<strong>50日均线</strong>判断</p>
+<p>3. 日常波动（Miner's）可忽略</p>
+<p>4. <strong>成交量确认</strong>：趋势健康时上涨需放量</p>
+<p><strong>趋势判断逻辑</strong>：</p>
+<p>牛市（上涨趋势）：  价格 > MA200 且 MA50 > MA200</p>
+<p>熊市（下跌趋势）：  价格 < MA200 且 MA50 < MA200</p>
+<p>盘整：              其他情况</p>
+<p><strong>均线金叉/死叉</strong>：</p>
+<ul>
+<li><strong>黄金交叉</strong>：MA50上穿MA200 → 买入信号（牛市确认）</li>
+<li><strong>死亡交叉</strong>：MA50下穿MA200 → 卖出信号（熊市确认）</li>
+</ul>
+<p><strong>关键价位识别</strong>：</p>
+<ul>
+<li>阻力位：近期摆动高点（供给密集区）</li>
+<li>支撑位：近期摆动低点（需求密集区）</li>
+</ul>
+<p>---</p>
+<h3>3.2 艾略特波浪（Elliott Wave）</h3>
+<p><strong>基础结构（5浪上涨 + 3浪调整）</strong>：</p>
+<p>推动浪（5浪）：1→2→3→4→5</p>
+<p>浪1：起始上升</p>
+<p>浪2：回调（通常38.2%-50%回撤浪1）</p>
+<p>浪3：主升浪（通常最长，不可短于浪1）</p>
+<p>浪4：回调（通常23.6%回撤，不破浪1终点）</p>
+<p>浪5：末升浪</p>
+<p>调整浪（3浪）：A→B→C</p>
+<p>A：下跌A浪</p>
+<p>B：反弹B浪（通常不超过浪4起点）</p>
+<p>C：主跌C浪</p>
+<p><strong>斐波那契回撤位</strong>（从高点到低点）：</p>
+<table>
+<tr><th>回撤位</th><th>价格</th><th>含义</th></tr>
+<tr><td>23.6%</td><td>高-(高-低)×0.236</td><td>弱支撑</td></tr>
+<tr><td>38.2%</td><td>高-(高-低)×0.382</td><td>正常回调</td></tr>
+<tr><td>50.0%</td><td>高-(高-低)×0.500</td><td>关键支撑</td></tr>
+<tr><td>61.8%</td><td>高-(高-低)×0.618</td><td>强支撑</td></tr>
+<tr><td>78.6%</td><td>高-(高-低)×0.786</td><td>深度支撑</td></tr>
+</table>
+<p><strong>摆动高/低点识别</strong>：</p>
+<ul>
+<li>窗口参数：A股用5-10日，美股用5-20日</li>
+<li>高点：当日高点高于前后N日最高价</li>
+<li>低点：当日低点低于前后N日最低价</li>
+</ul>
+<p>---</p>
+<h3>3.3 CAN SLIM 七维度选股</h3>
+<p><strong>评分体系（满分70分）</strong>：</p>
+<table>
+<tr><th>字母</th><th>维度</th><th>数据来源</th><th>满分</th><th>评分逻辑</th></tr>
+<tr><td>**C**</td><td>Current quarterly earnings</td><td>季报EPS同比</td><td>10</td><td>每+3%得1分</td></tr>
+<tr><td>**A**</td><td>Annual earnings growth</td><td>年EPS增长（3年化）</td><td>10</td><td>每+5%得1分</td></tr>
+<tr><td>**N**</td><td>New products/Highs</td><td>新品/创新高</td><td>10</td><td>创新高/新品+5分</td></tr>
+<tr><td>**S**</td><td>Supply and demand</td><td>成交量变化</td><td>10</td><td>放量1.2x以上得高分</td></tr>
+<tr><td>**L**</td><td>Leader or laggard</td><td>相对强弱（RS）</td><td>10</td><td>相对行业/大盘强弱</td></tr>
+<tr><td>**I**</td><td>Institutional sponsorship</td><td>机构持仓</td><td>10</td><td>机构增仓+分</td></tr>
+<tr><td>**M**</td><td>Market direction</td><td>大盘方向</td><td>10</td><td>整体趋势配合</td></tr>
+</table>
+<p><strong>评级阈值</strong>：</p>
+<table>
+<tr><th>总分</th><th>评级</th><th>操作建议</th></tr>
+<tr><td>≥55/70</td><td>⭐ 强烈买入</td><td>积极建仓</td></tr>
+<tr><td>40-54/70</td><td>⚡ 买入</td><td>考虑买入</td></tr>
+<tr><td>25-39/70</td><td>📊 持有</td><td>持有观察</td></tr>
+<tr><td><25/70</td><td>⚠️ 观望</td><td>等待机会</td></tr>
+</table>
+<p><strong>CANS LIM核心逻辑</strong>：只买那些同时满足「业绩增长快」「机构在买入」「大盘配合」的强势股。</p>
+<p>---</p>
+<h3>3.4 技术指标体系</h3>
+<p>#### 均线系统</p>
+<table>
+<tr><th>均线</th><th>周期</th><th>用途</th></tr>
+<tr><td>MA5</td><td>1周</td><td>短期方向，超短线</td></tr>
+<tr><td>MA10</td><td>2周</td><td>短期趋势</td></tr>
+<tr><td>MA20</td><td>1月</td><td>中期趋势</td></tr>
+<tr><td>MA60</td><td>3月</td><td>中长期趋势</td></tr>
+<tr><td>MA120</td><td>6月</td><td>半年线</td></tr>
+<tr><td>MA200</td><td>1年</td><td>长期趋势，确认牛熊</td></tr>
+</table>
+<p><strong>均线多头排列</strong>：<code>价格 > MA5 > MA10 > MA20 > MA60</code> → 最强做多形态</p>
+<p>#### MACD</p>
+<table>
+<tr><th>参数</th><th>默认值</th><th>说明</th></tr>
+<tr><td>快线</td><td>12日EMA</td><td></td></tr>
+<tr><td>慢线</td><td>26日EMA</td><td></td></tr>
+<tr><td>Signal</td><td>9日EMA</td><td></td></tr>
+</table>
+<p><strong>信号判断</strong>：</p>
+<ul>
+<li>MACD > Signal：<strong>多头排列</strong>（持有）</li>
+<li>MACD < Signal：<strong>空头排列</strong>（观望）</li>
+<li><strong>MACD金叉</strong>：MACD从下往上穿Signal → 买入信号</li>
+<li><strong>MACD死叉</strong>：MACD从上往下穿Signal → 卖出信号</li>
+<li>柱状图转正：动能增强</li>
+<li>柱状图转负：动能减弱</li>
+</ul>
+<p>#### RSI（相对强弱指数）</p>
+<table>
+<tr><th>RSI区间</th><th>判断</th><th>操作</th></tr>
+<tr><td>> 80</td><td>🔥 超买</td><td>考虑卖出/观望</td></tr>
+<tr><td>60-80</td><td>偏强</td><td>持有，不追高</td></tr>
+<tr><td>40-60</td><td>➡️ 中性</td><td>观察</td></tr>
+<tr><td>20-40</td><td>偏弱</td><td>关注企稳信号</td></tr>
+<tr><td>< 20</td><td>🧊 超卖</td><td>关注反弹机会</td></tr>
+</table>
+<p><strong>A股经验</strong>：RSI > 70 通常意味着短线回调风险；RSI < 30 才有较好的买入机会</p>
+<p>#### 布林带（Bollinger Bands）</p>
+<table>
+<tr><th>参数</th><th>说明</th></tr>
+<tr><td>周期</td><td>20日</td></tr>
+<tr><td>标准差</td><td>2σ</td></tr>
+</table>
+<p><strong>信号</strong>：</p>
+<ul>
+<li>价格突破<strong>上轨</strong>：强势但警惕回调（超买信号）</li>
+<li>价格跌破<strong>下轨</strong>：超卖，可能反弹</li>
+<li>布林带收口：波动率降低，预示突破方向</li>
+<li>布林带开口：波动率放大，趋势加速</li>
+</ul>
+<p>#### ATR（平均真实波幅）</p>
+<p><strong>用途</strong>：计算止损位</p>
+<p>止损位 = 入场价 - 2×ATR(14)</p>
+<p><strong>波动性评估</strong>：ATR占价比 > 3% → 高波动股票；< 1.5% → 低波动稳健股</p>
+<p>---</p>
+<h2>四、信号分类体系</h2>
+<blockquote>来源：scan_technical.py + NVDA技术分析整合</blockquote>
+<h3>4.1 A股技术扫描评分（满分100分）</h3>
+<table>
+<tr><th>信号类型</th><th>分值</th><th>说明</th></tr>
+<tr><td>均线多头排列（价格>MA5>MA10>MA20）</td><td>+25</td><td>最强做多形态</td></tr>
+<tr><td>短期均线多头（价格>MA5>MA10）</td><td>+15</td><td>次强做多形态</td></tr>
+<tr><td>MACD多头（MACD>Signal）</td><td>+15</td><td>趋势看多</td></tr>
+<tr><td>MACD金叉（刚形成）</td><td>+15</td><td>买入信号确认</td></tr>
+<tr><td>RSI正常区间（30<RSI<70）</td><td>+10</td><td>无超买超卖</td></tr>
+<tr><td>KDJ金叉（K从下上穿D）</td><td>+10</td><td>短期买入信号</td></tr>
+<tr><td>放量配合（量比>1.2）</td><td>+10</td><td>趋势确认</td></tr>
+<tr><td>突破布林上轨</td><td>+10</td><td>强势信号（警惕回调）</td></tr>
+</table>
+<p><strong>阈值设定</strong>：</p>
+<ul>
+<li>≥60分：<strong>🔥 高分信号</strong>，触发告警</li>
+<li>40-59分：⚡ 中分信号，持续观察</li>
+<li><40分：✓ 普通信号</li>
+</ul>
+<h3>4.2 四类事件分类</h3>
+<table>
+<tr><th>类别</th><th>触发条件</th><th>操作建议</th></tr>
+<tr><td>**可买入**</td><td>均线多头+MACD金叉+RSI正常+放量；或RSI<30超卖+缩量</td><td>关注买入机会</td></tr>
+<tr><td>**有利好**</td><td>创新高/接近新高；MACD金叉；放量突破；RSI突破50</td><td>持续关注</td></tr>
+<tr><td>**可卖出**</td><td>RSI>70超买；MACD死叉；跌破均线；高位放量滞涨</td><td>考虑止盈/止损</td></tr>
+<tr><td>**有风险**</td><td>大跌/跌停；RSI<30超卖继续跌；高位长阴；地量+下跌</td><td>规避/止损</td></tr>
+</table>
+<p>---</p>
+<h2>五、框架选择指南</h2>
+<h3>按股票类型选框架</h3>
+<table>
+<tr><th>股票类型</th><th>优先框架</th><th>辅助框架</th></tr>
+<tr><td>蓝筹/价值（茅台、工行）</td><td>Graham Number + DCF</td><td>霍华德·马克斯周期</td></tr>
+<tr><td>成长/科技（宁德、比亚迪）</td><td>DCF + 护城河</td><td>CAN SLIM + 技术指标</td></tr>
+<tr><td>AI/半导体（寒武纪、海光）</td><td>护城河 + 周期</td><td>CAN SLIM + 技术指标</td></tr>
+<tr><td>短线博弈</td><td>技术指标 + CAN SLIM</td><td>道氏理论</td></tr>
+<tr><td>周期股（猪肉、航空）</td><td>霍华德·马克斯周期</td><td>DCF（低估值时）</td></tr>
+</table>
+<h3>按使用场景</h3>
+<table>
+<tr><th>场景</th><th>优先工具</th><th>输出</th></tr>
+<tr><td>盘前扫描</td><td>技术指标（自动）</td><td>分类信号报告</td></tr>
+<tr><td>持仓检查</td><td>格雷厄姆+护城河</td><td>持有/卖出建议</td></tr>
+<tr><td>新股研究</td><td>DCF+护城河+CAN SLIM</td><td>价值/成长综合报告</td></tr>
+<tr><td>大盘判断</td><td>道氏理论+周期思维</td><td>牛熊/周期位置</td></tr>
+<tr><td>个股定位</td><td>艾略特波浪+Fib</td><td>入场价位建议</td></tr>
+</table>
+<p>---</p>
+<h2>六、工具对应关系</h2>
+<table>
+<tr><th>框架</th><th>实现脚本</th><th>输出</th></tr>
+<tr><td>A股技术扫描</td><td>`scripts/scan_technical.py`</td><td>高分信号告警</td></tr>
+<tr><td>美股价值分析</td><td>`scripts/nvda_analysis.py`</td><td>价值投资备忘录</td></tr>
+<tr><td>美股技术分析</td><td>`scripts/nvda_technical_analysis.py`</td><td>技术分析研判</td></tr>
+<tr><td>每日监测报告</td><td>`scripts/scan_technical.py`（改造后）</td><td>四类事件分类报告</td></tr>
+<tr><td>个股代码搜索</td><td>`scripts/stock_code_lookup.py`（新建）</td><td>代码入库</td></tr>
+</table>
+<p>---</p>
+<p>*本手册持续更新，随着体系完善逐步补充更多框架和方法。*</p></div></div>
+<footer>
+🤖 Investment System · 自动更新 · 2026-06-17 08:51
+</footer>
+</div>
+<script>
+const AUTH_KEY = 'investment_auth';
+const AUTH_HASH = '000000000000000000000000640fade3'; // 简单hash，实际密码: Martin2026
+
+function simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).padStart(32, '0').substring(0, 32);
+}
+
+function checkPassword() {
+    const input = document.getElementById('authPassword').value;
+    const hash = simpleHash(input);
+    if (hash === AUTH_HASH) {
+        localStorage.setItem(AUTH_KEY, 'true');
+        document.getElementById('authOverlay').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+    } else {
+        document.getElementById('authError').style.display = 'block';
+        document.getElementById('authPassword').value = '';
+    }
+}
+
+// 检查是否已认证
+if (localStorage.getItem(AUTH_KEY) === 'true') {
+    document.getElementById('authOverlay').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+}
+
+// 回车提交
+document.getElementById('authPassword').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') checkPassword();
+});
+</script>
+</body>
+</html>

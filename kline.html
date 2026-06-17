@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K线分析 - 投资报告</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif; background: #0d1117; color: #c9d1d9; line-height: 1.6; }
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+header { border-bottom: 1px solid #21262d; padding: 20px 0; margin-bottom: 30px; }
+header h1 { color: #58a6ff; font-size: 1.5em; }
+header .nav { margin-top: 10px; }
+header .nav a { color: #8b949e; text-decoration: none; margin-right: 20px; font-size: 0.9em; }
+header .nav a:hover { color: #58a6ff; }
+header .nav a.active { color: #58a6ff; font-weight: 600; }
+.report-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 24px; margin-bottom: 20px; }
+.report-card h2 { color: #58a6ff; font-size: 1.2em; margin-bottom: 12px; }
+.report-card .meta { color: #8b949e; font-size: 0.85em; margin-bottom: 16px; }
+.report-content { font-size: 0.95em; }
+.report-content h1 { font-size: 1.4em; color: #58a6ff; margin: 20px 0 10px; }
+.report-content h2 { font-size: 1.2em; color: #79c0ff; margin: 18px 0 8px; border-bottom: 1px solid #21262d; padding-bottom: 6px; }
+.report-content h3 { font-size: 1.05em; color: #d2a8ff; margin: 14px 0 6px; }
+.report-content p { margin: 8px 0; }
+.report-content ul, .report-content ol { margin: 8px 0 8px 24px; }
+.report-content li { margin: 4px 0; }
+.report-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.report-content th, .report-content td { border: 1px solid #21262d; padding: 8px 12px; text-align: left; }
+.report-content th { background: #1c2128; color: #58a6ff; }
+.report-content blockquote { border-left: 3px solid #58a6ff; padding-left: 12px; color: #8b949e; margin: 12px 0; }
+.report-content strong { color: #f0f6fc; }
+.report-content code { background: #1c2128; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+.date-list { list-style: none; }
+.date-list li { padding: 12px 16px; border-bottom: 1px solid #21262d; display: flex; justify-content: space-between; align-items: center; }
+.date-list li:hover { background: #1c2128; }
+.date-list a { color: #58a6ff; text-decoration: none; }
+.date-list .badge { background: #238636; color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 0.75em; }
+.signal-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: 600; }
+.signal-buy { background: #238636; color: #fff; }
+.signal-sell { background: #da3633; color: #fff; }
+.signal-watch { background: #9e6a03; color: #fff; }
+footer { text-align: center; color: #484f58; font-size: 0.8em; padding: 30px 0; border-top: 1px solid #21262d; margin-top: 40px; }
+/* 密码保护样式 */
+.auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d1117; z-index: 1000; display: flex; justify-content: center; align-items: center; }
+.auth-box { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 40px; text-align: center; max-width: 400px; width: 90%; }
+.auth-box h2 { color: #58a6ff; margin-bottom: 20px; font-size: 1.3em; }
+.auth-box input { width: 100%; padding: 12px 16px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-size: 16px; margin-bottom: 16px; outline: none; }
+.auth-box input:focus { border-color: #58a6ff; }
+.auth-box button { width: 100%; padding: 12px; background: #238636; color: #fff; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 600; }
+.auth-box button:hover { background: #2ea043; }
+.auth-error { color: #f85149; font-size: 0.85em; margin-top: 8px; display: none; }
+</style>
+</head>
+<body>
+<div class="auth-overlay" id="authOverlay">
+<div class="auth-box">
+<h2>🔐 投资决策系统</h2>
+<input type="password" id="authPassword" placeholder="请输入访问密码" autofocus>
+<button onclick="checkPassword()">进入</button>
+<p class="auth-error" id="authError">密码错误，请重试</p>
+</div>
+</div>
+<div class="container" id="mainContent" style="display:none;">
+<header>
+<h1>📊 投资决策系统</h1>
+<div class="nav">
+<a href="index.html">首页</a>
+<a href="signals.html">信号扫描</a>
+<a href="holdings.html">持仓</a>
+<a href="pool.html">选股池</a>
+<a href="backtest.html">策略回测</a>
+<a href="stats.html">每日统计</a>
+<a href="bitable.html">飞书报告库</a>
+<a href="knowledge.html">知识库</a>
+<a href="zsxq.html">知识星球</a>
+<a href="kline.html" class="active">K线分析</a>
+<a href="db.html">历史数据</a>
+</div>
+</header>
+<div class="card" style="margin-bottom:24px;">
+<h2 style="color:#58a6ff; margin-bottom:16px;">K线图 + 回撤分析</h2>
+<div style="margin-bottom:16px;">
+<label style="color:#8b949e;">选择股票: </label>
+<select id="stockSelect" style="padding:8px 12px; background:#0d1117; border:1px solid #30363d; border-radius:6px; color:#c9d1d9; min-width:300px;" onchange="loadStock(this.value)">
+<option value="000021">深科技(000021) [96天]</option>
+<option value="000425">徐工机械(000425) [96天]</option>
+<option value="000547">航天发展(000547) [96天]</option>
+<option value="000636">风华高科(000636) [96天]</option>
+<option value="000703">恒逸石化(000703) [96天]</option>
+<option value="000725">京东方Ａ(000725) [96天]</option>
+<option value="000785">居然智家(000785) [96天]</option>
+<option value="000822">山东海化(000822) [96天]</option>
+<option value="000856">冀东装备(000856) [96天]</option>
+<option value="000858">五 粮 液(000858) [96天]</option>
+<option value="000880">潍柴重机(000880) [96天]</option>
+<option value="001309">德明利(001309) [96天]</option>
+<option value="002009">天奇股份(002009) [96天]</option>
+<option value="002050">三花智控(002050) [96天]</option>
+<option value="002056">横店东磁(002056) [96天]</option>
+<option value="002139">拓邦股份(002139) [96天]</option>
+<option value="002151">北斗星通(002151) [96天]</option>
+<option value="002156">通富微电(002156) [96天]</option>
+<option value="002281">光迅科技(002281) [96天]</option>
+<option value="002352">顺丰控股(002352) [96天]</option>
+<option value="002371">北方华创(002371) [96天]</option>
+<option value="002384">东山精密(002384) [96天]</option>
+<option value="002407">多氟多(002407) [96天]</option>
+<option value="002484">江海股份(002484) [96天]</option>
+<option value="002585">双星新材(002585) [96天]</option>
+<option value="002594">比亚迪(002594) [96天]</option>
+<option value="002703">浙江世宝(002703) [96天]</option>
+<option value="002709">天赐材料(002709) [96天]</option>
+<option value="002812">恩捷股份(002812) [96天]</option>
+<option value="002859">洁美科技(002859) [86天]</option>
+<option value="002897">意华股份(002897) [96天]</option>
+<option value="002929">润建股份(002929) [96天]</option>
+<option value="002965">祥鑫科技(002965) [96天]</option>
+<option value="003021">兆威机电(003021) [96天]</option>
+<option value="003028">振邦智能(003028) [96天]</option>
+<option value="159605">中概互联ETF广发(159605) [97天]</option>
+<option value="159880">有色ETF鹏华(159880) [97天]</option>
+<option value="300007">汉威科技(300007) [96天]</option>
+<option value="300010">ST豆神(300010) [95天]</option>
+<option value="300034">钢研高纳(300034) [96天]</option>
+<option value="300053">航宇微(300053) [96天]</option>
+<option value="300058">蓝色光标(300058) [96天]</option>
+<option value="300115">长盈精密(300115) [96天]</option>
+<option value="300170">汉得信息(300170) [96天]</option>
+<option value="300253">卫宁健康(300253) [96天]</option>
+<option value="300308">中际旭创(300308) [96天]</option>
+<option value="300358">楚天科技(300358) [96天]</option>
+<option value="300378">鼎捷数智(300378) [96天]</option>
+<option value="300394">天孚通信(300394) [96天]</option>
+<option value="300395">菲利华(300395) [96天]</option>
+<option value="300409">道氏技术(300409) [96天]</option>
+<option value="300418">昆仑万维(300418) [96天]</option>
+<option value="300442">润泽科技(300442) [90天]</option>
+<option value="300496">中科创达(300496) [96天]</option>
+<option value="300502">新易盛(300502) [96天]</option>
+<option value="300548">长芯博创(300548) [96天]</option>
+<option value="300552">万集科技(300552) [96天]</option>
+<option value="300567">精测电子(300567) [96天]</option>
+<option value="300580">贝斯特(300580) [96天]</option>
+<option value="300604">长川科技(300604) [96天]</option>
+<option value="300620">光库科技(300620) [96天]</option>
+<option value="300624">万兴科技(300624) [96天]</option>
+<option value="300672">国科微(300672) [96天]</option>
+<option value="300684">中石科技(300684) [96天]</option>
+<option value="300687">赛意信息(300687) [96天]</option>
+<option value="300699">光威复材(300699) [96天]</option>
+<option value="300718">长盛轴承(300718) [96天]</option>
+<option value="300777">中简科技(300777) [96天]</option>
+<option value="300785">值得买(300785) [96天]</option>
+<option value="300870">欧陆通(300870) [96天]</option>
+<option value="300942">易瑞生物(300942) [96天]</option>
+<option value="300953">震裕科技(300953) [96天]</option>
+<option value="300969">恒帅股份(300969) [96天]</option>
+<option value="301005">超捷股份(301005) [96天]</option>
+<option value="301120">新特电气(301120) [96天]</option>
+<option value="301150">中一科技(301150) [96天]</option>
+<option value="301280">珠城科技(301280) [96天]</option>
+<option value="301291">明阳电气(301291) [96天]</option>
+<option value="301308">江波龙(301308) [96天]</option>
+<option value="301377">鼎泰高科(301377) [96天]</option>
+<option value="301413">安培龙(301413) [96天]</option>
+<option value="301421">波长光电(301421) [96天]</option>
+<option value="301489">思泉新材(301489) [96天]</option>
+<option value="301606">绿联科技(301606) [96天]</option>
+<option value="517520">黄金股ETF永赢(517520) [96天]</option>
+<option value="600004">白云机场(600004) [96天]</option>
+<option value="600009">上海机场(600009) [96天]</option>
+<option value="600029">南方航空(600029) [96天]</option>
+<option value="600036">招商银行(600036) [96天]</option>
+<option value="600048">保利发展(600048) [96天]</option>
+<option value="600110">诺德股份(600110) [96天]</option>
+<option value="600115">中国东航(600115) [96天]</option>
+<option value="600168">武汉控股(600168) [96天]</option>
+<option value="600183">生益科技(600183) [96天]</option>
+<option value="600346">XD恒力石(600346) [96天]</option>
+<option value="600378">昊华科技(600378) [96天]</option>
+<option value="600399">抚顺特钢(600399) [96天]</option>
+<option value="600498">烽火通信(600498) [96天]</option>
+<option value="600519">贵州茅台(600519) [96天]</option>
+<option value="600580">卧龙电驱(600580) [96天]</option>
+<option value="600859">王府井(600859) [96天]</option>
+<option value="600879">航天电子(600879) [96天]</option>
+<option value="601021">春秋航空(601021) [96天]</option>
+<option value="601100">恒立液压(601100) [96天]</option>
+<option value="601111">中国国航(601111) [96天]</option>
+<option value="601166">兴业银行(601166) [96天]</option>
+<option value="601233">桐昆股份(601233) [96天]</option>
+<option value="601398">工商银行(601398) [96天]</option>
+<option value="601600">中国铝业(601600) [96天]</option>
+<option value="601601">中国太保(601601) [96天]</option>
+<option value="601628">中国人寿(601628) [96天]</option>
+<option value="601689">拓普集团(601689) [96天]</option>
+<option value="601698">中国卫通(601698) [96天]</option>
+<option value="601872">招商轮船(601872) [96天]</option>
+<option value="601888">中国中免(601888) [96天]</option>
+<option value="601939">建设银行(601939) [96天]</option>
+<option value="601975">招商南油(601975) [96天]</option>
+<option value="603005">晶方科技(603005) [96天]</option>
+<option value="603009">北特科技(603009) [96天]</option>
+<option value="603026">石大胜华(603026) [96天]</option>
+<option value="603039">泛微网络(603039) [96天]</option>
+<option value="603069">海汽集团(603069) [96天]</option>
+<option value="603083">剑桥科技(603083) [96天]</option>
+<option value="603119">浙江荣泰(603119) [96天]</option>
+<option value="603171">税友股份(603171) [96天]</option>
+<option value="603225">新凤鸣(603225) [96天]</option>
+<option value="603256">宏和科技(603256) [96天]</option>
+<option value="603337">杰克科技(603337) [96天]</option>
+<option value="603345">安井食品(603345) [96天]</option>
+<option value="603596">伯特利(603596) [96天]</option>
+<option value="603658">安图生物(603658) [96天]</option>
+<option value="603662">柯力传感(603662) [96天]</option>
+<option value="603667">五洲新春(603667) [96天]</option>
+<option value="603728">鸣志电器(603728) [96天]</option>
+<option value="603859">能科科技(603859) [96天]</option>
+<option value="603885">吉祥航空(603885) [96天]</option>
+<option value="603920">世运电路(603920) [96天]</option>
+<option value="688008">澜起科技(688008) [96天]</option>
+<option value="688017">绿的谐波(688017) [96天]</option>
+<option value="688031">星环科技-U(688031) [97天]</option>
+<option value="688066">*ST航图(688066) [95天]</option>
+<option value="688072">拓荆科技(688072) [96天]</option>
+<option value="688147">微导纳米(688147) [96天]</option>
+<option value="688182">灿勤科技(688182) [96天]</option>
+<option value="688195">腾景科技(688195) [96天]</option>
+<option value="688256">寒武纪(688256) [96天]</option>
+<option value="688258">卓易信息(688258) [96天]</option>
+<option value="688300">联瑞新材(688300) [96天]</option>
+<option value="688322">奥比中光-W(688322) [97天]</option>
+<option value="688347">华虹公司(688347) [96天]</option>
+<option value="688361">中科飞测(688361) [96天]</option>
+<option value="688498">源杰科技(688498) [96天]</option>
+<option value="688500">慧辰股份(688500) [96天]</option>
+<option value="688502">茂莱光学(688502) [96天]</option>
+<option value="688521">芯原股份(688521) [97天]</option>
+<option value="688590">新致软件(688590) [96天]</option>
+<option value="688629">华丰科技(688629) [96天]</option>
+<option value="688981">中芯国际(688981) [97天]</option>
+</select>
+<select id="rangeSelect" style="padding:8px 12px; background:#0d1117; border:1px solid #30363d; border-radius:6px; color:#c9d1d9; margin-left:8px;" onchange="loadStock(document.getElementById('stockSelect').value)">
+<option value="30">30天</option><option value="60">60天</option><option value="90" selected>90天</option><option value="0">全部</option>
+</select></div>
+<div id="klineChart" style="width:100%; height:500px; background:#161b22; border:1px solid #21262d; border-radius:8px;"></div>
+<div id="drawdownChart" style="width:100%; height:200px; background:#161b22; border:1px solid #21262d; border-radius:8px; margin-top:12px;"></div>
+<div id="stockInfo" style="margin-top:12px; color:#8b949e; font-size:13px;"></div></div>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script>
+let chartData = {}; let klineChart, ddChart;
+fetch("kline_chart_data.json").then(r => r.json()).then(d => {
+  chartData = d;
+  klineChart = echarts.init(document.getElementById("klineChart"), "dark");
+  ddChart = echarts.init(document.getElementById("drawdownChart"), "dark");
+  const fc = Object.keys(d)[0]; if (fc) { document.getElementById("stockSelect").value = fc; loadStock(fc); }
+});
+function loadStock(code) {
+  const d = chartData[code]; if (!d) return;
+  let range = parseInt(document.getElementById("rangeSelect").value);
+  let dates=d.dates, ohlc=d.ohlc, ma55=d.ma55, ma60=d.ma60, ma65=d.ma65, dd=d.drawdown;
+  if (range > 0 && dates.length > range) { const s=dates.length-range; dates=dates.slice(s); ohlc=ohlc.slice(s); ma55=ma55.slice(s); ma60=ma60.slice(s); ma65=ma65.slice(s); dd=dd.slice(s); }
+  klineChart.setOption({backgroundColor:"#161b22", tooltip:{trigger:"axis",axisPointer:{type:"cross"}}, legend:{data:["K线","MA55","MA60","MA65"],top:5,textStyle:{color:"#8b949e"}}, grid:{left:60,right:20,top:40,bottom:60}, xAxis:{type:"category",data:dates,axisLabel:{color:"#8b949e",rotate:45}}, yAxis:{type:"value",scale:true,axisLabel:{color:"#8b949e"}}, dataZoom:[{type:"inside"},{type:"slider",bottom:5}], series:[{name:"K线",type:"candlestick",data:ohlc,itemStyle:{color:"#f85149",color0:"#3fb950",borderColor:"#f85149",borderColor0:"#3fb950"}},{name:"MA55",type:"line",data:ma55,smooth:true,lineStyle:{width:1},symbol:"none",itemStyle:{color:"#58a6ff"}},{name:"MA60",type:"line",data:ma60,smooth:true,lineStyle:{width:1},symbol:"none",itemStyle:{color:"#d2a8ff"}},{name:"MA65",type:"line",data:ma65,smooth:true,lineStyle:{width:1},symbol:"none",itemStyle:{color:"#f0883e"}}]});
+  ddChart.setOption({backgroundColor:"#161b22", tooltip:{trigger:"axis"}, grid:{left:60,right:20,top:10,bottom:30}, xAxis:{type:"category",data:dates,axisLabel:{color:"#8b949e",rotate:45}}, yAxis:{type:"value",axisLabel:{color:"#8b949e",formatter:"{value}%"}}, series:[{name:"回撤",type:"line",data:dd,symbol:"none",areaStyle:{color:"rgba(248,81,73,0.15)"},lineStyle:{color:"#f85149",width:1},markPoint:{data:[{type:"max",name:"最大回撤",itemStyle:{color:"#f85149"}}]}}]});
+  document.getElementById("stockInfo").innerHTML = "<b>"+d.name+"</b> | 最大回撤: <span style="color:#f85149;">"+d.max_drawdown+"%</span> ("+d.max_drawdown_date+") | MA55: "+(ma55[ma55.length-1]||"-")+" | MA60: "+(ma60[ma60.length-1]||"-")+" | MA65: "+(ma65[ma65.length-1]||"-");
+}
+window.addEventListener("resize", () => { klineChart && klineChart.resize(); ddChart && ddChart.resize(); });
+</script>
+<footer>
+🤖 Investment System · 自动更新 · 2026-06-17 08:51
+</footer>
+</div>
+<script>
+const AUTH_KEY = 'investment_auth';
+const AUTH_HASH = '000000000000000000000000640fade3'; // 简单hash，实际密码: Martin2026
+
+function simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).padStart(32, '0').substring(0, 32);
+}
+
+function checkPassword() {
+    const input = document.getElementById('authPassword').value;
+    const hash = simpleHash(input);
+    if (hash === AUTH_HASH) {
+        localStorage.setItem(AUTH_KEY, 'true');
+        document.getElementById('authOverlay').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+    } else {
+        document.getElementById('authError').style.display = 'block';
+        document.getElementById('authPassword').value = '';
+    }
+}
+
+// 检查是否已认证
+if (localStorage.getItem(AUTH_KEY) === 'true') {
+    document.getElementById('authOverlay').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+}
+
+// 回车提交
+document.getElementById('authPassword').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') checkPassword();
+});
+</script>
+</body>
+</html>

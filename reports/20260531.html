@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>报告 2026-05-31 - 投资报告</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif; background: #0d1117; color: #c9d1d9; line-height: 1.6; }
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+header { border-bottom: 1px solid #21262d; padding: 20px 0; margin-bottom: 30px; }
+header h1 { color: #58a6ff; font-size: 1.5em; }
+header .nav { margin-top: 10px; }
+header .nav a { color: #8b949e; text-decoration: none; margin-right: 20px; font-size: 0.9em; }
+header .nav a:hover { color: #58a6ff; }
+header .nav a.active { color: #58a6ff; font-weight: 600; }
+.report-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 24px; margin-bottom: 20px; }
+.report-card h2 { color: #58a6ff; font-size: 1.2em; margin-bottom: 12px; }
+.report-card .meta { color: #8b949e; font-size: 0.85em; margin-bottom: 16px; }
+.report-content { font-size: 0.95em; }
+.report-content h1 { font-size: 1.4em; color: #58a6ff; margin: 20px 0 10px; }
+.report-content h2 { font-size: 1.2em; color: #79c0ff; margin: 18px 0 8px; border-bottom: 1px solid #21262d; padding-bottom: 6px; }
+.report-content h3 { font-size: 1.05em; color: #d2a8ff; margin: 14px 0 6px; }
+.report-content p { margin: 8px 0; }
+.report-content ul, .report-content ol { margin: 8px 0 8px 24px; }
+.report-content li { margin: 4px 0; }
+.report-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.report-content th, .report-content td { border: 1px solid #21262d; padding: 8px 12px; text-align: left; }
+.report-content th { background: #1c2128; color: #58a6ff; }
+.report-content blockquote { border-left: 3px solid #58a6ff; padding-left: 12px; color: #8b949e; margin: 12px 0; }
+.report-content strong { color: #f0f6fc; }
+.report-content code { background: #1c2128; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+.date-list { list-style: none; }
+.date-list li { padding: 12px 16px; border-bottom: 1px solid #21262d; display: flex; justify-content: space-between; align-items: center; }
+.date-list li:hover { background: #1c2128; }
+.date-list a { color: #58a6ff; text-decoration: none; }
+.date-list .badge { background: #238636; color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 0.75em; }
+.signal-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: 600; }
+.signal-buy { background: #238636; color: #fff; }
+.signal-sell { background: #da3633; color: #fff; }
+.signal-watch { background: #9e6a03; color: #fff; }
+footer { text-align: center; color: #484f58; font-size: 0.8em; padding: 30px 0; border-top: 1px solid #21262d; margin-top: 40px; }
+/* 密码保护样式 */
+.auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d1117; z-index: 1000; display: flex; justify-content: center; align-items: center; }
+.auth-box { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 40px; text-align: center; max-width: 400px; width: 90%; }
+.auth-box h2 { color: #58a6ff; margin-bottom: 20px; font-size: 1.3em; }
+.auth-box input { width: 100%; padding: 12px 16px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-size: 16px; margin-bottom: 16px; outline: none; }
+.auth-box input:focus { border-color: #58a6ff; }
+.auth-box button { width: 100%; padding: 12px; background: #238636; color: #fff; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 600; }
+.auth-box button:hover { background: #2ea043; }
+.auth-error { color: #f85149; font-size: 0.85em; margin-top: 8px; display: none; }
+</style>
+</head>
+<body>
+<div class="auth-overlay" id="authOverlay">
+<div class="auth-box">
+<h2>🔐 投资决策系统</h2>
+<input type="password" id="authPassword" placeholder="请输入访问密码" autofocus>
+<button onclick="checkPassword()">进入</button>
+<p class="auth-error" id="authError">密码错误，请重试</p>
+</div>
+</div>
+<div class="container" id="mainContent" style="display:none;">
+<header>
+<h1>📊 投资决策系统</h1>
+<div class="nav">
+<a href="index.html">首页</a>
+<a href="signals.html">信号扫描</a>
+<a href="holdings.html">持仓</a>
+<a href="pool.html">选股池</a>
+<a href="backtest.html">策略回测</a>
+<a href="stats.html">每日统计</a>
+<a href="bitable.html">飞书报告库</a>
+<a href="knowledge.html">知识库</a>
+<a href="zsxq.html">知识星球</a>
+<a href="kline.html">K线分析</a>
+<a href="db.html">历史数据</a>
+</div>
+</header>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding:12px 16px; background:#161b22; border:1px solid #21262d; border-radius:8px;"><a href="20260529.html">← 2026-05-29</a><span style="color:#58a6ff; font-weight:600;">2026-05-31</span><a href="20260601.html">2026-06-01 →</a></div>
+<div class="report-card"><h2>weekly-review-lite</h2><div class="report-content"><h1>📊 本周投资复盘（5/25 - 5/31）</h1>
+<h2>一、大盘：下台阶，控仓位</h2>
+<p>本周科技线全面调整，科创板乖离值30%对应阶段性高点已确认。5/29阴线收盘，短线支撑4050，若反弹摸不到4120则弱势。</p>
+<p><strong>变盘分水岭</strong>：上证再次回到100日均线附近，两种情形——黑天鹅击穿继续跌，或放量中阳企稳+新方向共振。资金没选之前，不轻举妄动。</p>
+<p><strong>6月策略</strong>：下台阶，仓位控制3-5成。科技主线拥挤度消化（进一退二），6月还有长鑫上市+机构调仓两大扰动。</p>
+<p>---</p>
+<h2>二、主线梳理</h2>
+<p><strong>科技线</strong>：退潮确认，高乖离品种执行止盈。但AI产业趋势不变，是阶段性平衡不是主线切换。</p>
+<p><strong>MLCC超级周期</strong>：高容MLCC年初至今涨30%，6月新一轮调价。三环/风华高科（国产高容第一梯队），上游材料（国瓷/博迁/洁美）同步受益。</p>
+<p><strong>铜箔/PCB</strong>：铜冠铜箔/德福科技乖离100%，主升浪后期逐步兑现。电子布6月二次提速涨价，普通布+11%，特种布+10-20%。</p>
+<p><strong>半导体硅片</strong>：立昂微/西安奕材横盘消化乖离，中期看涨价潜力，低仓为主。</p>
+<p><strong>超跌反弹</strong>：白酒/地产/创新药纯粹筹码博弈，无新逻辑，科技回流即成血包。</p>
+<p>---</p>
+<h2>三、6月布局方向（等待回调到位）</h2>
+<p>1. <strong>MLCC</strong>：风华高科/三环集团乖离100%先加自选，等调整空间</p>
+<p>2. <strong>AIDC电源VPD</strong>：新雷能（Rubin架构2300W TDP，0-1卡位）</p>
+<p>3. <strong>VPD电感</strong>：铂科新材（芯片电感TAM 25亿→440亿）</p>
+<p>4. <strong>AI测试电源</strong>：科威尔/爱科赛博（0-1国产替代）</p>
+<p>5. <strong>芳纶涨价</strong>：泰和新材（AIDC光纤瓶颈物料，国内有涨价预期）</p>
+<p>6. <strong>SST/纳米晶</strong>：云路股份/安泰科技（下一代电力电子核心材料）</p>
+<p>---</p>
+<h2>四、交易纪律</h2>
+<ul>
+<li>乖离值30%常规止盈，50%以上必须执行</li>
+<li>回踩买点：放量中阳踩中期均线组</li>
+<li>卖点：跌穿中期均线组减仓或离场</li>
+<li>全局思维：大盘势能 > 板块效应 > 个股走势</li>
+</ul>
+<blockquote>市场越震荡，体系越值钱。浮盈不是盈，落袋才是安。</blockquote>
+<p>---</p>
+<p>*投资系统 · 周报 2026-05-31*</p></div></div>
+<div class="report-card"><h2>weekly-review</h2><div class="report-content"><h1>📋 周度复盘 05/26 ~ 05/30</h1>
+<blockquote>基于老樊策略课、飞书群聊精华、知识星球研报、系统信号综合生成</blockquote>
+<p>---</p>
+<h2>一、本周市场总结</h2>
+<p><strong>大盘走势：冲高回落，科技主线承压</strong></p>
+<ul>
+<li>上证指数本周先涨后跌，5/14高九卖出结构兑现后已连续调整2周</li>
+<li>科创板乖离值达到30%后开始退潮，科技线全面进入短期调整</li>
+<li>5/29阴线收盘，尚未确认止跌，短期支撑看4050</li>
+<li>微盘股指数从5/11开始下跌，比上证早，若加速下跌可能带动量化基金赎回</li>
+</ul>
+<p><strong>老樊核心判断：</strong></p>
+<blockquote>"大盘变盘的分水岭：上证指数再次回调到100日均线位置，变盘后再顺势而为。"</blockquote>
+<blockquote>"未来2周，指数在反复试探100日线，无非就是2种情形：再次出现黑天鹅直接击穿100日线，或者在100日线附近出现放量中阳企稳+新方向共振。"</blockquote>
+<p><strong>6月核心策略：下台阶，仓位控制3-5成（继续减仓应对）</strong></p>
+<p>---</p>
+<h2>二、6月大事件前瞻</h2>
+<p><strong>第一大事件：科技主线拥挤度消化（大概率进一退二）</strong></p>
+<ul>
+<li>行情结构类似2021年年初核心资产见顶，但产业趋势依然健康</li>
+<li>泛AI科技是全球增速最快的行业，不会是历史大顶</li>
+<li>但短期涨多+拥挤度高（A股前5%个股成交占比达46.1%，历史高位）</li>
+<li>需要"进一退二"方式完成退潮，等待科技调整结束再布局下一阶段</li>
+</ul>
+<p><strong>6月资金面2大扰动：</strong></p>
+<p>a) 6月中美大型IPO群星荟萃：两存/宇树、SpaceX、OpenAI、Anthropic，IPO前后对市场资金面形成短期扰动</p>
+<p>b) 机构资金中报临近调仓：险资和年金账户获利了结，曾在12月中旬和3月下旬对市场形成抛压</p>
+<p>---</p>
+<h2>三、持仓池周度表现</h2>
+<p><strong>当前仓位：60.1%（目标3-5成）| 现金39.9%</strong></p>
+<table>
+<tr><th>股票</th><th>仓位</th><th>浮盈</th><th>状态</th><th>操作建议</th></tr>
+<tr><td>浙江世宝</td><td>1%</td><td>-7.0%</td><td>🔴</td><td>**触发-5%硬止损，立即清仓**</td></tr>
+<tr><td>招商南油</td><td>3%</td><td>-8.1%</td><td>🔴</td><td>**触发-5%硬止损，立即清仓**</td></tr>
+<tr><td>招商轮船</td><td>10%</td><td>-6.8%</td><td>🔴</td><td>**触发-5%硬止损，立即清仓**</td></tr>
+<tr><td>中概互联网ETF</td><td>0.1%</td><td>-4.0%</td><td>🟡</td><td>接近止损线，密切关注</td></tr>
+<tr><td>工业有色ETF</td><td>8%</td><td>-4.5%</td><td>🟡</td><td>接近止损线，密切关注</td></tr>
+<tr><td>中国东航</td><td>3%</td><td>-3.6%</td><td>🟡</td><td>持有观察</td></tr>
+<tr><td>中国国航</td><td>3%</td><td>-2.7%</td><td>🟡</td><td>持有观察</td></tr>
+<tr><td>石大胜华</td><td>2%</td><td>-1.9%</td><td>🟡</td><td>持有观察</td></tr>
+<tr><td>伯特利</td><td>1%</td><td>-0.4%</td><td>🟡</td><td>持有观察</td></tr>
+<tr><td>明阳电气</td><td>5%</td><td>+5.9%</td><td>🟢</td><td>持有，关注MA5支撑</td></tr>
+<tr><td>安井食品</td><td>1%</td><td>+1.4%</td><td>🟢</td><td>持有</td></tr>
+<tr><td>卓易信息</td><td>3%</td><td>+0.8%</td><td>🟢</td><td>持有</td></tr>
+<tr><td>黄金股ETF永赢</td><td>8%</td><td>0.0%</td><td>🟢</td><td>持有，防御仓位</td></tr>
+<tr><td>中远海能(HK)</td><td>10%</td><td>0.0%</td><td>🟢</td><td>持有</td></tr>
+<tr><td>范式智能(HK)</td><td>2%</td><td>0.0%</td><td>🟢</td><td>持有</td></tr>
+</table>
+<p><strong>🔴 紧急操作：浙江世宝、招商南油、招商轮船 浮亏超5%，需立即清仓</strong></p>
+<p>---</p>
+<h2>四、群聊精华提炼（飞书+知识星球）</h2>
+<h3>老樊核心观点（5/27飞书群）</h3>
+<p><strong>市场判断：</strong></p>
+<ul>
+<li>"反抽减，冰点加"——当大盘回落至4070附近，可缓步小仓低吸（前提是反抽减仓，不是加仓）</li>
+<li>亏钱效应在放大，市场结构从贪婪走向脆弱，很小的边际变化都会带来巨大波动</li>
+<li>牛市环境中空仓不可取，实在悲观可放1-2成观察仓</li>
+</ul>
+<p><strong>个股点评：</strong></p>
+<ul>
+<li>澜起科技：50%乖离值需消化，再硬的基本面都需要时间</li>
+<li>奕瑞科技：PCB检测设备超预期，光子CT国内唯一且已商业化</li>
+<li>半导体硅片（立昂微/西安奕材）：横盘消化乖离值，中期看涨价潜力</li>
+<li>晶升股份：碳化硅方向，70%乖离值可能摸到100%</li>
+<li>美格智能：物理AI模组，绿盘小仓博弈</li>
+</ul>
+<h3>知识星球研报精华</h3>
+<p><strong>产业趋势：</strong></p>
+<ul>
+<li>韬定律（华为）：以"时间缩微"替代"几何缩微"，光互联投资做"简单题"</li>
+<li>电子布6月二次提速涨价：普通布上涨11%，特种布跳涨10-20%</li>
+<li>新易盛：27年DSP下单量超预期（3000万800G+2100万1.6T），板块内预期差最大</li>
+<li>PTFE材料：钻孔毛刺问题已解决，生益进展超预期</li>
+</ul>
+<p><strong>6月布局方向（老樊策略课）：</strong></p>
+<p>1. AIDC电源-VPD（新雷能）：0-1阶段卡位，Rubin架构2300W TDP</p>
+<p>2. VPD电感（铂科新材）：芯片电感TAM从25亿增至440亿（2025→2030）</p>
+<p>3. AI测试电源（科威尔/爱科赛博）：0-1国产替代</p>
+<p>4. 化工-芳纶（泰和新材）：AIDC光纤瓶颈物料，有涨价预期</p>
+<p>5. SST固态变压器-纳米晶（云路股份/安泰科技）：下一代电力电子核心材料</p>
+<p>6. MLCC超级周期（风华高科/三环集团）：Rubin机柜182%增速，类似去年光纤</p>
+<p>7. MLCC上游材料（国瓷材料/博迁新材/洁美科技）：乖离值50%，第二梯队</p>
+<p>8. 白酒超跌反弹（酒鬼酒/金徽酒）：纯粹筹码博弈，非反转</p>
+<p>---</p>
+<h2>五、下周操作策略</h2>
+<h3>大盘策略</h3>
+<ul>
+<li><strong>核心判断：下台阶，控制3-5成仓位</strong></li>
+<li>短线支撑4050，若放量收复4120则转为"中枢震荡"</li>
+<li>关注100日均线变盘信号</li>
+</ul>
+<h3>持仓操作</h3>
+<p>1. <strong>立即清仓</strong>：浙江世宝(-7%)、招商南油(-8.1%)、招商轮船(-6.8%)——触发-5%硬止损</p>
+<p>2. <strong>清仓后总仓位降至约46%</strong>，更接近老樊建议的3-5成</p>
+<p>3. <strong>密切关注</strong>：工业有色ETF(-4.5%)、中概互联网ETF(-4%)，接近止损线</p>
+<h3>6月布局方向（等待回调到位）</h3>
+<ul>
+<li>MLCC方向：风华高科/三环集团乖离值100%，先加自选，等调整空间</li>
+<li>AIDC电源：新雷能靠近中期均线组缓步低吸</li>
+<li>芳纶涨价：泰和新材回踩过程中贴近中期均线组</li>
+<li>SST/纳米晶：云路股份调整中贴近中期均线组小仓低吸</li>
+</ul>
+<h3>交易纪律</h3>
+<ul>
+<li><strong>移动平均带三类买卖点</strong>：买点买，卖点卖，心中无涨跌</li>
+<li><strong>机构做T三把斧</strong>：市场波动高，反而是做T降本的黄金期</li>
+<li><strong>全局思维</strong>：大盘势能 > 板块效应 > 个股走势，前排股是方向标</li>
+</ul>
+<p>---</p>
+<h2>六、风险提示</h2>
+<p>1. <strong>100日均线若被击穿</strong>：下跌趋势延续，需进一步减仓</p>
+<p>2. <strong>6月大型IPO抽血</strong>：宇树/SpaceX/OpenAI等IPO对资金面扰动</p>
+<p>3. <strong>机构中报调仓</strong>：险资年金获利了结可能形成抛压</p>
+<p>4. <strong>科技主线退潮</strong>：进一退二，高位科技股承压</p>
+<p>5. <strong>小微盘风险</strong>：若风格修复不好，量化基金持续赎回对市场不利</p>
+<p>---</p>
+<p>*🤖 Investment System · 周报 2026-05-31*</p></div></div>
+<footer>
+🤖 Investment System · 自动更新 · 2026-06-17 08:51
+</footer>
+</div>
+<script>
+const AUTH_KEY = 'investment_auth';
+const AUTH_HASH = '000000000000000000000000640fade3'; // 简单hash，实际密码: Martin2026
+
+function simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).padStart(32, '0').substring(0, 32);
+}
+
+function checkPassword() {
+    const input = document.getElementById('authPassword').value;
+    const hash = simpleHash(input);
+    if (hash === AUTH_HASH) {
+        localStorage.setItem(AUTH_KEY, 'true');
+        document.getElementById('authOverlay').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+    } else {
+        document.getElementById('authError').style.display = 'block';
+        document.getElementById('authPassword').value = '';
+    }
+}
+
+// 检查是否已认证
+if (localStorage.getItem(AUTH_KEY) === 'true') {
+    document.getElementById('authOverlay').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+}
+
+// 回车提交
+document.getElementById('authPassword').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') checkPassword();
+});
+</script>
+</body>
+</html>

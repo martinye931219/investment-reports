@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>报告 2026-06-15 - 投资报告</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif; background: #0d1117; color: #c9d1d9; line-height: 1.6; }
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+header { border-bottom: 1px solid #21262d; padding: 20px 0; margin-bottom: 30px; }
+header h1 { color: #58a6ff; font-size: 1.5em; }
+header .nav { margin-top: 10px; }
+header .nav a { color: #8b949e; text-decoration: none; margin-right: 20px; font-size: 0.9em; }
+header .nav a:hover { color: #58a6ff; }
+header .nav a.active { color: #58a6ff; font-weight: 600; }
+.report-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 24px; margin-bottom: 20px; }
+.report-card h2 { color: #58a6ff; font-size: 1.2em; margin-bottom: 12px; }
+.report-card .meta { color: #8b949e; font-size: 0.85em; margin-bottom: 16px; }
+.report-content { font-size: 0.95em; }
+.report-content h1 { font-size: 1.4em; color: #58a6ff; margin: 20px 0 10px; }
+.report-content h2 { font-size: 1.2em; color: #79c0ff; margin: 18px 0 8px; border-bottom: 1px solid #21262d; padding-bottom: 6px; }
+.report-content h3 { font-size: 1.05em; color: #d2a8ff; margin: 14px 0 6px; }
+.report-content p { margin: 8px 0; }
+.report-content ul, .report-content ol { margin: 8px 0 8px 24px; }
+.report-content li { margin: 4px 0; }
+.report-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.report-content th, .report-content td { border: 1px solid #21262d; padding: 8px 12px; text-align: left; }
+.report-content th { background: #1c2128; color: #58a6ff; }
+.report-content blockquote { border-left: 3px solid #58a6ff; padding-left: 12px; color: #8b949e; margin: 12px 0; }
+.report-content strong { color: #f0f6fc; }
+.report-content code { background: #1c2128; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+.date-list { list-style: none; }
+.date-list li { padding: 12px 16px; border-bottom: 1px solid #21262d; display: flex; justify-content: space-between; align-items: center; }
+.date-list li:hover { background: #1c2128; }
+.date-list a { color: #58a6ff; text-decoration: none; }
+.date-list .badge { background: #238636; color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 0.75em; }
+.signal-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: 600; }
+.signal-buy { background: #238636; color: #fff; }
+.signal-sell { background: #da3633; color: #fff; }
+.signal-watch { background: #9e6a03; color: #fff; }
+footer { text-align: center; color: #484f58; font-size: 0.8em; padding: 30px 0; border-top: 1px solid #21262d; margin-top: 40px; }
+/* 密码保护样式 */
+.auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d1117; z-index: 1000; display: flex; justify-content: center; align-items: center; }
+.auth-box { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 40px; text-align: center; max-width: 400px; width: 90%; }
+.auth-box h2 { color: #58a6ff; margin-bottom: 20px; font-size: 1.3em; }
+.auth-box input { width: 100%; padding: 12px 16px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-size: 16px; margin-bottom: 16px; outline: none; }
+.auth-box input:focus { border-color: #58a6ff; }
+.auth-box button { width: 100%; padding: 12px; background: #238636; color: #fff; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 600; }
+.auth-box button:hover { background: #2ea043; }
+.auth-error { color: #f85149; font-size: 0.85em; margin-top: 8px; display: none; }
+</style>
+</head>
+<body>
+<div class="auth-overlay" id="authOverlay">
+<div class="auth-box">
+<h2>🔐 投资决策系统</h2>
+<input type="password" id="authPassword" placeholder="请输入访问密码" autofocus>
+<button onclick="checkPassword()">进入</button>
+<p class="auth-error" id="authError">密码错误，请重试</p>
+</div>
+</div>
+<div class="container" id="mainContent" style="display:none;">
+<header>
+<h1>📊 投资决策系统</h1>
+<div class="nav">
+<a href="index.html">首页</a>
+<a href="signals.html">信号扫描</a>
+<a href="holdings.html">持仓</a>
+<a href="pool.html">选股池</a>
+<a href="backtest.html">策略回测</a>
+<a href="stats.html">每日统计</a>
+<a href="bitable.html">飞书报告库</a>
+<a href="knowledge.html">知识库</a>
+<a href="zsxq.html">知识星球</a>
+<a href="kline.html">K线分析</a>
+<a href="db.html">历史数据</a>
+</div>
+</header>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding:12px 16px; background:#161b22; border:1px solid #21262d; border-radius:8px;"><a href="20260614.html">← 2026-06-14</a><span style="color:#58a6ff; font-weight:600;">2026-06-15</span><a href="20260616.html">2026-06-16 →</a></div>
+<div class="report-card"><h2>feishu-evening-summary-20260615</h2><div class="report-content"><h1>飞书群聊晚报 6/15（周日）</h1>
+<blockquote>唯产品论研究院 + 先知研报2群 | 41条消息</blockquote>
+<p>---</p>
+<h2>大盘：调整后段，战术择时窗口</h2>
+<ul>
+<li>上周三走出"三天不新低结构"，进入试错性抄底阶段</li>
+<li>短期均线组粘合缠绕，股价重新站回短期均线组，<strong>可逢低分步加仓</strong></li>
+<li>本周扰动因素：日本加息（6/15-16）、美联储议息（6/16-17）、沃什讲话（6/18）</li>
+<li>市场处于<strong>调整后段</strong>，尽量不追高；战略上逐渐乐观，战术上做好择时</li>
+<li>科技主线仍是<strong>控球状态</strong>，非科技股的反弹是"再平衡"而非风格切换</li>
+</ul>
+<h2>板块异动</h2>
+<h3>PCB产业链——科技线抱团最猛</h3>
+<ul>
+<li>铜箔、电子布、一体化CCL、PCB全线大涨创新高</li>
+<li>诺德股份：回踩买点结构后连板（铜冠铜箔持续新高带动）</li>
+<li>鼎泰高科：乖离值达100%，可止盈大部分仓位，剩余顺势</li>
+<li>景旺电子：上周三出现回踩买点结构</li>
+<li>福斯特：感光干膜受PCB扩散，但股价仍在中期均线下方，破位未修复</li>
+</ul>
+<h3>电容——MLCC前排打高度带动细分</h3>
+<ul>
+<li>前排：风华高科、三环集团（MLCC）继续打高度</li>
+<li>跟涨：振华科技（钽电容）涨停、火炬电子/鸿远电子（军工MLCC）涨停、法拉电子（薄膜电容）涨停</li>
+<li>策略：中后排贴近中期均线组，位置不高；但紧盯前排，前排出中大阴线则中后排调整更多</li>
+</ul>
+<h3>算力金属——钨+锡再度涨停</h3>
+<ul>
+<li>中钨高新（钨）：探路尖兵模型复刻，仅适合剩余仓位持股</li>
+<li>华锡有色/锡业股份（锡）：乖离值低于钨，新开仓可小仓位顺势博弈</li>
+<li>核心观点：有色贴上"算力金属"标签会更强</li>
+</ul>
+<h3>液冷/电源——PCB材料大涨后的补涨</h3>
+<ul>
+<li>申菱环境：回踩买点结构后继续上涨，乖离值中等，仍有2个预期差，偏绿盘可小幅加仓</li>
+<li>欧陆通：回踩买点结构，谷歌链能见度高，锁定英飞凌巨量物料，明年出货150万支，Q4有望批量出货</li>
+</ul>
+<h3>光纤材料——AI上游材料持续受青睐</h3>
+<ul>
+<li>云南锗业连续涨停：启动前乖离值不高 + 磷化铟（光模块上游）+ 高纯四氯化锗（光纤上游）复合逻辑</li>
+<li>海外磷化铟衬底供需紧张，海外价格远高于国内，国产量产龙头受益</li>
+<li>后续如果发酵scale up，磷化铟弹性最优</li>
+</ul>
+<h3>算力租赁——国产化+中报催化</h3>
+<ul>
+<li>协创数据/宏景科技：均出现回踩买点结构，偏绿盘低吸，小仓位博弈</li>
+<li>逻辑：Claude 5被禁→大模型国产化→国产token需求增长→算力租赁受益</li>
+<li>中报行情临近，算力租赁是国产算力环节中少有的能出业绩品种</li>
+</ul>
+<h2>个股信号</h2>
+<table>
+<tr><th>标的</th><th>信号</th><th>要点</th></tr>
+<tr><td>山东赫达</td><td>涨停开板</td><td>左侧套牢盘抛压+缺中报利好；关键看中报超预期能否带入趋势上涨</td></tr>
+<tr><td>合盛硅业</td><td>弱突破买点</td><td>上周五出现，早盘给了上车机会，现在不追高</td></tr>
+<tr><td>新凤鸣</td><td>上影反攻第1要素</td><td>涨停板炸板出现，需看剩余2个要素</td></tr>
+<tr><td>多氟多</td><td>回踩买点</td><td>上周五出现，但锂电板块未彻底企稳，加仓性价比不高</td></tr>
+<tr><td>大中矿业</td><td>弱回踩买点</td><td>上周五出现但今天跌穿，未站稳中期均线组，绿盘不适合新开仓</td></tr>
+<tr><td>海光信息</td><td>弱回踩买点</td><td>国产算力催化较少，可等催化出现后顺势做</td></tr>
+<tr><td>德业股份</td><td>无买点结构</td><td>暂无基本面利空，但尚未出现买点结构</td></tr>
+<tr><td>洛阳钼业</td><td>突破买点</td><td>上周五出现</td></tr>
+<tr><td>三安光电</td><td>突破买点</td><td>结构上属于突破买点</td></tr>
+<tr><td>景旺电子</td><td>回踩买点</td><td>上周三出现</td></tr>
+</table>
+<h2>核心结论</h2>
+<p>1. <strong>市场开始抢跑中报行情</strong>——今天上涨的都是业绩线/涨价线，贴科技标签的更强</p>
+<p>2. <strong>科技仍是控球状态</strong>——非科技的反弹是再平衡，不是风格切换</p>
+<p>3. <strong>PCB产业链是科技线最强分支</strong>——铜箔/CCL/PCB全线新高，中后排需盯前排做</p>
+<p>4. <strong>算力金属（钨+锡）独立走强</strong>——有色修复行情靠算力金属拔得头筹</p>
+<p>5. <strong>操作纪律</strong>：回踩买点结构+偏绿盘低吸，不追高</p>
+<p>---</p>
+<p>*数据来源：飞书群聊 6/15 | 仅供个人学习参考，不构成投资建议*</p></div></div>
+<footer>
+🤖 Investment System · 自动更新 · 2026-06-17 08:51
+</footer>
+</div>
+<script>
+const AUTH_KEY = 'investment_auth';
+const AUTH_HASH = '000000000000000000000000640fade3'; // 简单hash，实际密码: Martin2026
+
+function simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).padStart(32, '0').substring(0, 32);
+}
+
+function checkPassword() {
+    const input = document.getElementById('authPassword').value;
+    const hash = simpleHash(input);
+    if (hash === AUTH_HASH) {
+        localStorage.setItem(AUTH_KEY, 'true');
+        document.getElementById('authOverlay').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+    } else {
+        document.getElementById('authError').style.display = 'block';
+        document.getElementById('authPassword').value = '';
+    }
+}
+
+// 检查是否已认证
+if (localStorage.getItem(AUTH_KEY) === 'true') {
+    document.getElementById('authOverlay').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+}
+
+// 回车提交
+document.getElementById('authPassword').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') checkPassword();
+});
+</script>
+</body>
+</html>
